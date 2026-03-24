@@ -8,17 +8,32 @@ import { ionCartOutline } from '@ng-icons/ionicons';
   imports: [NgIcon],
   providers: [provideIcons({ ionCartOutline })],
   template: `
+    <div class="relative overflow-hidden bg-[var(--card)] shadow-[var(--shadow-soft)] transition-[transform,box-shadow] duration-200 ease-in-out hover:-translate-y-0.5 hover:shadow-[var(--shadow-hover)] hover:border-[1px] hover:border-black/10 cursor-pointer">
+      <div class="relative aspect-square overflow-hidden bg-[var(--secondary)]">
+        <img [src]="image()" [alt]="'Picture of ' + title()" [title]="title()" class="h-full w-full object-cover" />
+      </div>
+
+      <div class="flex flex-col gap-2 p-4 mb-4">
+        <p class="text-sm tracking-wide text-[var(--primary)]">{{ category() }}</p>
+        <h3 class="text-lg font-bold [font-family:var(--font-heading)] leading-[1.3] tracking-[-0.02em]">{{ title() }}</h3>
+        <p class="text-lg font-semibold">{{ '$' + price() }}</p>
+        <button type="button" class="btn btn-primary inline-flex items-center gap-2">
+          <ng-icon name="ionCartOutline" size="18" aria-hidden="true"></ng-icon>
+          Add to cart
+        </button>
+      </div>     
+    </div>
     <div class="relative overflow-hidden bg-[var(--card)] shadow-[var(--shadow-soft)] transition-[transform,box-shadow] duration-200 ease-in-out hover:-translate-y-0.5 hover:scale-[1.01] hover:shadow-[var(--shadow-hover)]">
       <div class="relative aspect-square overflow-hidden bg-[var(--secondary)]">
         <img [src]="image()" [alt]="'Picture of ' + title()" [title]="title()" class="h-full w-full object-cover" />
       </div>
 
-      <div class="flex flex-col gap-2 p-4">
+      <div class="flex flex-col gap-2 p-4 mb-4">
         <p class="text-sm tracking-wide text-[var(--primary)]">{{ category() }}</p>
         <h3 class="text-lg font-bold [font-family:var(--font-heading)] leading-[1.3] tracking-[-0.02em]">{{ title() }}</h3>
         <p class="text-lg font-semibold">{{ '$' + price() }}</p>
         <button type="button" class="btn btn-primary inline-flex items-center gap-2">
-          <ng-icon name="ionCartOutline" size="18"></ng-icon>
+          <ng-icon name="ionCartOutline" size="18" aria-hidden="true"></ng-icon>
           Add to cart
         </button>
       </div>     
