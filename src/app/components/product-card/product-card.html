@@ -1,4 +1,4 @@
-<div class="product-grid w-9/12 mx-auto mt-8">
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-center w-9/12 mx-auto mt-8">
   @for (product of products; track product.title) {
     <app-product-card
     [category]="product.category"
