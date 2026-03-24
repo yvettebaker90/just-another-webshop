@@ -52,7 +52,7 @@ export class ProductCardComponent {
   selector: 'app-product-cards',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ProductCardComponent],
-  templateUrl: './product-card.html',
+  templateUrl: './product-card.component.html',
 })
 export class ProductCardsComponent {
   products = [
@@ -76,7 +76,7 @@ export class ProductCardsComponent {
     },
     {
       category: 'Fragrances',
-      title: 'Gucci Bloom Eau de',
+      title: 'Gucci Bloom Eau de Parfum',
       price: 79.99,
       image: 'https://cdn.dummyjson.com/product-images/fragrances/gucci-bloom-eau-de/thumbnail.webp',
     },
