@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
-import { Home } from './pages/home';
-import { Products } from './pages/products';
-import { ProductDetail } from './pages/products-details';
-import { ShoppingCart } from './pages/shopping-cart';
+import { Home } from './pages/home/home.page';
+import { Products } from './pages/products/products.page';
+import { ProductDetail } from './pages/products-detail/products-details.page';
+import { ShoppingCart } from './pages/shopping-cart/shopping-cart.page';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },

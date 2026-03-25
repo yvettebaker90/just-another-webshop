@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
   selector: 'app-products',
   standalone: true,
   imports: [],
-  templateUrl: './products.html'
+  templateUrl: './products.page.html'
 })
 export class Products {
   products = [
