@@ -5,9 +5,10 @@ import { ProductDetail } from './pages/products-details';
 import { ShoppingCart } from './pages/shopping-cart';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: '', redirectTo: 'products', pathMatch: 'full' },
   { path: 'home', component: Home },
   { path: 'products', component: Products },
   { path: 'products/:id', component: ProductDetail },
-  { path: 'shopping-cart', component: ShoppingCart }
+  { path: 'shopping-cart', component: ShoppingCart },
+  { path: '**', redirectTo: 'products' }
 ];

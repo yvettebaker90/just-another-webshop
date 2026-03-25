@@ -1,0 +1,115 @@
+<section class="products-page section">
+	<div class="container products-header">
+		<div>
+			<p class="products-kicker">Curated Selection</p>
+			<h1>Products</h1>
+			<p class="products-subtitle">Discover essentials across makeup, skincare, fragrance, and accessories.</p>
+		</div>
+	</div>
+
+	<div class="container products-layout">
+		<aside class="filters-panel card" aria-label="Product filters">
+			<div class="filters-heading">
+				<h2>Filters</h2>
+				<button type="button" class="clear-btn" (click)="clearFilters()">Clear all</button>
+			</div>
+
+			<section class="filter-group" aria-labelledby="category-heading">
+				<h3 id="category-heading">Category</h3>
+				<div class="filter-options" role="radiogroup" aria-label="Category filter">
+					@for (category of categories; track category) {
+						<button
+							type="button"
+							class="filter-option"
+							[class.is-active]="selectedCategory() === category"
+							[attr.aria-pressed]="selectedCategory() === category"
+							(click)="selectCategory(category)"
+						>
+							{{ category }}
+						</button>
+					}
+				</div>
+			</section>
+
+			<section class="filter-group" aria-labelledby="price-heading">
+				<h3 id="price-heading">Price range</h3>
+				<div class="price-grid">
+					<label>
+						Min
+						<input
+							type="range"
+							[min]="lowestPrice"
+							[max]="highestPrice"
+							[value]="minPrice()"
+							(input)="updateMinPrice($any($event.target).value)"
+							aria-label="Minimum price"
+						/>
+					</label>
+					<label>
+						Max
+						<input
+							type="range"
+							[min]="lowestPrice"
+							[max]="highestPrice"
+							[value]="maxPrice()"
+							(input)="updateMaxPrice($any($event.target).value)"
+							aria-label="Maximum price"
+						/>
+					</label>
+				</div>
+				<p class="price-output">${{ minPrice() }} - ${{ maxPrice() }}</p>
+			</section>
+
+			<section class="filter-group" aria-labelledby="tags-heading">
+				<h3 id="tags-heading">Tags</h3>
+				<div class="tag-list">
+					@for (tag of availableTags; track tag) {
+						<button
+							type="button"
+							class="tag-pill"
+							[class.is-active]="selectedTags().includes(tag)"
+							[attr.aria-pressed]="selectedTags().includes(tag)"
+							(click)="toggleTag(tag)"
+						>
+							{{ tag }}
+						</button>
+					}
+				</div>
+			</section>
+		</aside>
+
+		<main class="products-main" aria-live="polite">
+			<div class="products-toolbar card">
+				<p>{{ filteredProducts().length }} results</p>
+				<label class="sort-control">
+					Sort by
+					<select aria-label="Sort products" class="sort-select">
+						<option>Recommended</option>
+						<option>Price: Low to High</option>
+						<option>Price: High to Low</option>
+						<option>Newest</option>
+					</select>
+				</label>
+			</div>
+
+			@if (filteredProducts().length > 0) {
+				<div class="product-grid" aria-label="Filtered product grid">
+					@for (product of filteredProducts(); track product.id) {
+						<app-product-card
+							[category]="product.category"
+							[title]="product.title"
+							[price]="product.price"
+							[image]="product.image"
+						></app-product-card>
+					}
+				</div>
+			} @else {
+				<div class="empty-state card">
+					<h3>No products match your filters</h3>
+					<p>Try broadening your price range or removing a tag.</p>
+					<button type="button" class="btn btn-outline" (click)="clearFilters()">Reset filters</button>
+				</div>
+			}
+		</main>
+	</div>
+</section>
