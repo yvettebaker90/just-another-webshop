@@ -4,6 +4,7 @@ import { ProductCardsComponent } from '../../components/product-card/product-car
 import { SupabaseTestComponent } from '../../components/supabase-test/supabase-test.component';
 
 
+
 @Component({
   selector: 'app-home',
   standalone: true,
