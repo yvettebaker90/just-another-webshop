@@ -1,14 +1,18 @@
-import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, signal } from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { ionCartOutline, ionHeart, ionHeartOutline } from '@ng-icons/ionicons';
+import { Product, ProductService } from '../../services/product.service';
 
 @Component({
   selector: 'app-product-card',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgIcon],
   providers: [provideIcons({ ionCartOutline, ionHeart, ionHeartOutline })],
+  host: {
+    class: 'block h-full',
+  },
   template: `
-    <div class="relative overflow-hidden bg-[var(--card)] shadow-[var(--shadow-soft)] transition-[transform,box-shadow] duration-200 ease-in-out hover:-translate-y-0.5 hover:shadow-[var(--shadow-hover)] hover:border-[1px] hover:border-black/10 cursor-pointer">
+    <div class="relative flex h-full flex-col overflow-hidden bg-[var(--card)] shadow-[var(--shadow-soft)] transition-[transform,box-shadow] duration-200 ease-in-out hover:-translate-y-0.5 hover:border-[1px] hover:border-black/10 hover:shadow-[var(--shadow-hover)] cursor-pointer">
       <button
         type="button"
         class="absolute right-3 top-3 z-10 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-[var(--foreground)] shadow-sm transition hover:scale-105"
@@ -23,11 +27,14 @@ import { ionCartOutline, ionHeart, ionHeartOutline } from '@ng-icons/ionicons';
         <img [src]="image()" [alt]="'Picture of ' + title()" [title]="title()" class="h-full w-full object-cover" />
       </div>
 
-      <div class="flex flex-col gap-2 p-4 mb-4">
-        <p class="text-sm tracking-wide text-[var(--primary)]">{{ category() }}</p>
-        <h3 class="text-lg font-bold [font-family:var(--font-heading)] leading-[1.3] tracking-[-0.02em]">{{ title() }}</h3>
+      <div class="mb-4 flex flex-1 flex-col gap-2 p-4">
+        <p class="text-sm tracking-wide text-[var(--primary)] capitalize">{{ category() }}</p>
+        <h3
+          class="min-h-[3.4rem] text-lg font-bold [font-family:var(--font-heading)] leading-[1.3] tracking-[-0.02em] overflow-hidden [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2]"
+          [title]="title()"
+        >{{ title() }}</h3>
         <p class="text-lg font-semibold">{{ '$' + price() }}</p>
-        <button type="button" class="btn btn-primary inline-flex items-center gap-2">
+        <button type="button" class="btn btn-primary mt-auto inline-flex items-center gap-2">
           <ng-icon name="ionCartOutline" size="18" aria-hidden="true"></ng-icon>
           Add to cart
         </button>
@@ -38,7 +45,7 @@ import { ionCartOutline, ionHeart, ionHeartOutline } from '@ng-icons/ionicons';
 export class ProductCardComponent {
   category = input('');
   title = input('');
-  price = input();
+  price = input(0);
   image = input('');
 
   isFavorite = signal(false);
@@ -55,54 +62,28 @@ export class ProductCardComponent {
   templateUrl: './product-card.component.html',
 })
 export class ProductCardsComponent {
-  products = [
-    {
-    category: 'Makeup',
-      title: 'Essence Mascara Lash Princess',
-      price: 9.99,
-      image: 'https://cdn.dummyjson.com/product-images/beauty/essence-mascara-lash-princess/thumbnail.webp',
-    },
-    {
-      category: 'Makeup',
-      title: 'Red Lipstick',
-      price: 12.99,
-      image: 'https://cdn.dummyjson.com/product-images/beauty/red-lipstick/thumbnail.webp',
-    },
-    {
-      category: 'Fragrances',
-      title: "Dior J'adore",
-      price: 89.99,
-      image: "https://cdn.dummyjson.com/product-images/fragrances/dior-j'adore/thumbnail.webp",
-    },
-    {
-      category: 'Fragrances',
-      title: 'Gucci Bloom Eau de Parfum',
-      price: 79.99,
-      image: 'https://cdn.dummyjson.com/product-images/fragrances/gucci-bloom-eau-de/thumbnail.webp',
-    },
-        {
-    category: 'Makeup',
-      title: 'Essence Mascara Lash Princess',
-      price: 9.99,
-      image: 'https://cdn.dummyjson.com/product-images/beauty/essence-mascara-lash-princess/thumbnail.webp',
-    },
-    {
-      category: 'Makeup',
-      title: 'Red Lipstick',
-      price: 12.99,
-      image: 'https://cdn.dummyjson.com/product-images/beauty/red-lipstick/thumbnail.webp',
-    },
-    {
-      category: 'Fragrances',
-      title: "Dior J'adore",
-      price: 89.99,
-      image: "https://cdn.dummyjson.com/product-images/fragrances/dior-j'adore/thumbnail.webp",
-    },
-    {
-      category: 'Fragrances',
-      title: 'Gucci Bloom Eau de',
-      price: 79.99,
-      image: 'https://cdn.dummyjson.com/product-images/fragrances/gucci-bloom-eau-de/thumbnail.webp',
-    },   
-  ];
+  private readonly productService = inject(ProductService);
+
+  products = signal<Product[]>([]);
+  loading = signal(true);
+  error = signal<string | null>(null);
+
+  constructor() {
+    void this.loadProducts();
+  }
+
+  async loadProducts(): Promise<void> {
+    this.loading.set(true);
+    this.error.set(null);
+
+    try {
+      const products = await this.productService.getProducts();
+      this.products.set(products);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Could not load products.';
+      this.error.set(message);
+    } finally {
+      this.loading.set(false);
+    }
+  }
 }
