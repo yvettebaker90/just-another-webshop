@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  templateUrl: './products-details.html'
+  templateUrl: './products-details.page.html'
 })
 export class ProductDetail {
   productId = '';

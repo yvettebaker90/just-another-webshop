@@ -1,12 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
-import { ProductCardComponent } from '../components/product-card/product-card.component';
+import { ProductCardComponent } from '../../components/product-card/product-card.component';
 
 @Component({
   selector: 'app-products',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ProductCardComponent],
-  templateUrl: './products.html',
-  styleUrls: ['./products.css']
+  templateUrl: './products.page.html'
 })
 export class Products {
   readonly products = [
