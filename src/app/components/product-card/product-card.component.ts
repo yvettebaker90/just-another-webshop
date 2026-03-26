@@ -1,7 +1,12 @@
-import { ChangeDetectionStrategy, Component, inject, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { ionCartOutline, ionHeart, ionHeartOutline } from '@ng-icons/ionicons';
 import { Product, ProductService } from '../../services/product.service';
+
+type ProductCategoryGroup = {
+  category: string;
+  products: Product[];
+};
 
 @Component({
   selector: 'app-product-card',
@@ -67,6 +72,21 @@ export class ProductCardsComponent {
   products = signal<Product[]>([]);
   loading = signal(true);
   error = signal<string | null>(null);
+  totalProducts = computed(() => this.products().length);
+  groupedProducts = computed<ProductCategoryGroup[]>(() => {
+    const groups = new Map<string, Product[]>();
+
+    for (const product of this.products()) {
+      const category = product.category?.trim() || 'Other';
+      const existing = groups.get(category) ?? [];
+      groups.set(category, [...existing, product]);
+    }
+
+    return Array.from(groups.entries()).map(([category, products]) => ({
+      category,
+      products,
+    }));
+  });
 
   constructor() {
     void this.loadProducts();
