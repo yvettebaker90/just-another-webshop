@@ -1,0 +1,18 @@
+<div>
+  <h2>Supabase Test</h2>
+  <button (click)="load()">Ladda produkter</button>
+  <div *ngIf="loading()">Laddar...</div>
+  <div *ngIf="error()">Fel: {{ error() }}</div>
+
+
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-center w-9/12 mx-auto mt-8" *ngIf="products().length">
+    <app-product-card
+      *ngFor="let product of products()"
+      [category]="product.category"
+      [title]="product.title"
+      [price]="product.price"
+      [image]="getImage(product.image_1)">
+    </app-product-card>
+  </div>
+</div>
