@@ -18,10 +18,20 @@ export class ProductService {
     const { data, error } = await this.supabase.client
       .from('Jaw Products')
       .select('*');
+
     if (error) {
-      console.error('Error fetching products:', error);
-      return [];
+      throw new Error(`Error fetching products: ${error.message}`);
     }
-    return data as Product[];
+
+    const rows = (data ?? []) as Array<Partial<Product>>;
+
+    return rows.map((row, index) => ({
+      id: Number(row.id ?? index),
+      category: String(row.category ?? ''),
+      title: String(row.title ?? ''),
+      price: typeof row.price === 'number' ? row.price : Number(row.price ?? 0),
+      image: String(row.image ?? row.image_1 ?? ''),
+      image_1: row.image_1 ? String(row.image_1) : undefined,
+    }));
   }
 }
