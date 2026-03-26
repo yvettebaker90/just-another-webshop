@@ -1,0 +1,55 @@
+<div class="min-h-screen bg-[#f3f3f3] py-10">
+	<section class="mx-auto w-11/12 max-w-6xl space-y-6">
+		<header class="space-y-2">
+			<h1 class="text-4xl font-bold tracking-tight">Shop All Products</h1>
+			<p class="text-xl text-black/60">{{ totalProducts() }} products found</p>
+		</header>
+
+		<div class="grid grid-cols-1 gap-6 lg:grid-cols-[230px_1fr]">
+			<app-search-filter
+				[categories]="categories()"
+				[availableTags]="availableTags()"
+				[selectedCategories]="selectedCategories()"
+				[selectedTags]="selectedTags()"
+				[maxPrice]="maxPrice()"
+				[highestPrice]="highestPrice()"
+				(categoryToggled)="toggleCategory($event)"
+				(maxPriceChanged)="updateMaxPrice($event)"
+				(tagToggled)="toggleTag($event)"
+			></app-search-filter>
+
+			<div class="space-y-4">
+				@if (loading()) {
+					<p class="rounded border border-gray-200 bg-white px-4 py-6 text-center text-sm text-gray-600">
+						Loading products...
+					</p>
+				}
+
+				@if (error()) {
+					<p class="rounded border border-red-200 bg-red-50 px-4 py-6 text-center text-sm text-red-700">
+						Could not load products: {{ error() }}
+					</p>
+				}
+
+				@if (!loading() && !error() && totalProducts() === 0) {
+					<p class="rounded border border-gray-200 bg-white px-4 py-6 text-center text-sm text-gray-600">
+						No products match your filters.
+					</p>
+				}
+
+				@if (!loading() && !error()) {
+					<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+						@for (product of filteredProducts(); track product.id) {
+							<app-product-card
+								[category]="product.category"
+								[title]="product.title"
+								[price]="product.price"
+								[image]="product.image || product.image_1 || ''"
+							></app-product-card>
+						}
+					</div>
+				}
+			</div>
+		</div>
+	</section>
+</div>
