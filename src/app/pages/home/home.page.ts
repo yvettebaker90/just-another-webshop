@@ -6,8 +6,7 @@ import { HeroComponent } from '../../components/hero/hero.component';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [ProductCardsComponent, SearchBarComponent],
-  imports: [ProductCardsComponent, HeroComponent],
+  imports: [ProductCardsComponent, SearchBarComponent, HeroComponent],
   templateUrl: './home.page.html'
 })
 export class Home {}
