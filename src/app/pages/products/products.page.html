@@ -8,12 +8,15 @@
 		<div class="grid grid-cols-1 gap-6 lg:grid-cols-[230px_1fr]">
 			<app-search-filter
 				[categories]="categories()"
+				[brands]="brands()"
 				[availableTags]="availableTags()"
 				[selectedCategories]="selectedCategories()"
+				[selectedBrands]="selectedBrands()"
 				[selectedTags]="selectedTags()"
 				[maxPrice]="maxPrice()"
 				[highestPrice]="highestPrice()"
 				(categoryToggled)="toggleCategory($event)"
+				(brandToggled)="toggleBrand($event)"
 				(maxPriceChanged)="updateMaxPrice($event)"
 				(tagToggled)="toggleTag($event)"
 			></app-search-filter>

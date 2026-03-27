@@ -8,6 +8,7 @@ export interface Product {
   price: number;
   image: string;
   image_1?: string;
+  brand?: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -32,6 +33,7 @@ export class ProductService {
       price: typeof row.price === 'number' ? row.price : Number(row.price ?? 0),
       image: String(row.image ?? row.image_1 ?? ''),
       image_1: row.image_1 ? String(row.image_1) : undefined,
+      brand: row.brand ? String(row.brand) : undefined,
     }));
   }
 }
