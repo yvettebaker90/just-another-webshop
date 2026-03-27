@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { ionHeartOutline, ionCartOutline, ionPersonOutline } from '@ng-icons/ionicons';
+import { ionHeartOutline, ionCartOutline, ionPersonOutline, ionHomeOutline, ionBagOutline } from '@ng-icons/ionicons';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
@@ -9,9 +9,10 @@ import { CommonModule } from '@angular/common';
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [NgIcon, RouterModule, CommonModule],
-  providers: [provideIcons({ ionHeartOutline, ionCartOutline, ionPersonOutline })],
+  providers: [provideIcons({ ionHeartOutline, ionCartOutline, ionPersonOutline, ionHomeOutline, ionBagOutline })],
   templateUrl: './header.component.html',
 })
 export class HeaderComponent {
   cartCount = 2;
+  mobileMenuOpen = false;
 }
