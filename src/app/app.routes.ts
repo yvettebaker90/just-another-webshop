@@ -5,7 +5,7 @@ import { ProductDetail } from './pages/products-detail/products-details.page';
 import { ShoppingCart } from './pages/shopping-cart/shopping-cart.page';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'products', pathMatch: 'full' },
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'home', component: Home },
   { path: 'products', component: Products },
   { path: 'products/:id', component: ProductDetail },
