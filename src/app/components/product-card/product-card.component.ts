@@ -33,7 +33,7 @@ type ProductCategoryGroup = {
       </div>
 
       <div class="mb-4 flex flex-1 flex-col gap-2 p-4">
-        <p class="text-sm tracking-wide text-[var(--primary)] capitalize">{{ category() }}</p>
+        <p class="text-sm tracking-wide text-[var(--primary)] capitalize">{{ brand() }} / {{ category() }}</p>
         <h3
           class="min-h-[3.4rem] text-lg font-bold [font-family:var(--font-heading)] leading-[1.3] tracking-[-0.02em] overflow-hidden [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2]"
           [title]="title()"
@@ -52,6 +52,7 @@ export class ProductCardComponent {
   title = input('');
   price = input(0);
   image = input('');
+  brand = input('');
 
   isFavorite = signal(false);
 
