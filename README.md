@@ -1,4 +1,24 @@
-# JustAnotherWebshop
+# Just Another Webshop
+
+Just Another Webshop is a webshop built with Angular and uses Supabase as the backend for data management. The project design is based on a Figma mockup.
+
+## Features
+- Product listing
+- Search and filter functionality
+- Shopping cart
+- Product details
+- Responsive design based on the Figma mockup
+
+## Technologies
+- **Angular** (v21)
+- **Supabase** (for authentication and data storage)
+- **Tailwind CSS** (for styling)
+
+## Design
+A Figma mockup is used as the basis for UI/UX.
+
+## Backend
+The project uses Supabase for data storage. See `supabase.services.ts` for implementation details.
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.3.
 
