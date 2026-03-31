@@ -1,10 +1,10 @@
 <main class="min-h-screen py-8" style="background-color: var(--background);" role="main" aria-labelledby="cart-heading">
-    <div class="mx-auto w-9/12 px-4">
-        <h1 id="cart-heading" class="text-3xl font-bold mb-40"
-            style="font-family: var(--font-heading); color: var(--foreground);">
+    <div class="w-full max-w-md mx-auto px-4 md:w-9/12 md:max-w-none bg-background">
+        <h1 id="cart-heading" class="text-3xl font-bold mb-40" style="font-family: var(--font-heading);"
+            style="font-family: var(--font-heading);"
+            class="text-3xl font-bold mb-40 text-center md:text-left mt-20 text-foreground">
             Shopping Cart
         </h1>
-
         <!-- Cart Content -->
         <div class="grid gap-8 gap-y-12 lg:grid-cols-3 items-start">
             <!-- Cart Items Column -->
@@ -12,7 +12,7 @@
                 <h2 id="cart-items-heading" class="sr-only">Cart Items</h2>
                 <!-- Cart Item (Loop) -->
                 <div *ngFor="let item of cartItems" class="rounded-lg p-4"
-                    style="background-color: var(--card); border: 1px solid var(--border);">
+                    class="rounded-lg p-4 bg-card border border-border">
                     <div class="flex gap-4">
                         <!-- Product Image -->
                         <div class="h-24 w-24 shrink-0 overflow-hidden rounded-lg"
@@ -23,37 +23,36 @@
                         <!-- Product Info -->
                         <div class="flex flex-1 flex-col justify-between">
                             <div>
-                                <h3 class="font-semibold"
-                                    style="font-family: var(--font-heading); color: var(--foreground);">
+                                <h3 class="font-semibold" style="font-family: var(--font-heading);"
+                                    class="font-semibold text-foreground" style="font-family: var(--font-heading);">
                                     {{ item.title }}
                                 </h3>
-                                <p class="text-sm" style="color: var(--muted-foreground);">{{ item.category }}</p>
+                                <!-- Only one category line needed, use utility class -->
+                                <p class="text-sm text-foreground">{{ item.category }}</p>
                             </div>
 
                             <!-- Quantity Controls & Price -->
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center gap-2">
+                                    <span class="sr-only">Quantity for {{ item.title }}</span>
                                     <button (click)="onDecrementQuantity(item)"
-                                        class="h-8 w-8 rounded border flex items-center justify-center hover:opacity-70 transition-opacity"
-                                        style="border-color: var(--border);">
-                                        <span style="color: var(--foreground);">−</span>
+                                        class="h-8 w-8 rounded border border-border flex items-center justify-center hover:opacity-70 transition-opacity">
+                                        <span class="text-foreground">−</span>
                                     </button>
-                                    <span class="w-8 text-center text-sm font-medium"
-                                        style="color: var(--foreground);">{{ item.quantity }}</span>
+                                    <span class="w-8 text-center text-sm font-medium text-foreground">{{ item.quantity
+                                        }}</span>
                                     <button (click)="onIncrementQuantity(item)"
-                                        class="h-8 w-8 rounded border flex items-center justify-center hover:opacity-70 transition-opacity"
-                                        style="border-color: var(--border);">
-                                        <span style="color: var(--foreground);">+</span>
+                                        class="h-8 w-8 rounded border border-border flex items-center justify-center hover:opacity-70 transition-opacity">
+                                        <span class="text-foreground">+</span>
                                     </button>
                                 </div>
 
                                 <!-- Price -->
                                 <div class="text-right">
-                                    <p class="font-semibold" style="color: var(--foreground);">
+                                    <p class="font-semibold text-foreground">
                                         ${{ (item.price * item.quantity).toFixed(2) }}
                                     </p>
-                                    <p *ngIf="item.quantity > 1" class="text-xs"
-                                        style="color: var(--muted-foreground);">
+                                    <p *ngIf="item.quantity > 1" class="text-xs text-foreground">
                                         ${{ item.price.toFixed(2) }} each
                                     </p>
                                 </div>
@@ -62,8 +61,8 @@
 
                         <!-- Remove Button -->
                         <button (click)="onRemoveItem(item.id)"
-                            class="h-8 w-8 flex items-center justify-center hover:opacity-70 transition-opacity"
-                            style="color: var(--destructive);" aria-label="Remove {{item.title}} from cart">
+                            class="h-8 w-8 flex items-center justify-center hover:opacity-70 transition-opacity text-destructive"
+                            aria-label="Remove {{item.title}} from cart">
                             <ng-icon name="ionTrashOutline" style="font-size: 20px;"></ng-icon>
                         </button>
                     </div>
@@ -71,8 +70,7 @@
 
                 <!-- Continue Shopping Button -->
                 <button (click)="onContinueShopping()"
-                    class="w-full sm:w-auto px-6 py-3 rounded-lg border-2 font-medium hover:opacity-80 transition-opacity"
-                    style="border-color: var(--border); color: var(--foreground);">
+                    class="w-full sm:w-auto px-6 py-3 rounded-lg border-2 border-border font-medium hover:opacity-80 transition-opacity text-foreground">
                     Continue Shopping
                 </button>
             </section>
@@ -80,9 +78,9 @@
             <!-- Order Summary Sidebar -->
             <aside class="lg:col-span-1" aria-labelledby="order-summary-heading">
                 <div class="rounded-lg p-6 sticky top-0 mt-4"
-                    style="background-color: var(--card); border: 1px solid var(--border);">
+                    class="rounded-lg p-6 sticky top-0 mt-4 bg-card border border-border">
                     <h2 id="order-summary-heading" class="text-xl font-semibold mb-50"
-                        style="font-family: var(--font-heading); color: var(--foreground);">
+                        style="font-family: var(--font-heading);" class="text-xl font-semibold mb-50 text-foreground">
                         Order Summary
                     </h2>
 
@@ -90,36 +88,36 @@
                     <div class="space-y-3 mb-6">
                         <!-- Subtotal -->
                         <div class="flex justify-between text-sm">
-                            <span style="color: var(--muted-foreground);">Subtotal</span>
+                            <span class="text-foreground">Subtotal</span>
                             <span class="font-medium" style="color: var(--foreground);">${{ subtotal.toFixed(2)
                                 }}</span>
                         </div>
 
                         <!-- Shipping -->
                         <div class="flex justify-between text-sm">
-                            <span style="color: var(--muted-foreground);">Shipping</span>
+                            <span class="text-foreground">Shipping</span>
                             <span class="font-medium">
                                 <ng-container *ngIf="shipping === 0; else notFree">
-                                    <span style="color: var(--success-green);">Free</span>
+                                    <span style="color: var(--success-green); font-weight: 600;">Free</span>
                                 </ng-container>
                                 <ng-template #notFree>
-                                    <span style="color: var(--foreground);">${{ shipping.toFixed(2) }}</span>
+                                    <span class="text-foreground">${{ shipping.toFixed(2) }}</span>
                                 </ng-template>
                             </span>
                         </div>
 
                         <!-- Tax -->
                         <div class="flex justify-between text-sm">
-                            <span style="color: var(--muted-foreground);">Tax (8%)</span>
-                            <span class="font-medium" style="color: var(--foreground);">${{ tax.toFixed(2) }}</span>
+                            <span class="text-foreground">Tax (8%)</span>
+                            <span class="font-medium text-foreground">${{ tax.toFixed(2) }}</span>
                         </div>
 
                         <!-- Divider -->
-                        <div style="border-top: 1px solid var(--border); margin: 1rem 0;"></div>
+                        <div class="border-t border-border my-4"></div>
 
                         <!-- Total -->
                         <div class="flex justify-between">
-                            <span class="font-semibold" style="color: var(--foreground);">Total</span>
+                            <span class="font-semibold text-foreground">Total</span>
                             <span class="text-xl font-bold" style="color: var(--foreground);" aria-live="polite">${{
                                 total.toFixed(2) }}</span>
                         </div>
@@ -127,7 +125,8 @@
 
                     <!-- Free Shipping Threshold Info -->
                     <div *ngIf="subtotal < 50" class="mb-6 rounded-lg p-3 text-sm text-center"
-                        style="background-color: rgba(163, 177, 138, 0.1); color: var(--accent);">
+                        style="background-color: rgba(163, 177, 138, 0.1);"
+                        class="mb-6 rounded-lg p-3 text-sm text-center text-accent">
                         <p>
                             Add <span class="font-semibold">${{ (50 - subtotal).toFixed(2) }}</span> more for free
                             shipping!
@@ -144,11 +143,11 @@
 
                     <!-- Trust Info -->
                     <div class="space-y-2 text-xs text-center" style="color: var(--muted-foreground);">
-                        <p class="flex items-center justify-center gap-2">
+                        <p class="flex items-center justify-center gap-2 text-foreground">
                             <span style="font-size: 16px;">✓</span>
                             Secure checkout
                         </p>
-                        <p>Free returns within 30 days</p>
+                        <p class="text-foreground">Free returns within 30 days</p>
                     </div>
                 </div>
             </aside>

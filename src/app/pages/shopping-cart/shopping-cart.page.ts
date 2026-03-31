@@ -74,7 +74,7 @@ export class ShoppingCart {
 
   /* Eventhandlers - CartService */
 
-  /* Decrese quantity with 1 */
+  /* Decrease quantity with 1 */
   onDecrementQuantity(item: CartItem): void {
     if (item.quantity > 1) {
       item.quantity -= 1;
@@ -83,7 +83,7 @@ export class ShoppingCart {
     }
   }
 
-  /* Increse quantity with 1 */
+  /* Increase quantity with 1 */
   onIncrementQuantity(item: CartItem): void {
     item.quantity += 1;
     // TODO: Call cartService.updateQuantity(item.id, item.quantity)
