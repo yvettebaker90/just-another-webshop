@@ -1,4 +1,4 @@
-<div class="w-full max-w-3xl mx-auto px-4 mt-4 mb-4">
+<!-- <div class="w-full max-w-3xl mx-auto px-4 mt-4 mb-4">
   <div class="relative flex items-center">
     <ng-icon
       name="ionSearchOutline"
@@ -12,4 +12,62 @@
       class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded text-gray-900 placeholder-gray-500 focus:outline-none focus:border-[#a3b18a] focus:ring-1 focus:ring-[#a3b18a] transition-colors"
     />
   </div>
+</div> -->
+
+<div class="w-full max-w-3xl mx-auto px-4 mt-4 mb-4">
+  <div class="relative flex items-center">
+    <!-- Search Icon -->
+    <ng-icon
+      name="ionSearchOutline"
+      class="absolute left-3 w-5 h-5 text-gray-400"
+    ></ng-icon>
+ 
+    <!-- Search Input -->
+    <input
+      type="text"
+      [value]="searchQuery()"
+      (input)="onSearch($any($event.target).value)"
+      placeholder="Search products..."
+      class="w-full pl-10 pr-12 py-2.5 border border-gray-300 rounded text-gray-900 placeholder-gray-500 focus:outline-none focus:border-[#a3b18a] focus:ring-1 focus:ring-[#a3b18a] transition-colors"
+      [class.opacity-50]="isLoading()"
+    />
+ 
+    <!-- Clear Button (när det finns text) -->
+    @if (searchQuery().length > 0) {
+      <button
+        type="button"
+        (click)="clearSearch()"
+        class="absolute right-3 text-gray-400 hover:text-gray-600 transition-colors"
+        title="Clear search"
+      >
+        ✕
+      </button>
+    }
+ 
+    <!-- Loading Spinner -->
+    @if (isLoading()) {
+      <div class="absolute right-3 w-5 h-5">
+        <div class="animate-spin">⟳</div>
+      </div>
+    }
+  </div>
+ 
+  <!-- Error Message -->
+  @if (error()) {
+    <div class="mt-2 p-3 bg-red-50 border border-red-200 rounded text-red-700 text-sm">
+      {{ error() }}
+    </div>
+  }
+ 
+  <!-- Search Results Count -->
+  @if (searchQuery().length > 0 && !isLoading()) {
+    <div class="mt-2 text-sm text-gray-600">
+      @if (searchResults().length > 0) {
+        Found <strong>{{ searchResults().length }}</strong>
+        {{ searchResults().length === 1 ? 'product' : 'products' }}
+      } @else {
+        No products found for "<strong>{{ searchQuery() }}</strong>"
+      }
+    </div>
+  }
 </div>

@@ -1,6 +1,9 @@
-<div><app-search-bar></app-search-bar></div>
-<div><app-hero></app-hero></div>
-<div><app-product-cards></app-product-cards></div>
-
-
-
+<div>
+	<app-search-bar (resultsChanged)="onSearchResults($event.results, $event.query)" [initialQuery]="route.snapshot.queryParams['q'] || ''"></app-search-bar>
+</div>
+<div>
+	<app-hero></app-hero>
+</div>
+<div>
+	<app-test-product-cards [products]="searchResults() ?? []"></app-test-product-cards>
+</div>
