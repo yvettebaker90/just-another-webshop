@@ -8,6 +8,7 @@ export interface Product {
   price: number;
   image: string;
   image_1?: string;
+  description?: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -32,6 +33,28 @@ export class ProductService {
       price: typeof row.price === 'number' ? row.price : Number(row.price ?? 0),
       image: String(row.image ?? row.image_1 ?? ''),
       image_1: row.image_1 ? String(row.image_1) : undefined,
+      description: row.description ? String(row.description) : undefined,
     }));
+  }
+
+  async getProductById(id: number): Promise<Product | null> {
+    const { data, error } = await this.supabase.client
+      .from('Jaw Products')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (error || !data) return null;
+
+    const row = data as Partial<Product>;
+    return {
+      id: Number(row.id ?? id),
+      category: String(row.category ?? ''),
+      title: String(row.title ?? ''),
+      price: typeof row.price === 'number' ? row.price : Number(row.price ?? 0),
+      image: String(row.image ?? row.image_1 ?? ''),
+      image_1: row.image_1 ? String(row.image_1) : undefined,
+      description: row.description ? String(row.description) : undefined,
+    };
   }
 }
