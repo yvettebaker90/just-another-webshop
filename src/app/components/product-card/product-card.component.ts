@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { ionCartOutline, ionHeart, ionHeartOutline } from '@ng-icons/ionicons';
 import { Product, ProductService } from '../../services/product.service';
@@ -17,13 +18,13 @@ type ProductCategoryGroup = {
     class: 'block h-full',
   },
   template: `
-    <div class="relative flex h-full flex-col overflow-hidden bg-[var(--card)] shadow-[var(--shadow-soft)] transition-[transform,box-shadow] duration-200 ease-in-out hover:-translate-y-0.5 hover:border-[1px] hover:border-black/10 hover:shadow-[var(--shadow-hover)] cursor-pointer">
+    <div (click)="navigateToDetail()" class="relative flex h-full flex-col overflow-hidden bg-[var(--card)] shadow-[var(--shadow-soft)] transition-[transform,box-shadow] duration-200 ease-in-out hover:-translate-y-0.5 hover:border-[1px] hover:border-black/10 hover:shadow-[var(--shadow-hover)] cursor-pointer">
       <button
         type="button"
         class="absolute right-3 top-3 z-10 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-[var(--foreground)] shadow-sm transition hover:scale-105"
         [attr.aria-label]="isFavorite() ? 'Remove from favorites' : 'Add to favorites'"
         [attr.aria-pressed]="isFavorite()"
-        (click)="toggleFavorite()"
+        (click)="$event.stopPropagation(); toggleFavorite()"
       >
         <ng-icon [name]="isFavorite() ? 'ionHeart' : 'ionHeartOutline'" size="20"></ng-icon>
       </button>
@@ -39,7 +40,7 @@ type ProductCategoryGroup = {
           [title]="title()"
         >{{ title() }}</h3>
         <p class="text-lg font-semibold">{{ '$' + price() }}</p>
-        <button type="button" class="btn btn-primary mt-auto inline-flex items-center gap-2">
+        <button type="button" (click)="$event.stopPropagation()" class="btn btn-primary mt-auto inline-flex items-center gap-2">
           <ng-icon name="ionCartOutline" size="18" aria-hidden="true"></ng-icon>
           Add to cart
         </button>
@@ -48,6 +49,9 @@ type ProductCategoryGroup = {
   `,
 })
 export class ProductCardComponent {
+  private readonly router = inject(Router);
+
+  id = input(0);
   category = input('');
   title = input('');
   price = input(0);
@@ -55,6 +59,10 @@ export class ProductCardComponent {
   brand = input('');
 
   isFavorite = signal(false);
+
+  navigateToDetail(): void {
+    void this.router.navigate(['/products', this.id()]);
+  }
 
   toggleFavorite(): void {
     this.isFavorite.update((value) => !value);
