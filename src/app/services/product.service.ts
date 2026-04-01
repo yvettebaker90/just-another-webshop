@@ -57,6 +57,7 @@ export class ProductService {
       image: String(row.image ?? row.image_1 ?? ''),
       image_1: row.image_1 ? String(row.image_1) : undefined,
       description: row.description ? String(row.description) : undefined,
+      brand: String(row.brand ?? ''),
     };
   }
 }
