@@ -1,4 +1,6 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy, signal } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { ProductCardComponent } from '../../components/product-card/product-card.component';
 import { SearchFilterComponent } from '../../components/search-filter/search-filter.component';
 import { Product, ProductService } from '../../services/product.service';
@@ -13,38 +15,47 @@ type ProductWithTags = Product & {
   imports: [ProductCardComponent, SearchFilterComponent],
   templateUrl: './products.page.html'
 })
-export class Products {
+export class Products implements OnDestroy {
   private readonly productService = inject(ProductService);
+  private readonly route = inject(ActivatedRoute);
   private readonly staticTags = ['new', 'popular', 'sale'];
+  // Subscription to query params; unsubscribed in ngOnDestroy to prevent memory leaks
+  private queryParamsSub: Subscription;
 
+  // All products from Supabase — used for building filter options (categories, brands, price)
+  readonly allProducts = signal<ProductWithTags[]>([]);
+  // Displayed products — either all products or search results from Supabase
   readonly products = signal<ProductWithTags[]>([]);
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
+  // Current search query from the URL ?search= param
+  readonly searchQuery = signal('');
 
+  // Filter options derived from all products so they stay unchanged during search
   readonly categories = computed(() => {
     const categorySet = new Set(
-      this.products()
+      this.allProducts()
         .map((product) => product.category)
         .filter((category) => category.trim().length > 0)
     );
-
     return Array.from(categorySet);
   });
 
+  // Brand options derived from all products (not affected by search)
   readonly brands = computed(() => {
     const brandSet = new Set(
-      this.products()
+      this.allProducts()
         .map((product) => (product.brand ?? '').trim())
         .filter((brand) => brand.length > 0)
     );
-
     return Array.from(brandSet);
   });
 
   readonly availableTags = computed(() => this.staticTags.map((tag) => this.toTitleCase(tag)));
 
+  // Highest price derived from all products so the price slider range is always correct
   readonly highestPrice = computed(() => {
-    const prices = this.products().map((product) => product.price);
+    const prices = this.allProducts().map((product) => product.price);
     return prices.length > 0 ? Math.ceil(Math.max(...prices)) : 0;
   });
 
@@ -54,8 +65,18 @@ export class Products {
   readonly selectedTags = signal<string[]>([]);
   readonly totalProducts = computed(() => this.filteredProducts().length);
 
+  // Subscribe to URL query params to react when the searchbar navigates here
   constructor() {
-    void this.loadProducts();
+    this.queryParamsSub = this.route.queryParams.subscribe((params) => {
+      const search = params['search'] ?? '';
+      this.searchQuery.set(search);
+      void this.loadProducts(search.trim() || undefined);
+    });
+  }
+
+  // Clean up query params subscription
+  ngOnDestroy(): void {
+    this.queryParamsSub.unsubscribe();
   }
 
   readonly filteredProducts = computed(() => {
@@ -74,20 +95,32 @@ export class Products {
     });
   });
 
-  async loadProducts(): Promise<void> {
+  async loadProducts(search?: string): Promise<void> {
     this.loading.set(true);
     this.error.set(null);
 
     try {
-      const products = await this.productService.getProducts();
-
-      const normalizedProducts: ProductWithTags[] = products.map((product) => ({
+      // Always fetch all products so filter options (categories, brands, price) stay complete
+      const allRaw = await this.productService.getProducts();
+      const allNormalized: ProductWithTags[] = allRaw.map((product) => ({
         ...product,
         image: product.image || product.image_1 || '',
         tags: this.normalizeTags(product),
       }));
+      this.allProducts.set(allNormalized);
 
-      this.products.set(normalizedProducts);
+      // If a search query exists, fetch matching products from Supabase otherwise display all products
+      if (search && search.length > 0) {
+        const searchRaw = await this.productService.searchProducts(search);
+        const searchNormalized: ProductWithTags[] = searchRaw.map((product) => ({
+          ...product,
+          image: product.image || product.image_1 || '',
+          tags: this.normalizeTags(product),
+        }));
+        this.products.set(searchNormalized);
+      } else {
+        this.products.set(allNormalized);
+      }
 
       this.maxPrice.set(this.highestPrice());
     } catch (error: unknown) {
