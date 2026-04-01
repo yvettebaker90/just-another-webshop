@@ -31,6 +31,16 @@ export class Products {
     return Array.from(categorySet);
   });
 
+  readonly brands = computed(() => {
+    const brandSet = new Set(
+      this.products()
+        .map((product) => (product.brand ?? '').trim())
+        .filter((brand) => brand.length > 0)
+    );
+
+    return Array.from(brandSet);
+  });
+
   readonly availableTags = computed(() => this.staticTags.map((tag) => this.toTitleCase(tag)));
 
   readonly highestPrice = computed(() => {
@@ -39,6 +49,7 @@ export class Products {
   });
 
   readonly selectedCategories = signal<string[]>([]);
+  readonly selectedBrands = signal<string[]>([]);
   readonly maxPrice = signal(0);
   readonly selectedTags = signal<string[]>([]);
   readonly totalProducts = computed(() => this.filteredProducts().length);
@@ -49,15 +60,17 @@ export class Products {
 
   readonly filteredProducts = computed(() => {
     const categories = this.selectedCategories();
+    const brands = this.selectedBrands();
     const max = this.maxPrice();
     const tags = this.selectedTags().map((tag) => tag.toLowerCase());
 
     return this.products().filter((product) => {
       const inCategory = categories.length === 0 || categories.includes(product.category);
+      const inBrand = brands.length === 0 || brands.includes(product.brand ?? '');
       const inPriceRange = product.price <= max;
       const hasSelectedTags = tags.length === 0 || tags.every((tag) => product.tags.includes(tag));
 
-      return inCategory && inPriceRange && hasSelectedTags;
+      return inCategory && inBrand && inPriceRange && hasSelectedTags;
     });
   });
 
@@ -94,6 +107,15 @@ export class Products {
     });
   }
 
+  toggleBrand(brand: string): void {
+    this.selectedBrands.update((brands) => {
+      if (brands.includes(brand)) {
+        return brands.filter((value) => value !== brand);
+      }
+      return [...brands, brand];
+    });
+  }
+
   updateMaxPrice(value: string): void {
     const parsedValue = Number(value);
     const clampedValue = Math.max(0, Math.min(parsedValue, this.highestPrice()));
@@ -111,6 +133,7 @@ export class Products {
 
   clearFilters(): void {
     this.selectedCategories.set([]);
+    this.selectedBrands.set([]);
     this.maxPrice.set(this.highestPrice());
     this.selectedTags.set([]);
   }

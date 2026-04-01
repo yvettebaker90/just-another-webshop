@@ -7,18 +7,24 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
 })
 export class SearchFilterComponent {
   categories = input<string[]>([]);
-  availableTags = input<string[]>([]);
   selectedCategories = input<string[]>([]);
+  categoryToggled = output<string>();
+  brands = input<string[]>([]);
+  selectedBrands = input<string[]>([]);
+  brandToggled = output<string>();
+  availableTags = input<string[]>([]);
   selectedTags = input<string[]>([]);
+  tagToggled = output<string>();
   maxPrice = input(100);
   highestPrice = input(0);
-
-  categoryToggled = output<string>();
   maxPriceChanged = output<string>();
-  tagToggled = output<string>();
-
+  
   isCategorySelected(category: string): boolean {
     return this.selectedCategories().includes(category);
+  }
+
+  isBrandSelected(brand: string): boolean {
+    return this.selectedBrands().includes(brand);
   }
 
   isTagSelected(tag: string): boolean {
@@ -27,6 +33,19 @@ export class SearchFilterComponent {
 
   onCategoryClick(category: string): void {
     this.categoryToggled.emit(category);
+  }
+
+  onBrandClick(brand: string): void {
+    this.brandToggled.emit(brand);
+  }
+
+  formatCategoryLabel(category: string): string {
+    return category
+      .replace(/-/g, ' ')
+      .split(/\s+/)
+      .filter(Boolean)
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(' ');
   }
 
   onMaxPriceChange(event: Event): void {

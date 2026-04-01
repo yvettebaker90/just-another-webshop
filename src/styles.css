@@ -33,6 +33,8 @@
   --destructive: #c4665a;
   --destructive-foreground: #ffffff;
 
+  --success-green: #166534;
+
   --sale-red: #f87171;
   --sale-red-bg: #fee2e2;
   --stock-border: #fecaca;
@@ -177,15 +179,37 @@ h3 {
 }
 
 /* Spacing helpers */
-.gap-2 { gap: 0.5rem; }
-.gap-4 { gap: 1rem; }
-.gap-6 { gap: 1.5rem; }
-.gap-8 { gap: 2rem; }
+.gap-2 {
+  gap: 0.5rem;
+}
 
-.space-y-2 > * + * { margin-top: 0.5rem; }
-.space-y-4 > * + * { margin-top: 1rem; }
-.space-y-6 > * + * { margin-top: 1.5rem; }
-.space-y-8 > * + * { margin-top: 2rem; }
+.gap-4 {
+  gap: 1rem;
+}
+
+.gap-6 {
+  gap: 1.5rem;
+}
+
+.gap-8 {
+  gap: 2rem;
+}
+
+.space-y-2>*+* {
+  margin-top: 0.5rem;
+}
+
+.space-y-4>*+* {
+  margin-top: 1rem;
+}
+
+.space-y-6>*+* {
+  margin-top: 1.5rem;
+}
+
+.space-y-8>*+* {
+  margin-top: 2rem;
+}
 
 /* Surfaces */
 .card {
@@ -443,21 +467,87 @@ h3 {
   font-weight: 500;
 }
 
-/* Utility helpers */
-.rounded-sm { border-radius: var(--radius-sm); }
-.rounded-md { border-radius: var(--radius-md); }
-.rounded-lg { border-radius: var(--radius-lg); }
-.rounded-xl { border-radius: var(--radius-xl); }
-.rounded-2xl { border-radius: var(--radius-2xl); }
-.rounded-full { border-radius: var(--radius-full); }
+/* Spacing shopping cart headers */
+.mb-40 {
+  margin-bottom: 0.5rem;
+}
 
-.border-default { border: 1px solid var(--border); }
-.text-foreground { color: var(--foreground); }
-.text-muted-foreground { color: var(--muted-foreground); }
-.bg-background { background-color: var(--background); }
-.bg-card { background-color: var(--card); }
-.bg-secondary { background-color: var(--secondary); }
-.bg-accent { background-color: var(--accent); }
+.mb-50 {
+  margin-bottom: 1rem;
+}
+
+/* Utility helpers */
+.rounded-sm {
+  border-radius: var(--radius-sm);
+}
+
+.rounded-md {
+  border-radius: var(--radius-md);
+}
+
+.rounded-lg {
+  border-radius: var(--radius-lg);
+}
+
+.rounded-xl {
+  border-radius: var(--radius-xl);
+}
+
+.rounded-2xl {
+  border-radius: var(--radius-2xl);
+}
+
+.rounded-full {
+  border-radius: var(--radius-full);
+}
+
+.border-default {
+  border: 1px solid var(--border);
+}
+
+.text-foreground {
+  color: var(--foreground);
+}
+
+.text-muted-foreground {
+  color: var(--muted-foreground);
+}
+
+.bg-background {
+  background-color: var(--background);
+}
+
+.bg-card {
+  background-color: var(--card);
+}
+
+.bg-secondary {
+  background-color: var(--secondary);
+}
+
+.bg-accent {
+  background-color: var(--accent);
+}
+
+.text-primary {
+  color: var(--primary);
+}
+
+.text-success {
+  color: var(--success-green);
+}
+
+.text-destructive {
+  color: var(--destructive);
+}
+
+.border-border {
+  border-color: var(--border);
+}
+
+.border-card {
+  border-color: var(--card);
+}
 
 .sr-only {
   position: absolute;
