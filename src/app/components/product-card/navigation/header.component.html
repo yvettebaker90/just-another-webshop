@@ -7,10 +7,10 @@
         <div class="shrink-0">
           <a routerLink="/home" class="focus:outline-none">
             <span
-              class="header-logo tracking-tight text-2xl uppercase block w-full text-left md:text-center whitespace-nowrap text-foreground sm:whitespace-normal custom625:text-left custom625:leading-none"
+              class="header-logo tracking-tight uppercase block w-full text-left md:text-center text-2xl max-[500px]:text-xl whitespace-nowrap max-[500px]:whitespace-normal text-foreground"
               style="line-height:1;"
             >
-              JUST ANOTHER <span class="hidden custom625:inline"><br></span>WEBSHOP
+              JUST ANOTHER <span class="block max-[500px]:block min-[501px]:inline">WEBSHOP</span>
             </span>
           </a>
         </div>
@@ -99,4 +99,8 @@
       </a>
     </div>
   </div>
+<div class="w-full px-6 mx-0 lg:w-9/12 lg:mx-auto lg:px-4">
+  <hr style="border: none; border-top: 1px solid var(--border); margin: 0;">
+</div>
+<div><app-search-bar></app-search-bar></div>
 </header>

@@ -1,15 +1,21 @@
-<div class="w-full max-w-3xl mx-auto px-4 mt-4 mb-4">
+<!-- Searchbar: displayed in the header on every page -->
+<!-- On input, debounces then navigates to /products?search=query -->
+<div class="w-full max-w-3xl mx-auto px-4 mt-5 mb-5">
   <div class="relative flex items-center">
-    <ng-icon
-      name="ionSearchOutline"
-      class="absolute left-3 w-5 h-5 text-gray-400"
-    ></ng-icon>
-    <input
-      type="text"
-      [(ngModel)]="searchQuery"
-      (input)="onSearch()"
+    <!-- Search icon -->
+    <ng-icon name="ionSearchOutline" class="absolute left-3 w-5 h-5 text-gray-400"></ng-icon>
+
+    <!-- Search input: updates signal on keystroke, debounced 500ms (0.5 sek) before navigating -->
+    <input type="text" [value]="searchQuery()" (input)="onSearch($any($event.target).value)"
       placeholder="Search products..."
-      class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded text-gray-900 placeholder-gray-500 focus:outline-none focus:border-[#a3b18a] focus:ring-1 focus:ring-[#a3b18a] transition-colors"
-    />
+      class="w-full pl-10 pr-12 py-2.5 border border-gray-300 rounded text-gray-900 placeholder-gray-500 focus:outline-none focus:border-[#a3b18a] focus:ring-1 focus:ring-[#a3b18a] transition-colors" />
+
+    <!-- Clear button: shown when there is text in the search field -->
+    @if (searchQuery().length > 0) {
+    <button type="button" (click)="clearSearch()"
+      class="absolute right-3 text-gray-400 hover:text-gray-600 transition-colors" title="Clear search">
+      ✕
+    </button>
+    }
   </div>
 </div>
