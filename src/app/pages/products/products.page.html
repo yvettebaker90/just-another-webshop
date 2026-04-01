@@ -42,7 +42,7 @@
 
 				@if (!loading() && !error()) {
 					<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-						@for (product of filteredProducts(); track product.id) {
+						@for (product of paginatedProducts(); track product.id) {
 							<app-product-card
 								[id]="product.id"
 								[brand]="product.brand"
@@ -53,6 +53,45 @@
 							></app-product-card>
 						}
 					</div>
+
+					@if (totalPages() > 1) {
+						<div class="flex items-center justify-center gap-1 pt-6">
+							<button
+								type="button"
+								(click)="goToPage(currentPage() - 1)"
+								[disabled]="currentPage() === 1"
+								class="inline-flex h-9 w-9 items-center justify-center border border-gray-300 bg-white text-sm transition hover:bg-gray-100 disabled:pointer-events-none disabled:opacity-40"
+								aria-label="Previous page"
+							>&#8249;</button>
+
+							@for (page of pageNumbers(); track $index) {
+								@if (page === null) {
+									<span class="inline-flex h-9 w-9 items-center justify-center text-sm text-gray-400">…</span>
+								} @else {
+									<button
+										type="button"
+										(click)="goToPage(page)"
+										class="inline-flex h-9 w-9 items-center justify-center border text-sm transition"
+										[class.bg-black]="currentPage() === page"
+										[class.text-white]="currentPage() === page"
+										[class.border-black]="currentPage() === page"
+										[class.bg-white]="currentPage() !== page"
+										[class.border-gray-300]="currentPage() !== page"
+										[class.hover:bg-gray-100]="currentPage() !== page"
+										[attr.aria-current]="currentPage() === page ? 'page' : null"
+									>{{ page }}</button>
+								}
+							}
+
+							<button
+								type="button"
+								(click)="goToPage(currentPage() + 1)"
+								[disabled]="currentPage() === totalPages()"
+								class="inline-flex h-9 w-9 items-center justify-center border border-gray-300 bg-white text-sm transition hover:bg-gray-100 disabled:pointer-events-none disabled:opacity-40"
+								aria-label="Next page"
+							>&#8250;</button>
+						</div>
+					}
 				}
 			</div>
 		</div>

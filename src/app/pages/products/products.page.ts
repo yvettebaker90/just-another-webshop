@@ -65,6 +65,27 @@ export class Products implements OnDestroy {
   readonly selectedTags = signal<string[]>([]);
   readonly totalProducts = computed(() => this.filteredProducts().length);
 
+  readonly PAGE_SIZE = 12;
+  readonly currentPage = signal(1);
+  readonly totalPages = computed(() => Math.ceil(this.filteredProducts().length / this.PAGE_SIZE));
+  readonly paginatedProducts = computed(() => {
+    const start = (this.currentPage() - 1) * this.PAGE_SIZE;
+    return this.filteredProducts().slice(start, start + this.PAGE_SIZE);
+  });
+  readonly pageNumbers = computed(() => {
+    const total = this.totalPages();
+    const current = this.currentPage();
+    if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1) as (number | null)[];
+    const pages: (number | null)[] = [1];
+    if (current > 3) pages.push(null);
+    for (let i = Math.max(2, current - 1); i <= Math.min(total - 1, current + 1); i++) pages.push(i);
+    if (current < total - 2) pages.push(null);
+    pages.push(total);
+    return pages;
+  });
+
+  goToPage(page: number): void { this.currentPage.set(page); }
+
   // Subscribe to URL query params to react when the searchbar navigates here
   constructor() {
     this.queryParamsSub = this.route.queryParams.subscribe((params) => {
@@ -123,6 +144,7 @@ export class Products implements OnDestroy {
       }
 
       this.maxPrice.set(this.highestPrice());
+      this.currentPage.set(1);
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : 'Could not load products.';
       this.error.set(message);
@@ -132,6 +154,7 @@ export class Products implements OnDestroy {
   }
 
   toggleCategory(category: string): void {
+    this.currentPage.set(1);
     this.selectedCategories.update((categories) => {
       if (categories.includes(category)) {
         return categories.filter((value) => value !== category);
@@ -141,6 +164,7 @@ export class Products implements OnDestroy {
   }
 
   toggleBrand(brand: string): void {
+    this.currentPage.set(1);
     this.selectedBrands.update((brands) => {
       if (brands.includes(brand)) {
         return brands.filter((value) => value !== brand);
@@ -150,12 +174,14 @@ export class Products implements OnDestroy {
   }
 
   updateMaxPrice(value: string): void {
+    this.currentPage.set(1);
     const parsedValue = Number(value);
     const clampedValue = Math.max(0, Math.min(parsedValue, this.highestPrice()));
     this.maxPrice.set(clampedValue);
   }
 
   toggleTag(tag: string): void {
+    this.currentPage.set(1);
     this.selectedTags.update((tags) => {
       if (tags.includes(tag)) {
         return tags.filter((value) => value !== tag);
@@ -165,6 +191,7 @@ export class Products implements OnDestroy {
   }
 
   clearFilters(): void {
+    this.currentPage.set(1);
     this.selectedCategories.set([]);
     this.selectedBrands.set([]);
     this.maxPrice.set(this.highestPrice());
