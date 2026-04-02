@@ -1,0 +1,30 @@
+<main class="mx-auto w-9/12 px-4 py-10 md:px-6 md:py-12" aria-labelledby="wishlist-title">
+    <section class="mb-8 space-y-2 md:mb-10">
+        <p class="text-xs font-bold uppercase tracking-[0.14em] text-[var(--muted-foreground)]">Saved For Later</p>
+        <h1 id="wishlist-title" class="text-3xl font-bold tracking-tight md:text-4xl">My favorites</h1>
+        <p class="max-w-2xl text-sm text-[var(--muted-foreground)] md:text-base">
+            4 items saved
+        </p>
+    </section>
+
+    <section class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" aria-label="Wishlist produkter">
+        @for (item of wishlistItems; track item.id) {
+            <article class="flex flex-col overflow-hidden bg-[var(--card)]">
+                <div class="grid h-100 place-items-center bg-gradient-to-br from-[#dce2cc] to-[#d9d0c7] font-semibold text-[var(--muted-foreground)]">Picture</div>
+                <div class="space-y-1 p-4">
+                    <p class="text-xs font-bold uppercase tracking-[0.08em] text-[var(--muted-foreground)]">{{ item.brand }}</p>
+                    <h2 class="text-base font-semibold">{{ item.title }}</h2>
+                    <p class="text-sm font-bold">{{ item.price }}</p>
+                </div>
+                <div class="mt-auto flex flex-col gap-2 p-4 pt-0 sm:flex-col">
+                    <button type="button" class="rounded-md border border-[var(--primary)] bg-[var(--primary)] px-3 py-2 text-md font-semibold text-[var(--primary-foreground)] transition hover:opacity-90">
+                        Add to cart
+                    </button>
+                    <button type="button" class="rounded-md border border-[var(--border)] bg-red-500 px-3 py-2 text-md font-semibold text-white transition hover:bg-red-600">
+                        Delete
+                    </button>
+                </div>
+            </article>
+        }
+    </section>
+</main>
