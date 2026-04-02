@@ -18,7 +18,8 @@
         [category]="product.category || 'Unknown Category'"
         [title]="product.title"
         [price]="product.price"
-        [image]="product.image || product.image_1 || ''">
+        [image]="product.image || product.image_1 || ''"
+        [tags]="product.tags ? product.tags : []">
       </app-product-card>
     }
 

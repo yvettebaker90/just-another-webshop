@@ -1,5 +1,5 @@
 <div class="min-h-screen bg-[#f3f3f3] py-10 w-full">
-	<section class="mx-auto w-9/12 space-y-6">
+	<section class="mx-auto w-9/12 space-y-6" id="top">
 		<header class="space-y-2">
 			<h1 class="text-4xl font-bold tracking-tight">Shop All Products</h1>
 			<p class="text-xl text-black/60">{{ totalProducts() }} products found</p>
@@ -50,6 +50,7 @@
 								[title]="product.title"
 								[price]="product.price"
 								[image]="product.image || product.image_1 || ''"
+								[tags]="product.tags"
 							></app-product-card>
 						}
 					</div>
