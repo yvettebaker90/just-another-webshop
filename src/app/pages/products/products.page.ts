@@ -31,31 +31,38 @@ export class Products implements OnDestroy {
   // Current search query from the URL ?search= param
   readonly searchQuery = signal('');
 
-  // Filter options derived from all products so they stay unchanged during search
+  // Filter options derived from displayed products so they reflect search results
   readonly categories = computed(() => {
     const categorySet = new Set(
-      this.allProducts()
+      this.products()
         .map((product) => product.category)
         .filter((category) => category.trim().length > 0)
     );
     return Array.from(categorySet);
   });
 
-  // Brand options derived from all products (not affected by search)
+  // Brand options derived from displayed products (reflects search results)
   readonly brands = computed(() => {
     const brandSet = new Set(
-      this.allProducts()
+      this.products()
         .map((product) => (product.brand ?? '').trim())
         .filter((brand) => brand.length > 0)
     );
     return Array.from(brandSet);
   });
 
-  readonly availableTags = computed(() => this.staticTags.map((tag) => this.toTitleCase(tag)));
+  readonly availableTags = computed(() => {
+    const tagSet = new Set(
+      this.products()
+        .flatMap((product) => product.tags)
+        .filter((tag) => this.staticTags.includes(tag))
+    );
+    return Array.from(tagSet).map((tag) => this.toTitleCase(tag));
+  });
 
-  // Highest price derived from all products so the price slider range is always correct
+  // Highest price derived from displayed products so the price slider reflects search results
   readonly highestPrice = computed(() => {
-    const prices = this.allProducts().map((product) => product.price);
+    const prices = this.products().map((product) => product.price);
     return prices.length > 0 ? Math.ceil(Math.max(...prices)) : 0;
   });
 
@@ -143,6 +150,10 @@ export class Products implements OnDestroy {
         this.products.set(allNormalized);
       }
 
+      // Reset filters that are no longer relevant for the current product set
+      this.selectedCategories.update((sel) => sel.filter((c) => this.categories().includes(c)));
+      this.selectedBrands.update((sel) => sel.filter((b) => this.brands().includes(b)));
+      this.selectedTags.update((sel) => sel.filter((t) => this.availableTags().includes(t)));
       this.maxPrice.set(this.highestPrice());
       this.currentPage.set(1);
     } catch (error: unknown) {
