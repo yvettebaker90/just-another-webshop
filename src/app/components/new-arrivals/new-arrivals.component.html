@@ -5,9 +5,15 @@
             <p class="mt-2 text-sm text-muted-foreground font-light">Discover our latest collection</p>
         </div>
         <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            <app-product-card *ngFor="let product of newArrivals()" [brand]="product.brand"
-                [category]="product.category" [title]="product.title" [price]="product.price"
-                [image]="product.image || product.image_1 || ''" [tags]="product.tags || []"></app-product-card>
+            <app-product-card *ngFor="let product of newArrivals()"
+                [id]="product.id"
+                [brand]="product.brand"
+                [category]="product.category"
+                [title]="product.title"
+                [price]="product.price"
+                [image]="product.image || product.image_1 || ''"
+                [tags]="product.tags || []">
+            </app-product-card>
         </div>
         <div class="mt-12 text-center">
             <button routerLink="/products" fragment="top" class="btn btn-outline btn-lg font-light tracking-wide">View All Products</button>
