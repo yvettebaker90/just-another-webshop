@@ -14,6 +14,7 @@ import { SearchBarComponent } from '../../searchbar/searchbar.component';
   templateUrl: './header.component.html',
 })
 export class HeaderComponent {
-  cartCount = 2;
+  cartCount = 2; // Example (change to dynamic value later)
+  wishlistCount = 3; // Example (change to dynamic value later)
   mobileMenuOpen = false;
 }
