@@ -27,7 +27,7 @@
                 {{ cartCount }}
               </span>
             </div>
-            <a routerLink="/shopping-cart" aria-label="Account">
+            <a routerLink="/account" aria-label="Account">
               <ng-icon name="ionPersonOutline" size="24" color="black"></ng-icon>
             </a>
           </div>
@@ -55,9 +55,15 @@
 
         <!-- Icons (hidden on mobile) -->
         <div class="hidden md:flex items-center space-x-6">
-          <button aria-label="/shopping-cart">
-            <ng-icon name="ionHeartOutline" size="24" color="black"></ng-icon>
-          </button>
+          <div class="relative">
+            <a routerLink="/wishlist" aria-label="Wishlist">
+              <ng-icon name="ionHeartOutline" size="24" color="black"></ng-icon>
+            </a>
+            <span *ngIf="wishlistCount > 0"
+              class="absolute -top-2 -right-2 bg-black text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center border-2 border-white">
+              {{ wishlistCount }}
+            </span>
+          </div>
           <div class="relative">
             <a routerLink="/shopping-cart" aria-label="Shopping cart">
               <ng-icon name="ionCartOutline" size="24" color="black"></ng-icon>
@@ -67,9 +73,9 @@
               {{ cartCount }}
             </span>
           </div>
-          <button aria-label="Account">
+          <a routerLink="/account" aria-label="Account">
             <ng-icon name="ionPersonOutline" size="24" color="black"></ng-icon>
-          </button>
+          </a>
         </div>
       </div>
     </div>
@@ -93,7 +99,7 @@
         class="flex items-center text-foreground text-lg font-medium">
         <ng-icon name="ionBagOutline" size="20" class="mr-2"></ng-icon> Collections
       </a>
-      <a routerLink="/shopping-cart" (click)="mobileMenuOpen = false"
+      <a routerLink="/wishlist" (click)="mobileMenuOpen = false"
         class="flex items-center text-foreground text-lg font-medium">
         <ng-icon name="ionHeartOutline" size="20" class="mr-2"></ng-icon> Wishlist
       </a>
