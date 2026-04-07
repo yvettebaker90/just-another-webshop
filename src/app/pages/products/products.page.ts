@@ -15,23 +15,26 @@ type ProductWithTags = Product & {
   imports: [ProductCardComponent, SearchFilterComponent],
   templateUrl: './products.page.html'
 })
+// Products page component: displays all products with filtering, search, and pagination
 export class Products implements OnDestroy {
+  // Inject ProductService for data and ActivatedRoute for query params
   private readonly productService = inject(ProductService);
   private readonly route = inject(ActivatedRoute);
-  private readonly staticTags = ['new', 'popular', 'sale'];
-  // Subscription to query params; unsubscribed in ngOnDestroy to prevent memory leaks
+
+  // Subscription for query param changes
   private queryParamsSub: Subscription;
 
-  // All products from Supabase — used for building filter options (categories, brands, price)
+  // All products (unfiltered)
   readonly allProducts = signal<ProductWithTags[]>([]);
-  // Displayed products — either all products or search results from Supabase
+  // Products to display (filtered by search, filters, etc)
   readonly products = signal<ProductWithTags[]>([]);
+  // Loading and error state
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
-  // Current search query from the URL ?search= param
+  // Current search query from URL
   readonly searchQuery = signal('');
 
-  // Filter options derived from displayed products so they reflect search results
+  // Unique categories from products
   readonly categories = computed(() => {
     const categorySet = new Set(
       this.products()
@@ -41,7 +44,7 @@ export class Products implements OnDestroy {
     return Array.from(categorySet);
   });
 
-  // Brand options derived from displayed products (reflects search results)
+  // Unique brands from products
   readonly brands = computed(() => {
     const brandSet = new Set(
       this.products()
@@ -51,34 +54,41 @@ export class Products implements OnDestroy {
     return Array.from(brandSet);
   });
 
+  // Available tags (sorted as: New, Popular, Sale)
   readonly availableTags = computed(() => {
     const tagSet = new Set(
       this.products()
         .flatMap((product) => product.tags)
-        .filter((tag) => this.staticTags.includes(tag))
     );
-    return Array.from(tagSet).map((tag) => this.toTitleCase(tag));
+    return ['new', 'popular', 'sale']
+      .filter(tag => tagSet.has(tag))
+      .map(tag => this.toTitleCase(tag));
   });
 
-  // Highest price derived from displayed products so the price slider reflects search results
+  // Highest price among all products (for slider)
   readonly highestPrice = computed(() => {
     const prices = this.products().map((product) => product.price);
     return prices.length > 0 ? Math.ceil(Math.max(...prices)) : 0;
   });
 
+  // State for selected filters
   readonly selectedCategories = signal<string[]>([]);
   readonly selectedBrands = signal<string[]>([]);
   readonly maxPrice = signal(0);
   readonly selectedTags = signal<string[]>([]);
+  // Number of products after filtering
   readonly totalProducts = computed(() => this.filteredProducts().length);
 
+  // Pagination state
   readonly PAGE_SIZE = 12;
   readonly currentPage = signal(1);
   readonly totalPages = computed(() => Math.ceil(this.filteredProducts().length / this.PAGE_SIZE));
+  // Products for current page
   readonly paginatedProducts = computed(() => {
     const start = (this.currentPage() - 1) * this.PAGE_SIZE;
     return this.filteredProducts().slice(start, start + this.PAGE_SIZE);
   });
+  // Page numbers for pagination controls
   readonly pageNumbers = computed(() => {
     const total = this.totalPages();
     const current = this.currentPage();
@@ -91,9 +101,10 @@ export class Products implements OnDestroy {
     return pages;
   });
 
+  // Go to a specific page
   goToPage(page: number): void { this.currentPage.set(page); }
 
-  // Subscribe to URL query params to react when the searchbar navigates here
+  // Subscribe to query param changes and load products on init
   constructor() {
     this.queryParamsSub = this.route.queryParams.subscribe((params) => {
       const search = params['search'] ?? '';
@@ -102,11 +113,12 @@ export class Products implements OnDestroy {
     });
   }
 
-  // Clean up query params subscription
+  // Unsubscribe from query param changes on destroy
   ngOnDestroy(): void {
     this.queryParamsSub.unsubscribe();
   }
 
+  // Returns products filtered by all selected filters and search
   readonly filteredProducts = computed(() => {
     const categories = this.selectedCategories();
     const brands = this.selectedBrands();
@@ -123,34 +135,24 @@ export class Products implements OnDestroy {
     });
   });
 
+  /* Loads all products (optionally filtered by search query) and updates all filter and pagination state */
   async loadProducts(search?: string): Promise<void> {
     this.loading.set(true);
     this.error.set(null);
 
     try {
-      // Always fetch all products so filter options (categories, brands, price) stay complete
+      // ProductService already returns tags as array
       const allRaw = await this.productService.getProducts();
-      const allNormalized: ProductWithTags[] = allRaw.map((product) => ({
-        ...product,
-        image: product.image || product.image_1 || '',
-        tags: this.normalizeTags(product),
-      }));
-      this.allProducts.set(allNormalized);
+      this.allProducts.set(allRaw as ProductWithTags[]);
 
-      // If a search query exists, fetch matching products from Supabase otherwise display all products
       if (search && search.length > 0) {
         const searchRaw = await this.productService.searchProducts(search);
-        const searchNormalized: ProductWithTags[] = searchRaw.map((product) => ({
-          ...product,
-          image: product.image || product.image_1 || '',
-          tags: this.normalizeTags(product),
-        }));
-        this.products.set(searchNormalized);
+        this.products.set(searchRaw as ProductWithTags[]);
       } else {
-        this.products.set(allNormalized);
+        this.products.set(allRaw as ProductWithTags[]);
       }
 
-      // Reset filters that are no longer relevant for the current product set
+      // Remove any selected filters that are no longer valid
       this.selectedCategories.update((sel) => sel.filter((c) => this.categories().includes(c)));
       this.selectedBrands.update((sel) => sel.filter((b) => this.brands().includes(b)));
       this.selectedTags.update((sel) => sel.filter((t) => this.availableTags().includes(t)));
@@ -164,6 +166,7 @@ export class Products implements OnDestroy {
     }
   }
 
+  // Toggle a category filter
   toggleCategory(category: string): void {
     this.currentPage.set(1);
     this.selectedCategories.update((categories) => {
@@ -174,6 +177,7 @@ export class Products implements OnDestroy {
     });
   }
 
+  // Toggle a brand filter
   toggleBrand(brand: string): void {
     this.currentPage.set(1);
     this.selectedBrands.update((brands) => {
@@ -184,6 +188,7 @@ export class Products implements OnDestroy {
     });
   }
 
+  // Update the max price filter
   updateMaxPrice(value: string): void {
     this.currentPage.set(1);
     const parsedValue = Number(value);
@@ -191,6 +196,7 @@ export class Products implements OnDestroy {
     this.maxPrice.set(clampedValue);
   }
 
+  // Toggle a tag filter
   toggleTag(tag: string): void {
     this.currentPage.set(1);
     this.selectedTags.update((tags) => {
@@ -201,6 +207,7 @@ export class Products implements OnDestroy {
     });
   }
 
+  // Clear all filters
   clearFilters(): void {
     this.currentPage.set(1);
     this.selectedCategories.set([]);
@@ -209,24 +216,7 @@ export class Products implements OnDestroy {
     this.selectedTags.set([]);
   }
 
-  private normalizeTags(product: Product): string[] {
-    const tagsRaw = (product as Product & { tags?: unknown }).tags;
-    if (Array.isArray(tagsRaw)) {
-      return tagsRaw
-        .map((tag) => String(tag).trim().toLowerCase())
-        .filter((tag) => this.staticTags.includes(tag));
-    }
-
-    if (typeof tagsRaw === 'string') {
-      return tagsRaw
-        .split(',')
-        .map((tag) => tag.trim().toLowerCase())
-        .filter((tag) => this.staticTags.includes(tag));
-    }
-
-    return [];
-  }
-
+  // Utility: convert a string to Title Case
   private toTitleCase(value: string): string {
     return value.charAt(0).toUpperCase() + value.slice(1);
   }

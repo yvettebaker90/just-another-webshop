@@ -18,7 +18,7 @@ export class SearchFilterComponent {
   maxPrice = input(100);
   highestPrice = input(0);
   maxPriceChanged = output<string>();
-  
+
   isCategorySelected(category: string): boolean {
     return this.selectedCategories().includes(category);
   }
@@ -28,7 +28,7 @@ export class SearchFilterComponent {
   }
 
   isTagSelected(tag: string): boolean {
-    return this.selectedTags().includes(tag);
+    return this.selectedTags().includes(tag.toLowerCase());
   }
 
   onCategoryClick(category: string): void {
@@ -54,6 +54,6 @@ export class SearchFilterComponent {
   }
 
   onTagToggle(tag: string): void {
-    this.tagToggled.emit(tag);
+    this.tagToggled.emit(tag.toLowerCase());
   }
 }

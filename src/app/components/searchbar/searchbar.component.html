@@ -5,7 +5,7 @@
     <!-- Search icon -->
     <ng-icon name="ionSearchOutline" class="absolute left-3 w-5 h-5 text-gray-400"></ng-icon>
 
-    <!-- Search input: updates signal on keystroke, debounced 500ms (0.5 sek) before navigating -->
+    <!-- Search input: updates signal on keystroke, debounced 500ms (0.5 sec) before navigating -->
     <label for="search-input" class="sr-only">Search products</label>
     <input id="search-input" type="text" [value]="searchQuery()" (input)="onSearch($any($event.target).value)"
       placeholder="Search products..."
