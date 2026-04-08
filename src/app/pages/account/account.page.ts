@@ -69,8 +69,14 @@ export class AccountPage implements OnInit {
       return;
     }
 
-    // Real profile loading from Supabase
-    const profile = await this.profileService.getProfile(this.mockUserId);
+    // Get logged in user
+    const { data: { user } } = await this.supabaseService.client.auth.getUser();
+    if (!user) {
+      this.router.navigate(['/login']);
+      return;
+    }
+    // Get profile for logged in user
+    const profile = await this.profileService.getProfile(user.id);
     if (profile) {
       this.profileForm.patchValue({
         firstName: profile.first_name,

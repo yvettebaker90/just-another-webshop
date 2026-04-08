@@ -59,13 +59,19 @@ export class RegisterPage {
             });
             console.log('signUp result:', { data, error });
             const user = data.user;
+            const session = data.session;
             console.log('user:', user);
+            console.log('session:', session);
             if (error) {
                 this.error = error.message;
                 return;
             }
             if (!user || !user.id) {
                 this.error = 'Registreringen misslyckades, försök igen.';
+                return;
+            }
+            if (!session) {
+                this.error = 'Ingen session returnerades – användaren är inte inloggad.';
                 return;
             }
 

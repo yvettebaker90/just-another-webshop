@@ -51,7 +51,7 @@ export class ProfileService {
             .from('profiles')
             .insert([
                 {
-                        user_id: profile.user_id,
+                    user_id: profile.user_id,
                     first_name: profile.first_name,
                     last_name: profile.last_name,
                     email: profile.email,
@@ -62,6 +62,7 @@ export class ProfileService {
 
         if (error) {
             console.error('Profile creation error:', error);
+            console.error('Profildata vid fel:', profile);
             return null;
         }
         return data as UserProfile;
