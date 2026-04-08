@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
 import { ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-register',
     templateUrl: './register.page.html',
     standalone: true,
-    imports: [ReactiveFormsModule],
+    imports: [ReactiveFormsModule, CommonModule],
 })
 export class RegisterPage {
     registerForm: FormGroup;
