@@ -1,28 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { ionPersonCircleOutline, ionLogOutOutline, ionPersonOutline } from '@ng-icons/ionicons';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
-interface UserProfile {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-}
-
-interface ShippingAddress {
-  street: string;
-  city: string;
-  zipCode: string;
-}
+import { Router } from '@angular/router';
+import { SupabaseService } from '../../services/supabase.services';
 
 @Component({
   selector: 'app-account',
   templateUrl: './account.page.html',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, DatePipe, NgIcon],
+  imports: [CommonModule, ReactiveFormsModule, NgIcon],
   providers: [provideIcons({ ionPersonCircleOutline, ionLogOutOutline, ionPersonOutline })]
 })
 export class AccountPage implements OnInit {
@@ -30,25 +19,34 @@ export class AccountPage implements OnInit {
   addressForm!: FormGroup;
   showSuccess = false;
   successMessage = '';
+  private isDevelopment = true; // ← Toggle between mock/real
+  private mockUserId = '00000000-0000-0000-0000-000000000001';
 
-  // Mock user data
-  user = {
-    name: 'John Doe',
-    email: 'john.doe@example.com',
-    joinDate: '2025-01-15',
-    avatar: 'assets/avatar.jpg'
-  };
-
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private supabaseService: SupabaseService,
+    private router: Router
+  ) {
     this.initializeForms();
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    if (this.isDevelopment) {
+      console.log('MOCK: Loaded account page (skipped auth check)');
+      this.loadUserProfile();
+      return;
+    }
+
+    // Real auth check
+    const { data: { user } } = await this.supabaseService.client.auth.getUser();
+    if (!user) {
+      this.router.navigate(['/login']);
+      return;
+    }
     this.loadUserProfile();
   }
 
   private initializeForms(): void {
-    // Profile form
     this.profileForm = this.fb.group({
       firstName: ['John', [Validators.required, Validators.minLength(2)]],
       lastName: ['Doe', [Validators.required, Validators.minLength(2)]],
@@ -56,7 +54,6 @@ export class AccountPage implements OnInit {
       phone: ['+46 70 123 45 67', [Validators.required, Validators.pattern(/^\+46\s?\d{1,3}\s?\d{2,3}\s?\d{2}\s?\d{2}$/)]]
     });
 
-    // Shipping address form
     this.addressForm = this.fb.group({
       street: ['Storgatan 10', [Validators.required, Validators.minLength(5)]],
       city: ['Stockholm', [Validators.required, Validators.minLength(2)]],
@@ -65,16 +62,27 @@ export class AccountPage implements OnInit {
   }
 
   private loadUserProfile(): void {
-    // Fetch from Supabase later instead of mock data
+    if (this.isDevelopment) {
+      console.log('MOCK: Loaded profile for user:', this.mockUserId);
+      return;
+    }
+
+    // Real profile loading from Supabase
+    // const profile = await this.profileService.getProfile(this.mockUserId);
+    // if (profile) {
+    //   this.profileForm.patchValue({
+    //     firstName: profile.first_name,
+    //     lastName: profile.last_name,
+    //     email: profile.email,
+    //   });
+    // }
   }
 
   saveProfileChanges(): void {
     if (this.profileForm.valid) {
-      // Simulate API call
       console.log('Saving profile:', this.profileForm.value);
       this.showSuccessMessage('Profile updated successfully');
-      
-      // Reset form to mark it as pristine
+
       setTimeout(() => {
         this.profileForm.markAsPristine();
       }, 500);
@@ -83,11 +91,9 @@ export class AccountPage implements OnInit {
 
   saveAddress(): void {
     if (this.addressForm.valid) {
-      // Simulate API call
       console.log('Saving address:', this.addressForm.value);
       this.showSuccessMessage('Shipping address updated successfully');
-      
-      // Reset form to mark it as pristine
+
       setTimeout(() => {
         this.addressForm.markAsPristine();
       }, 500);
@@ -98,16 +104,21 @@ export class AccountPage implements OnInit {
     this.successMessage = message;
     this.showSuccess = true;
 
-    // Hide message after 3 seconds
     setTimeout(() => {
       this.showSuccess = false;
     }, 3000);
   }
 
-  signOut(): void {
-    console.log('Signing out...');
-    // Call an auth service later
-    // this.authService.logout();
+  async signOut(): Promise<void> {
+    if (this.isDevelopment) {
+      console.log('MOCK: Signed out');
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    // Real sign out
+    await this.supabaseService.client.auth.signOut();
+    window.location.href = '/login';
   }
 
   get isProfileDirty(): boolean {

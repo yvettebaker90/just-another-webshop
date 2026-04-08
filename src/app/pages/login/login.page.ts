@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { SupabaseService } from '../../services/supabase.services';
 
 @Component({
     selector: 'app-login',
@@ -17,7 +18,8 @@ export class LoginPage implements OnInit {
 
     constructor(
         private formBuilder: FormBuilder,
-        private router: Router
+        private router: Router,
+        private supabaseService: SupabaseService
     ) {
         this.loginForm = this.formBuilder.group({
             email: ['', [Validators.required, Validators.email]],
@@ -35,32 +37,32 @@ export class LoginPage implements OnInit {
         return this.loginForm.get('password');
     }
 
-    onSubmit(): void {
+    async onSubmit(): Promise<void> {
         this.submitted = true;
         this.error = null;
 
-        // Stop if form is invalid
         if (this.loginForm.invalid) {
             return;
         }
 
         this.loading = true;
+        const { email, password } = this.loginForm.value;
 
-        // Simulate API-call
-        setTimeout(() => {
-            const { email, password } = this.loginForm.value;
+        // Supabase Auth signIn
+        const { data, error } = await this.supabaseService.client.auth.signInWithPassword({
+            email,
+            password,
+        });
 
-            // Replace with API-call (Supabase)
-            console.log('Login attempt:', { email, password });
-
-            // Example: Navigate to account-page if success
-            // this.router.navigate(['/account']);
-
-            // Example: Show errors
-            // this.error = 'Invalid email or password';
-
+        if (error) {
+            this.error = 'Invalid email or password';
             this.loading = false;
-        }, 1500);
+            return;
+        }
+
+        // Login success, navigate to account-page
+        this.router.navigate(['/account']);
+        this.loading = false;
     }
 
     navigateToSignup(): void {

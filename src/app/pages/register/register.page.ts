@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ProfileService } from '../../services/profile.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-register',
@@ -12,8 +14,14 @@ import { CommonModule } from '@angular/common';
 export class RegisterPage {
     registerForm: FormGroup;
     submitted = false;
+    error: string | null = null;
+    success: string | null = null;
 
-    constructor(private fb: FormBuilder) {
+    constructor(
+        private fb: FormBuilder,
+        private profileService: ProfileService,
+        private router: Router
+    ) {
         this.registerForm = this.fb.group({
             firstName: ['', [Validators.required]],
             lastName: ['', [Validators.required]],
@@ -35,11 +43,37 @@ export class RegisterPage {
         return password === confirmPassword ? null : { passwordsMismatch: true };
     }
 
-    onSubmit() {
+    async onSubmit() {
+        console.log('submit!');
         this.submitted = true;
+        this.error = null;
+        this.success = null;
+
         if (this.registerForm.valid) {
-            // Handle register here
-            console.log('Registration data:', this.registerForm.value);
+            const { firstName, lastName, email, password } = this.registerForm.value;
+
+            // MOCK: Create profile without auth-call
+            const profile = await this.profileService.createProfile({
+                user_id: '', // ProfileService handles this
+                first_name: firstName,
+                last_name: lastName,
+                email,
+            });
+
+            console.log('createProfile result:', profile);
+
+            if (!profile) {
+                this.error = 'Failed to create profile. Kontakta support.';
+                return;
+            }
+
+            this.success = 'Registration successful! Redirecting...';
+            setTimeout(() => {
+                this.router.navigate(['/account']);
+            }, 1000);
+
+            this.registerForm.reset();
+            this.submitted = false;
         }
     }
 }
