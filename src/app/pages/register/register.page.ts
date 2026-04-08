@@ -4,6 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ProfileService } from '../../services/profile.service';
 import { Router } from '@angular/router';
+import { SupabaseService } from '../../services/supabase.services';
 
 @Component({
     selector: 'app-register',
@@ -19,6 +20,7 @@ export class RegisterPage {
 
     constructor(
         private fb: FormBuilder,
+        private supabaseService: SupabaseService,
         private profileService: ProfileService,
         private router: Router
     ) {
@@ -48,30 +50,41 @@ export class RegisterPage {
         this.submitted = true;
         this.error = null;
         this.success = null;
-
         if (this.registerForm.valid) {
             const { firstName, lastName, email, password } = this.registerForm.value;
+            // Create user with Supabase Auth
+            const { data, error } = await this.supabaseService.client.auth.signUp({
+                email,
+                password,
+            });
+            console.log('signUp result:', { data, error });
+            const user = data.user;
+            console.log('user:', user);
+            if (error) {
+                this.error = error.message;
+                return;
+            }
+            if (!user || !user.id) {
+                this.error = 'Registreringen misslyckades, försök igen.';
+                return;
+            }
 
-            // MOCK: Create profile without auth-call
+            // Create profile in profiles-table
             const profile = await this.profileService.createProfile({
-                user_id: '', // ProfileService handles this
+                user_id: user.id,
                 first_name: firstName,
                 last_name: lastName,
                 email,
             });
-
             console.log('createProfile result:', profile);
-
             if (!profile) {
                 this.error = 'Failed to create profile. Kontakta support.';
                 return;
             }
-
             this.success = 'Registration successful! Redirecting...';
             setTimeout(() => {
                 this.router.navigate(['/account']);
             }, 1000);
-
             this.registerForm.reset();
             this.submitted = false;
         }

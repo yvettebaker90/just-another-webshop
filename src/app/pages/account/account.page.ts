@@ -6,6 +6,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SupabaseService } from '../../services/supabase.services';
+import { ProfileService } from '../../services/profile.service';
 
 @Component({
   selector: 'app-account',
@@ -19,13 +20,14 @@ export class AccountPage implements OnInit {
   addressForm!: FormGroup;
   showSuccess = false;
   successMessage = '';
-  private isDevelopment = true; // ← Toggle between mock/real
+  private isDevelopment = false; // ← Toggle between mock/real
   private mockUserId = '00000000-0000-0000-0000-000000000001';
 
   constructor(
     private fb: FormBuilder,
     private supabaseService: SupabaseService,
-    private router: Router
+    private router: Router,
+    private profileService: ProfileService
   ) {
     this.initializeForms();
   }
@@ -61,21 +63,21 @@ export class AccountPage implements OnInit {
     });
   }
 
-  private loadUserProfile(): void {
+  private async loadUserProfile(): Promise<void> {
     if (this.isDevelopment) {
       console.log('MOCK: Loaded profile for user:', this.mockUserId);
       return;
     }
 
     // Real profile loading from Supabase
-    // const profile = await this.profileService.getProfile(this.mockUserId);
-    // if (profile) {
-    //   this.profileForm.patchValue({
-    //     firstName: profile.first_name,
-    //     lastName: profile.last_name,
-    //     email: profile.email,
-    //   });
-    // }
+    const profile = await this.profileService.getProfile(this.mockUserId);
+    if (profile) {
+      this.profileForm.patchValue({
+        firstName: profile.first_name,
+        lastName: profile.last_name,
+        email: profile.email,
+      });
+    }
   }
 
   saveProfileChanges(): void {

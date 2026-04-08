@@ -13,7 +13,7 @@ export interface UserProfile {
 
 @Injectable({ providedIn: 'root' })
 export class ProfileService {
-    private isDevelopment = true; // Toggle for mock/real (change to false with supabasetest)
+    private isDevelopment = false; // Toggle for mock/real (change to false with supabasetest)
     private mockUserId = '00000000-0000-0000-0000-000000000001';
     private mockProfiles: Map<string, UserProfile> = new Map();
 
@@ -21,7 +21,7 @@ export class ProfileService {
 
     async getProfile(userId: string): Promise<UserProfile | null> {
         if (this.isDevelopment) {
-            console.log('🎭 MOCK: getProfile for', userId);
+            console.log('MOCK: getProfile for', userId);
             return this.mockProfiles.get(userId) || null;
         }
 
@@ -36,7 +36,7 @@ export class ProfileService {
 
     async createProfile(profile: UserProfile): Promise<UserProfile | null> {
         if (this.isDevelopment) {
-            console.log('🎭 MOCK: createProfile', profile);
+            console.log('MOCK: createProfile', profile);
             const newProfile: UserProfile = {
                 ...profile,
                 user_id: this.mockUserId,
@@ -46,18 +46,12 @@ export class ProfileService {
             return newProfile;
         }
 
-        // 🚀 Real Supabase
-        const { data: { user } } = await this.supabase.client.auth.getUser();
-        if (!user) {
-            console.error('No authenticated user');
-            return null;
-        }
 
         const { data, error } = await this.supabase.client
             .from('profiles')
             .insert([
                 {
-                    user_id: user.id,
+                        user_id: profile.user_id,
                     first_name: profile.first_name,
                     last_name: profile.last_name,
                     email: profile.email,
@@ -75,7 +69,7 @@ export class ProfileService {
 
     async updateProfile(userId: string, updates: Partial<UserProfile>): Promise<UserProfile | null> {
         if (this.isDevelopment) {
-            console.log('🎭 MOCK: updateProfile', userId, updates);
+            console.log('MOCK: updateProfile', userId, updates);
             const existing = this.mockProfiles.get(userId);
             if (!existing) return null;
 
@@ -84,7 +78,7 @@ export class ProfileService {
             return updated;
         }
 
-        // 🚀 Real Supabase
+        // Real Supabase
         const { data, error } = await this.supabase.client
             .from('profiles')
             .update(updates)
@@ -98,6 +92,6 @@ export class ProfileService {
     // Toggle between mock and real mode
     setDevelopmentMode(isDev: boolean) {
         this.isDevelopment = isDev;
-        console.log(isDev ? '🎭 Development mode ON (mock)' : '🚀 Production mode ON (real Supabase)');
+        console.log(isDev ? 'Development mode ON (mock)' : 'Production mode ON (real Supabase)');
     }
 }
