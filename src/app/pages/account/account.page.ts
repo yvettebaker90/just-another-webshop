@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { ionPersonCircleOutline, ionLogOutOutline, ionPersonOutline } from '@ng-icons/ionicons';
@@ -20,26 +20,27 @@ export class AccountPage implements OnInit {
   addressForm!: FormGroup;
   showSuccess = false;
   successMessage = '';
-  private isDevelopment = false; // ← Toggle between mock/real
-  private mockUserId = '00000000-0000-0000-0000-000000000001';
+
+  // Properties for profile view
+  profileAvatarUrl: string | undefined;
+  profileCreatedAt: string | undefined;
+
+  profileLoaded = false;
+  profileError = false;
 
   constructor(
     private fb: FormBuilder,
     private supabaseService: SupabaseService,
     private router: Router,
-    private profileService: ProfileService
+    private profileService: ProfileService,
+    private cdr: ChangeDetectorRef
   ) {
-    this.initializeForms();
+    this.initializeForms(); // Initialize forms
   }
 
   async ngOnInit(): Promise<void> {
-    if (this.isDevelopment) {
-      console.log('MOCK: Loaded account page (skipped auth check)');
-      this.loadUserProfile();
-      return;
-    }
 
-    // Real auth check
+    // Check authentication (Supabase)
     const { data: { user } } = await this.supabaseService.client.auth.getUser();
     if (!user) {
       this.router.navigate(['/login']);
@@ -48,12 +49,14 @@ export class AccountPage implements OnInit {
     this.loadUserProfile();
   }
 
+  // Initialize the profile and address forms with default values and validators
   private initializeForms(): void {
     this.profileForm = this.fb.group({
       firstName: ['John', [Validators.required, Validators.minLength(2)]],
       lastName: ['Doe', [Validators.required, Validators.minLength(2)]],
       email: ['john.doe@example.com', [Validators.required, Validators.email]],
-      phone: ['+46 70 123 45 67', [Validators.required, Validators.pattern(/^\+46\s?\d{1,3}\s?\d{2,3}\s?\d{2}\s?\d{2}$/)]]
+      phone: ['', [Validators.pattern(/^\+46\s?\d{1,3}\s?\d{2,3}\s?\d{2}\s?\d{2}$/)]],
+      avatar: ['']
     });
 
     this.addressForm = this.fb.group({
@@ -63,18 +66,15 @@ export class AccountPage implements OnInit {
     });
   }
 
+  // Loads the user profile from Supabase and updates the form and view
   private async loadUserProfile(): Promise<void> {
-    if (this.isDevelopment) {
-      console.log('MOCK: Loaded profile for user:', this.mockUserId);
-      return;
-    }
-
     // Get logged in user
     const { data: { user } } = await this.supabaseService.client.auth.getUser();
     if (!user) {
       this.router.navigate(['/login']);
       return;
     }
+
     // Get profile for logged in user
     const profile = await this.profileService.getProfile(user.id);
     if (profile) {
@@ -82,57 +82,74 @@ export class AccountPage implements OnInit {
         firstName: profile.first_name,
         lastName: profile.last_name,
         email: profile.email,
+        phone: profile.phone || '',
+        avatar: profile.avatar_url || ''
       });
+      this.profileAvatarUrl = profile.avatar_url || '';
+      this.profileCreatedAt = profile.created_at;
+      this.profileLoaded = true;
+      this.profileError = false;
+      this.cdr.detectChanges();
+    } else {
+      this.profileLoaded = true;
+      this.profileError = true;
+      this.cdr.detectChanges();
     }
   }
 
-  saveProfileChanges(): void {
+  // Save changes to the user profile in Supabase
+  async saveProfileChanges(): Promise<void> {
     if (this.profileForm.valid) {
-      console.log('Saving profile:', this.profileForm.value);
+      const { firstName, lastName, email, phone, avatar } = this.profileForm.value;
+      const { data: { user } } = await this.supabaseService.client.auth.getUser();
+      if (!user) return;
+      const updates = {
+        first_name: firstName,
+        last_name: lastName,
+        email,
+        phone,
+        avatar_url: avatar
+      };
+      await this.profileService.updateProfile(user.id, updates);
+      this.profileAvatarUrl = avatar;
       this.showSuccessMessage('Profile updated successfully');
-
       setTimeout(() => {
         this.profileForm.markAsPristine();
       }, 500);
     }
   }
 
+  // Save changes to the shipping address
   saveAddress(): void {
     if (this.addressForm.valid) {
-      console.log('Saving address:', this.addressForm.value);
       this.showSuccessMessage('Shipping address updated successfully');
-
       setTimeout(() => {
         this.addressForm.markAsPristine();
       }, 500);
     }
   }
 
+  // Show a temporary success message
   private showSuccessMessage(message: string): void {
     this.successMessage = message;
     this.showSuccess = true;
-
     setTimeout(() => {
       this.showSuccess = false;
     }, 3000);
   }
 
+  // Sign out the user and redirect to login
   async signOut(): Promise<void> {
-    if (this.isDevelopment) {
-      console.log('MOCK: Signed out');
-      this.router.navigate(['/login']);
-      return;
-    }
-
-    // Real sign out
     await this.supabaseService.client.auth.signOut();
     window.location.href = '/login';
   }
 
+  // Returns true if the profile form is dirty (changed) and valid
   get isProfileDirty(): boolean {
     return this.profileForm.dirty && this.profileForm.valid;
   }
 
+  // Returns true if the address form is dirty (changed) and valid
   get isAddressDirty(): boolean {
     return this.addressForm.dirty && this.addressForm.valid;
   }

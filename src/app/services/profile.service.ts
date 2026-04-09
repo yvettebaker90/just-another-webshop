@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { SupabaseService } from './supabase.services';
 
+// Interface describing the structure of a user profile in the database
 export interface UserProfile {
     user_id: string;
     first_name: string;
@@ -11,20 +12,14 @@ export interface UserProfile {
     created_at?: string;
 }
 
+// Service for CRUD operations on user profiles in Supabase
 @Injectable({ providedIn: 'root' })
 export class ProfileService {
-    private isDevelopment = false; // Toggle for mock/real (change to false with supabasetest)
-    private mockUserId = '00000000-0000-0000-0000-000000000001';
-    private mockProfiles: Map<string, UserProfile> = new Map();
-
+    // Inject the Supabase service for database access
     constructor(private supabase: SupabaseService) { }
 
+    // Fetch a user profile by user ID
     async getProfile(userId: string): Promise<UserProfile | null> {
-        if (this.isDevelopment) {
-            console.log('MOCK: getProfile for', userId);
-            return this.mockProfiles.get(userId) || null;
-        }
-
         const { data, error } = await this.supabase.client
             .from('profiles')
             .select('*')
@@ -34,19 +29,8 @@ export class ProfileService {
         return data as UserProfile;
     }
 
+    // Create a new user profile
     async createProfile(profile: UserProfile): Promise<UserProfile | null> {
-        if (this.isDevelopment) {
-            console.log('MOCK: createProfile', profile);
-            const newProfile: UserProfile = {
-                ...profile,
-                user_id: this.mockUserId,
-                created_at: new Date().toISOString(),
-            };
-            this.mockProfiles.set(this.mockUserId, newProfile);
-            return newProfile;
-        }
-
-
         const { data, error } = await this.supabase.client
             .from('profiles')
             .insert([
@@ -61,25 +45,13 @@ export class ProfileService {
             .single();
 
         if (error) {
-            console.error('Profile creation error:', error);
-            console.error('Profildata vid fel:', profile);
             return null;
         }
         return data as UserProfile;
     }
 
+    // Update an existing user profile by user ID
     async updateProfile(userId: string, updates: Partial<UserProfile>): Promise<UserProfile | null> {
-        if (this.isDevelopment) {
-            console.log('MOCK: updateProfile', userId, updates);
-            const existing = this.mockProfiles.get(userId);
-            if (!existing) return null;
-
-            const updated = { ...existing, ...updates };
-            this.mockProfiles.set(userId, updated);
-            return updated;
-        }
-
-        // Real Supabase
         const { data, error } = await this.supabase.client
             .from('profiles')
             .update(updates)
@@ -88,11 +60,5 @@ export class ProfileService {
             .single();
         if (error) return null;
         return data as UserProfile;
-    }
-
-    // Toggle between mock and real mode
-    setDevelopmentMode(isDev: boolean) {
-        this.isDevelopment = isDev;
-        console.log(isDev ? 'Development mode ON (mock)' : 'Production mode ON (real Supabase)');
     }
 }
