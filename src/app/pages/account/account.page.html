@@ -25,8 +25,10 @@
           <ng-container *ngIf="!profileError; else profileErrorBlock">
             <!-- Avatar -->
             <div class="flex justify-center mb-6">
-              <div class="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center shadow-lg mx-auto overflow-hidden">
-                <img *ngIf="profileAvatarUrl; else defaultAvatar" [src]="profileAvatarUrl" alt="Avatar" class="w-20 h-20 object-cover rounded-full" />
+              <div
+                class="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center shadow-lg mx-auto overflow-hidden">
+                <img *ngIf="profileAvatarUrl; else defaultAvatar" [src]="profileAvatarUrl" alt="Avatar"
+                  class="w-20 h-20 object-cover rounded-full" />
                 <ng-template #defaultAvatar>
                   <ng-icon name="ionPersonOutline" size="48" color="#111"></ng-icon>
                 </ng-template>
@@ -34,7 +36,8 @@
             </div>
             <!-- User Info -->
             <div class="text-center mb-8">
-              <h2 class="text-xl font-bold text-gray-900">{{ profileForm.get('firstName')?.value }} {{ profileForm.get('lastName')?.value }}</h2>
+              <h2 class="text-xl font-bold text-gray-900">{{ profileForm.get('firstName')?.value }} {{
+                profileForm.get('lastName')?.value }}</h2>
               <p class="text-gray-600 text-sm mt-1">{{ profileForm.get('email')?.value }}</p>
               <p class="text-gray-500 text-xs mt-3">
                 Member since
@@ -44,11 +47,11 @@
             </div>
           </ng-container>
           <ng-template #profileErrorBlock>
-            <div class="text-center text-red-600">Kunde inte ladda profilinformation.</div>
+            <div class="text-center text-red-600">Could not load profile information.</div>
           </ng-template>
         </ng-container>
         <ng-template #loadingProfile>
-          <div class="text-center text-gray-500">Laddar profil...</div>
+          <div class="text-center text-gray-500">Loading profile...</div>
         </ng-template>
 
         <!-- Actions -->
@@ -100,7 +103,8 @@
           <div>
             <label for="email" class="block text-sm font-semibold text-gray-900 mb-2">Email</label>
             <input id="email" type="email" formControlName="email" placeholder="your@email.com"
-              class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none transition-colors bg-white text-gray-900" readonly />
+              class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none transition-colors bg-white text-gray-900"
+              readonly />
             <div class="text-gray-500 text-xs mt-1">
               Email address cannot be changed here.
             </div>
