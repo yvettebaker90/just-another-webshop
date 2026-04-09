@@ -4,6 +4,7 @@ import { WishlistService } from '../../services/wishlist.service';
 
 @Component({
   selector: 'app-wishlist',
+  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ProductCardComponent],
   templateUrl: './wishlist.page.html'
