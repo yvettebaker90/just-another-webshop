@@ -1,9 +1,10 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { ionHeartOutline, ionCartOutline, ionPersonOutline, ionHomeOutline, ionBagOutline } from '@ng-icons/ionicons';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SearchBarComponent } from '../../searchbar/searchbar.component';
+import { WishlistService } from '../../../services/wishlist.service';
 
 @Component({
   selector: 'app-header',
@@ -14,7 +15,9 @@ import { SearchBarComponent } from '../../searchbar/searchbar.component';
   templateUrl: './header.component.html',
 })
 export class HeaderComponent {
+  private readonly wishlistService = inject(WishlistService);
+
   cartCount = 2; // Example (change to dynamic value later)
-  wishlistCount = 3; // Example (change to dynamic value later)
+  readonly wishlistCount = this.wishlistService.totalItems;
   mobileMenuOpen = false;
 }
