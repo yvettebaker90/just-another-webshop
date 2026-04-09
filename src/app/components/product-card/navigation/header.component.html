@@ -59,9 +59,9 @@
             <a routerLink="/wishlist" aria-label="Wishlist">
               <ng-icon name="ionHeartOutline" size="24" color="black"></ng-icon>
             </a>
-            <span *ngIf="wishlistCount > 0"
+            <span *ngIf="wishlistCount() > 0"
               class="absolute -top-2 -right-2 bg-black text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center border-2 border-white">
-              {{ wishlistCount }}
+              {{ wishlistCount() }}
             </span>
           </div>
           <div class="relative">

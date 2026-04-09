@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { ionCartOutline, ionHeart, ionHeartOutline } from '@ng-icons/ionicons';
 import { Product, ProductService } from '../../services/product.service';
+import { WishlistService } from '../../services/wishlist.service';
 
 type ProductCategoryGroup = {
   category: string;
@@ -58,6 +59,7 @@ type ProductCategoryGroup = {
 })
 export class ProductCardComponent {
   private readonly router = inject(Router);
+  private readonly wishlistService = inject(WishlistService);
 
   id = input(0);
   category = input('');
@@ -67,14 +69,29 @@ export class ProductCardComponent {
   brand = input('');
   tags = input<string[]>([]);
 
-  isFavorite = signal(false);
+  readonly isFavorite = computed(() => {
+    const productId = this.id();
+    return productId > 0 && this.wishlistService.isInWishlist(productId);
+  });
 
   navigateToDetail(): void {
     void this.router.navigate(['/products', this.id()]);
   }
 
   toggleFavorite(): void {
-    this.isFavorite.update((value) => !value);
+    const productId = this.id();
+    if (productId <= 0) {
+      return;
+    }
+
+    void this.wishlistService.toggle({
+      id: productId,
+      title: this.title(),
+      brand: this.brand(),
+      price: this.price(),
+      image: this.image(),
+      category: this.category(),
+    });
   }
 
   getBadgeClass(tag: string): string {
