@@ -4,10 +4,10 @@
   >
     <div class="space-y-3">
       <h3 class="text-lg font-semibold">Just Another Webshop</h3>
-      <p class="mt-4 text-[var(--muted-foreground)] text-sm font-medium">
+      <p class="mt-4 text-[var(--primary)] text-sm font-medium">
         Your one-stop destination for quality products at great prices. Shop with confidence.
       </p>
-      <div class="flex gap-4 text-[var(--muted-foreground)] mt-4">
+      <div class="flex gap-4 text-[var(--primary)] mt-4">
         <ng-icon name="ionLogoFacebook" size="24"></ng-icon>
         <ng-icon name="ionLogoTwitter" size="24"></ng-icon>
         <ng-icon name="ionLogoInstagram" size="24"></ng-icon>
@@ -18,7 +18,7 @@
       <h3 class="text-md font-semibold">Quick Links</h3>
       <div class="mb-4 mt-3 space-y-2">
         @for (link of quickLinks; track link.label) {
-          <a [href]="link.href" class="block text-[var(--muted-foreground)] transition hover:text-[var(--primary)]">{{ link.label }}</a>
+          <a [href]="link.href" class="block text-[var(--primary)] transition hover:text-[var(--muted-foreground)]">{{ link.label }}</a>
         }
       </div>
     </div>
@@ -27,17 +27,18 @@
       <h3 class="text-md font-semibold">Customer Service</h3>
       <div class="mb-4 mt-3 space-y-2">
         @for (link of customerServiceLinks; track link.label) {
-          <a [href]="link.href" class="block text-[var(--muted-foreground)] transition hover:text-[var(--primary)]">{{ link.label }}</a>
+          <a [href]="link.href" class="block text-[var(--primary)] transition hover:text-[var(--muted-foreground)]">{{ link.label }}</a>
         }
       </div>
     </div>
 
     <div class="space-y-3">
       <h3 class="text-md font-semibold">Newsletter</h3>
-      <p class="mt-4 text-[var(--muted-foreground)] font-medium text-sm">Subscribe to get special offers and updates.</p>
+      <p class="mt-4 text-[var(--primary)] font-medium text-sm">Subscribe to get special offers and updates.</p>
 
       <div class="mt-3 flex gap-2">
         <input
+          aria-label="Enter your email"
           type="email"
           placeholder="Enter your email"
           class="w-full rounded border border-gray-300 bg-white px-3 py-2"
@@ -55,6 +56,6 @@
   </div>
 
   <div class="mx-auto w-9/12 border-t border-[var(--muted-foreground)]/30 py-4 text-center">
-    <p class="text-[var(--muted-foreground)] text-sm">&copy; {{ currentYear }} Just Another Webshop. All rights reserved.</p>
+    <p class="text-[var(--primary)] text-sm">&copy; {{ currentYear }} Just Another Webshop. All rights reserved.</p>
   </div>
 </footer>
