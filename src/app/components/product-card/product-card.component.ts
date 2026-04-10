@@ -5,6 +5,7 @@ import { NgIcon, provideIcons } from '@ng-icons/core';
 import { ionCartOutline, ionHeart, ionHeartOutline } from '@ng-icons/ionicons';
 import { Product, ProductService } from '../../services/product.service';
 import { WishlistService } from '../../services/wishlist.service';
+import { ShoppingCartService } from '../../services/shopping-cart.service';
 
 type ProductCategoryGroup = {
   category: string;
@@ -49,7 +50,7 @@ type ProductCategoryGroup = {
           [title]="title()"
         >{{ title() }}</h3>
         <p class="text-lg font-semibold">{{ '$' + price() }}</p>
-        <button type="button" (click)="$event.stopPropagation()" class="btn btn-primary mt-auto inline-flex items-center gap-2">
+        <button type="button" (click)="$event.stopPropagation(); addToCart()" class="btn btn-primary mt-auto inline-flex items-center gap-2">
           <ng-icon name="ionCartOutline" size="18" aria-hidden="true"></ng-icon>
           Add to cart
         </button>
@@ -60,6 +61,7 @@ type ProductCategoryGroup = {
 export class ProductCardComponent {
   private readonly router = inject(Router);
   private readonly wishlistService = inject(WishlistService);
+  private readonly cartService = inject(ShoppingCartService);
 
   id = input(0);
   category = input('');
@@ -73,6 +75,18 @@ export class ProductCardComponent {
     const productId = this.id();
     return productId > 0 && this.wishlistService.isInWishlist(productId);
   });
+
+  addToCart() {
+    this.cartService.add({
+      id: this.id(),
+      title: this.title(),
+      brand: this.brand(),
+      price: this.price(),
+      image: this.image(),
+      category: this.category(),
+      quantity: 1
+    });
+  }
 
   navigateToDetail(): void {
     void this.router.navigate(['/products', this.id()]);

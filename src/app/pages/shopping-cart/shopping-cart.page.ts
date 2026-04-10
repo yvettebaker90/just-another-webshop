@@ -1,19 +1,12 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
+import { ShoppingCartService } from '../../services/shopping-cart.service';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { ionTrashOutline } from '@ng-icons/ionicons';
 
-interface CartItem {
-  id: string;
-  productId: string;
-  title: string;
-  category: string;
-  price: number;
-  image: string;
-  quantity: number;
-}
+import type { CartItem } from '../../services/shopping-cart.service';
 
 @Component({
   selector: 'app-shopping-cart-page',
@@ -24,94 +17,38 @@ interface CartItem {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShoppingCart {
-  constructor(private router: Router) {}
-  cartItems: CartItem[] = [
-    {
-      id: 'cart-1',
-      productId: '1',
-      title: 'Minimal Ceramic Vase',
-      category: 'Home Decor',
-      price: 49.99,
-      image: 'https://images.unsplash.com/photo-1574421233376-06f2ccf017f7?w=300&h=300&fit=crop',
-      quantity: 2,
-    },
-    {
-      id: 'cart-2',
-      productId: '2',
-      title: 'Wireless Headphones',
-      category: 'Electronics',
-      price: 129.99,
-      image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300&h=300&fit=crop',
-      quantity: 1,
-    },
-    {
-      id: 'cart-3',
-      productId: '3',
-      title: 'Smart Watch',
-      category: 'Electronics',
-      price: 199.99,
-      image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300&h=300&fit=crop',
-      quantity: 1,
-    },
-  ];
+  private readonly cartService = inject(ShoppingCartService);
+  cartItems = this.cartService.cartItems;
 
-  /* Calculations */
-  get subtotal(): number {
-    return this.cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  }
+  subtotal = computed(() => this.cartItems().reduce((sum, item) => sum + item.price * item.quantity, 0));
+  shipping = computed(() => this.subtotal() > 50 ? 0 : 5.99);
+  tax = computed(() => this.subtotal() * 0.08);
+  total = computed(() => this.subtotal() + this.shipping() + this.tax());
 
-  get shipping(): number {
-    return this.subtotal > 50 ? 0 : 5.99;
-  }
+  constructor(private router: Router) { }
 
-  get tax(): number {
-    return this.subtotal * 0.08;
-  }
-
-  get total(): number {
-    return this.subtotal + this.shipping + this.tax;
-  }
-
-  /* Eventhandlers - CartService */
-
-  /* Decrease quantity with 1 */
-  onDecrementQuantity(item: CartItem): void {
+  async onDecrementQuantity(item: CartItem) {
     if (item.quantity > 1) {
-      item.quantity -= 1;
-      // TODO: Call cartService.updateQuantity(item.id, item.quantity)
-      console.log(`Quantity decreased to ${item.quantity} for ${item.title}`);
+      await this.cartService.updateQuantity(item.id, item.quantity - 1);
     }
   }
 
-  /* Increase quantity with 1 */
-  onIncrementQuantity(item: CartItem): void {
-    item.quantity += 1;
-    // TODO: Call cartService.updateQuantity(item.id, item.quantity)
-    console.log(`Quantity increased to ${item.quantity} for ${item.title}`);
+  async onIncrementQuantity(item: CartItem) {
+    await this.cartService.updateQuantity(item.id, item.quantity + 1);
   }
 
-  /* Delete item from cart */
-  onRemoveItem(cartItemId: string): void {
-    const index = this.cartItems.findIndex((item) => item.id === cartItemId);
-    if (index > -1) {
-      const removedItem = this.cartItems[index];
-      this.cartItems.splice(index, 1);
-      // TODO: Call cartService.removeFromCart(cartItemId)
-      console.log(`Removed ${removedItem.title} from cart`);
-    }
+  async onRemoveItem(productId: number) {
+    await this.cartService.remove(productId);
   }
 
-  /* Proceed to checkout */
   onCheckout(): void {
     // TODO: Navigate to checkout-page
-    console.log('Proceeding to checkout with total:', this.total);
+    console.log('Proceeding to checkout with total:', this.total());
   }
 
-  /* Continue shopping (navigate to products-page) */
   onContinueShopping(): void {
     this.router.navigate(['/products']);
   }
-  /* Start shopping (navigate to products-page) */
   onStartShopping(): void {
     this.router.navigate(['/products']);
   }
