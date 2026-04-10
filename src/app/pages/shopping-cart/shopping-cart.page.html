@@ -1,4 +1,4 @@
-@if (cartItems.length === 0) {
+@if (cartItems().length === 0) {
 <section
     class="rounded-xl border border-[var(--border)] bg-[var(--card)] p-8 text-center flex flex-col items-center justify-center">
     <ng-icon name="ionCartOutline" size="48" color="black" class="mb-4"></ng-icon>
@@ -25,7 +25,7 @@
             <section class="lg:col-span-2 space-y-4" aria-labelledby="cart-items-heading">
                 <h2 id="cart-items-heading" class="sr-only">Cart Items</h2>
                 <!-- Cart Item (Loop) -->
-                <div *ngFor="let item of cartItems" class="rounded-lg p-4"
+                <div *ngFor="let item of cartItems()" class="rounded-lg p-4"
                     class="rounded-lg p-4 bg-card border border-border">
                     <div class="flex gap-4">
                         <!-- Product Image -->
@@ -103,7 +103,7 @@
                         <!-- Subtotal -->
                         <div class="flex justify-between text-sm">
                             <span class="text-foreground">Subtotal</span>
-                            <span class="font-medium" style="color: var(--foreground);">${{ subtotal.toFixed(2)
+                            <span class="font-medium" style="color: var(--foreground);">${{ subtotal().toFixed(2)
                                 }}</span>
                         </div>
 
@@ -111,11 +111,11 @@
                         <div class="flex justify-between text-sm">
                             <span class="text-foreground">Shipping</span>
                             <span class="font-medium">
-                                <ng-container *ngIf="shipping === 0; else notFree">
+                                <ng-container *ngIf="shipping() === 0; else notFree">
                                     <span style="color: var(--success-green); font-weight: 600;">Free</span>
                                 </ng-container>
                                 <ng-template #notFree>
-                                    <span class="text-foreground">${{ shipping.toFixed(2) }}</span>
+                                    <span class="text-foreground">${{ shipping().toFixed(2) }}</span>
                                 </ng-template>
                             </span>
                         </div>
@@ -123,7 +123,7 @@
                         <!-- Tax -->
                         <div class="flex justify-between text-sm">
                             <span class="text-foreground">Tax (8%)</span>
-                            <span class="font-medium text-foreground">${{ tax.toFixed(2) }}</span>
+                            <span class="font-medium text-foreground">${{ tax().toFixed(2) }}</span>
                         </div>
 
                         <!-- Divider -->
@@ -133,16 +133,16 @@
                         <div class="flex justify-between">
                             <span class="font-semibold text-foreground">Total</span>
                             <span class="text-xl font-bold" style="color: var(--foreground);" aria-live="polite">${{
-                                total.toFixed(2) }}</span>
+                                total().toFixed(2) }}</span>
                         </div>
                     </div>
 
                     <!-- Free Shipping Threshold Info -->
-                    <div *ngIf="subtotal < 50" class="mb-6 rounded-lg p-3 text-sm text-center"
+                    <div *ngIf="subtotal() < 50" class="mb-6 rounded-lg p-3 text-sm text-center"
                         style="background-color: rgba(163, 177, 138, 0.1);"
                         class="mb-6 rounded-lg p-3 text-sm text-center text-accent">
                         <p>
-                            Add <span class="font-semibold">${{ (50 - subtotal).toFixed(2) }}</span> more for free
+                            Add <span class="font-semibold">${{ (50 - subtotal()).toFixed(2) }}</span> more for free
                             shipping!
                         </p>
                     </div>

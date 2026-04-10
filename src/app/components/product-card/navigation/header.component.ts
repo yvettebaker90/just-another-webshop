@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SearchBarComponent } from '../../searchbar/searchbar.component';
 import { WishlistService } from '../../../services/wishlist.service';
+import { ShoppingCartService } from '../../../services/shopping-cart.service';
 
 @Component({
   selector: 'app-header',
@@ -16,8 +17,11 @@ import { WishlistService } from '../../../services/wishlist.service';
 })
 export class HeaderComponent {
   private readonly wishlistService = inject(WishlistService);
+  private readonly cartService = inject(ShoppingCartService);
 
-  cartCount = 2; // Example (change to dynamic value later)
   readonly wishlistCount = this.wishlistService.totalItems;
+  get cartCount() {
+    return this.cartService.totalItems();
+  }
   mobileMenuOpen = false;
 }
