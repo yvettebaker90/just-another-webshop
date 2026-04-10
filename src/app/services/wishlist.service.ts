@@ -22,12 +22,29 @@ export class WishlistService {
   readonly totalItems = computed(() => this.wishlistItemsSignal().length);
 
   constructor() {
-    this.loadFromLocalStorage();
-    void this.syncWithSupabase();
+    void this.initializeWishlist();
 
-    this.supabaseService.client.auth.onAuthStateChange(() => {
-      void this.syncWithSupabase();
+    this.supabaseService.client.auth.onAuthStateChange((_event, session) => {
+      if (!session?.user) {
+        this.clearLocalState();
+        return;
+      }
+
+      this.loadFromLocalStorage();
+      void this.syncWithSupabase(session.user.id);
     });
+  }
+
+  private async initializeWishlist(): Promise<void> {
+    const userId = await this.getCurrentUserId();
+
+    if (!userId) {
+      this.clearLocalState();
+      return;
+    }
+
+    this.loadFromLocalStorage();
+    await this.syncWithSupabase(userId);
   }
 
   isInWishlist(productId: number): boolean {
@@ -80,19 +97,20 @@ export class WishlistService {
     }
   }
 
-  private async syncWithSupabase(): Promise<void> {
-    const userId = await this.getCurrentUserId();
-    if (!userId) {
+  private async syncWithSupabase(userId?: string): Promise<void> {
+    const resolvedUserId = userId ?? await this.getCurrentUserId();
+    if (!resolvedUserId) {
+      this.clearLocalState();
       return;
     }
 
-    const remoteItems = await this.readSupabaseWishlist(userId);
+    const remoteItems = await this.readSupabaseWishlist(resolvedUserId);
     const merged = this.mergeById(this.wishlistItemsSignal(), remoteItems);
 
     this.wishlistItemsSignal.set(merged);
     this.saveToLocalStorage();
 
-    await this.upsertSupabaseRows(userId, merged);
+    await this.upsertSupabaseRows(resolvedUserId, merged);
   }
 
   private async getCurrentUserId(): Promise<string | null> {
@@ -237,6 +255,18 @@ export class WishlistService {
   }
 
   private saveToLocalStorage(): void {
-    localStorage.setItem(this.storageKey, JSON.stringify(this.wishlistItemsSignal()));
+    const items = this.wishlistItemsSignal();
+
+    if (items.length === 0) {
+      localStorage.removeItem(this.storageKey);
+      return;
+    }
+
+    localStorage.setItem(this.storageKey, JSON.stringify(items));
+  }
+
+  private clearLocalState(): void {
+    this.wishlistItemsSignal.set([]);
+    localStorage.removeItem(this.storageKey);
   }
 }
