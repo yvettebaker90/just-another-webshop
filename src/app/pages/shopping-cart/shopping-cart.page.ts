@@ -111,4 +111,8 @@ export class ShoppingCart {
   onContinueShopping(): void {
     this.router.navigate(['/products']);
   }
+  /* Start shopping (navigate to products-page) */
+  onStartShopping(): void {
+    this.router.navigate(['/products']);
+  }
 }

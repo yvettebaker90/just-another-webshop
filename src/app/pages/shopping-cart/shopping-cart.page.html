@@ -1,6 +1,22 @@
+@if (cartItems.length === 0) {
+<section
+    class="rounded-xl border border-[var(--border)] bg-[var(--card)] p-8 text-center flex flex-col items-center justify-center">
+    <ng-icon name="ionCartOutline" size="48" color="black" class="mb-4"></ng-icon>
+    <h2 class="text-xl font-semibold mb-2">Your cart is empty</h2>
+    <p class="mt-2 mb-6 text-sm text-[var(--muted-foreground)]">
+        Looks like you haven't added anything to your cart yet.
+    </p>
+    <button
+        class="px-6 py-3 rounded-lg border-2 border-border font-medium hover:opacity-80 transition-opacity text-foreground"
+        (click)="onStartShopping()">
+        Start shopping
+    </button>
+</section>
+} @else {
 <main class="min-h-screen py-8" style="background-color: var(--background);" role="main" aria-labelledby="cart-heading">
     <div class="w-9/12 mx-auto px-4 bg-background">
-        <h1 id="cart-heading" class="text-3xl font-bold mb-40 mt-20 text-foreground text-left" style="font-family: var(--font-heading);">
+        <h1 id="cart-heading" class="text-3xl font-bold mb-40 mt-20 text-foreground text-left"
+            style="font-family: var(--font-heading);">
             Shopping Cart
         </h1>
         <!-- Cart Content -->
@@ -152,3 +168,4 @@
         </div>
     </div>
 </main>
+}
