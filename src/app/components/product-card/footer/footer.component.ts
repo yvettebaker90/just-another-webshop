@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { ionMailOutline, ionLogoInstagram, ionLogoFacebook, ionLogoTwitter } from '@ng-icons/ionicons';
-import { ɵEmptyOutletComponent } from "@angular/router";
 
 type FooterLink = {
     label: string;
@@ -11,7 +10,7 @@ type FooterLink = {
 @Component({
     selector: 'app-footer',
     standalone: true,
-    imports: [NgIcon, ɵEmptyOutletComponent],
+    imports: [NgIcon],
     providers: [provideIcons({ ionMailOutline, ionLogoInstagram, ionLogoFacebook, ionLogoTwitter })],
     templateUrl: './footer.component.html',
 })
