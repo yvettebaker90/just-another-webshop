@@ -7,7 +7,8 @@ import { WishlistService } from '../../services/wishlist.service';
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ProductCardComponent],
-  templateUrl: './wishlist.page.html'
+  templateUrl: './wishlist.page.html',
+  styleUrl: './wishlist.page.css'
 })
 export class WishlistPage {
   private readonly wishlistService = inject(WishlistService);

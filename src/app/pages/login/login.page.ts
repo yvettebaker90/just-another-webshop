@@ -7,6 +7,7 @@ import { SupabaseService } from '../../services/supabase.services';
 @Component({
     selector: 'app-login',
     templateUrl: './login.page.html',
+    styleUrl: './login.page.css',
     standalone: true,
     imports: [CommonModule, ReactiveFormsModule],
 })

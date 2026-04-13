@@ -1,13 +1,13 @@
-<footer class="mt-8 justify-center border-t border-[var(--muted-foreground)]/30 text-black">
+<footer class="mt-8 justify-center border-t border-muted-foreground/30 text-black">
   <div
     class="mx-auto grid w-9/12 grid-cols-1 items-start gap-8 px-4 py-8 sm:grid-cols-2 sm:gap-10 md:gap-12 md:grid-cols-2 lg:grid-cols-4 lg:gap-16"
   >
     <div class="space-y-3">
       <h3 class="text-lg font-semibold">Just Another Webshop</h3>
-      <p class="mt-4 text-[var(--primary)] text-sm font-medium">
+      <p class="mt-4 text-primary text-sm font-medium">
         Your one-stop destination for quality products at great prices. Shop with confidence.
       </p>
-      <div class="flex gap-4 text-[var(--primary)] mt-4">
+      <div class="mt-4 flex gap-4 text-primary">
         <ng-icon name="ionLogoFacebook" size="24"></ng-icon>
         <ng-icon name="ionLogoTwitter" size="24"></ng-icon>
         <ng-icon name="ionLogoInstagram" size="24"></ng-icon>
@@ -18,7 +18,7 @@
       <h3 class="text-md font-semibold">Quick Links</h3>
       <div class="mb-4 mt-3 space-y-2">
         @for (link of quickLinks; track link.label) {
-          <a [href]="link.href" class="block text-[var(--primary)] transition hover:text-[var(--muted-foreground)]">{{ link.label }}</a>
+          <a [href]="link.href" class="block text-foreground transition hover:text-accent">{{ link.label }}</a>
         }
       </div>
     </div>
@@ -27,14 +27,14 @@
       <h3 class="text-md font-semibold">Customer Service</h3>
       <div class="mb-4 mt-3 space-y-2">
         @for (link of customerServiceLinks; track link.label) {
-          <a [href]="link.href" class="block text-[var(--primary)] transition hover:text-[var(--muted-foreground)]">{{ link.label }}</a>
+          <a [href]="link.href" class="block text-foreground transition hover:text-accent">{{ link.label }}</a>
         }
       </div>
     </div>
 
     <div class="space-y-3">
       <h3 class="text-md font-semibold">Newsletter</h3>
-      <p class="mt-4 text-[var(--primary)] font-medium text-sm">Subscribe to get special offers and updates.</p>
+      <p class="mt-4 text-sm font-medium text-primary">Subscribe to get special offers and updates.</p>
 
       <div class="mt-3 flex gap-2">
         <input
@@ -56,7 +56,7 @@
     </div>
   </div>
 
-  <div class="mx-auto w-9/12 border-t border-[var(--muted-foreground)]/30 py-4 text-center">
-    <p class="text-[var(--primary)] text-sm">&copy; {{ currentYear }} Just Another Webshop. All rights reserved.</p>
+  <div class="mx-auto w-9/12 border-t border-muted-foreground/30 py-4 text-center">
+    <p class="text-sm text-primary">&copy; {{ currentYear }} Just Another Webshop. All rights reserved.</p>
   </div>
 </footer>

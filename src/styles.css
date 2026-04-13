@@ -1,38 +1,58 @@
-/* You can add global styles to this file, and also import other style files */
-
 @import 'tailwindcss';
 
 :root {
   /* Colors */
-  --background: #f8f7f5;
-  --foreground: #2b2b2b;
+  --color-surface-page: #f8f7f5;
+  --color-text-primary: #2b2b2b;
 
-  --card: #ffffff;
-  --card-foreground: #2b2b2b;
+  --color-surface-card: #ffffff;
+  --color-text-on-card: #2b2b2b;
 
-  --popover: #ffffff;
-  --popover-foreground: #2b2b2b;
+  --color-surface-popover: #ffffff;
+  --color-text-on-popover: #2b2b2b;
 
-  --primary: #2b2b2b;
-  --primary-foreground: #f8f7f5;
+  --color-action-primary: #2b2b2b;
+  --color-text-on-primary: #f8f7f5;
 
-  --secondary: #e8e3dc;
-  --secondary-foreground: #2b2b2b;
+  --color-surface-secondary: #e8e3dc;
+  --color-text-on-secondary: #2b2b2b;
 
-  --muted: #e8e3dc;
-  --muted-foreground: #837a71;
+  --color-surface-muted: #e8e3dc;
+  --color-text-secondary: #837a71;
 
-  --accent: #6d7b52;
-  --accent-foreground: #2b2b2b;
+  --color-action-accent: #6d7b52;
+  --color-text-on-accent: #2b2b2b;
 
   --taupe: #b8ada4;
-  --border: #d4cfc7;
-  --input: #d4cfc7;
-  --ring: #a3b18a;
+  --color-border-default: #d4cfc7;
+  --color-border-input: #d4cfc7;
+  --color-focus-ring: #a3b18a;
 
-  --destructive: #8b2f23;
-  --destructive-foreground: #ffffff;
-  --success-green: #166534;
+  --color-status-danger: #8b2f23;
+  --color-text-on-danger: #ffffff;
+  --color-status-success: #166534;
+
+  /* Legacy aliases (safe during migration) */
+  --background: var(--color-surface-page);
+  --foreground: var(--color-text-primary);
+  --card: var(--color-surface-card);
+  --card-foreground: var(--color-text-on-card);
+  --popover: var(--color-surface-popover);
+  --popover-foreground: var(--color-text-on-popover);
+  --primary: var(--color-action-primary);
+  --primary-foreground: var(--color-text-on-primary);
+  --secondary: var(--color-surface-secondary);
+  --secondary-foreground: var(--color-text-on-secondary);
+  --muted: var(--color-surface-muted);
+  --muted-foreground: var(--color-text-secondary);
+  --accent: var(--color-action-accent);
+  --accent-foreground: var(--color-text-on-accent);
+  --border: var(--color-border-default);
+  --input: var(--color-border-input);
+  --ring: var(--color-focus-ring);
+  --destructive: var(--color-status-danger);
+  --destructive-foreground: var(--color-text-on-danger);
+  --success-green: var(--color-status-success);
 
   --sale-red: #f87171;
   --sale-red-bg: #fee2e2;
@@ -61,6 +81,31 @@
   --font-body: "Plus Jakarta Sans", sans-serif;
 }
 
+@theme inline {
+  --color-background: var(--color-surface-page);
+  --color-foreground: var(--color-text-primary);
+  --color-card: var(--color-surface-card);
+  --color-card-foreground: var(--color-text-on-card);
+  --color-popover: var(--color-surface-popover);
+  --color-popover-foreground: var(--color-text-on-popover);
+  --color-primary: var(--color-action-primary);
+  --color-primary-foreground: var(--color-text-on-primary);
+  --color-secondary: var(--color-surface-secondary);
+  --color-secondary-foreground: var(--color-text-on-secondary);
+  --color-muted: var(--color-surface-muted);
+  --color-muted-foreground: var(--color-text-secondary);
+  --color-accent: var(--color-action-accent);
+  --color-accent-foreground: var(--color-text-on-accent);
+  --color-border: var(--color-border-default);
+  --color-input: var(--color-border-input);
+  --color-ring: var(--color-focus-ring);
+  --color-destructive: var(--color-status-danger);
+  --color-destructive-foreground: var(--color-text-on-danger);
+  --color-success: var(--color-status-success);
+  --font-heading: var(--font-heading);
+  --font-body: var(--font-body);
+}
+
 /* Reset / Base */
 *,
 *::before,
@@ -75,8 +120,8 @@ html {
 
 body {
   margin: 0;
-  background-color: var(--background);
-  color: var(--foreground);
+  background-color: var(--color-surface-page);
+  color: var(--color-text-primary);
   font-family: var(--font-body);
   font-weight: 400;
   line-height: 1.5;
@@ -96,9 +141,9 @@ textarea {
   font: inherit;
 }
 
-  a {
-    text-decoration: none;
-  }
+a {
+  text-decoration: none;
+}
 
 /* Typography */
 h1,
@@ -110,23 +155,10 @@ h6 {
   margin: 0;
   font-family: var(--font-heading);
   letter-spacing: -0.02em;
-  color: var(--foreground);
+  color: var(--color-text-primary);
 }
 
 
-
-.text-display {
-  font-family: var(--font-heading);
-  font-size: clamp(2.25rem, 4vw, 3rem);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1.1;
-}
-
-.text-price-large {
-  font-size: 1.875rem;
-  font-weight: 700;
-}
 
 .text-sale-price {
   color: var(--stock-text);
@@ -134,20 +166,12 @@ h6 {
 }
 
 .text-original-price {
-  color: var(--muted-foreground);
+  color: var(--color-text-secondary);
   text-decoration: line-through;
 }
 
 .text-muted {
-  color: var(--muted-foreground);
-}
-
-.text-xs {
-  font-size: 0.75rem;
-}
-
-.text-sm {
-  font-size: 0.875rem;
+  color: var(--color-text-secondary);
 }
 
 /* Layout helpers */
@@ -162,54 +186,21 @@ h6 {
   padding-block: 3rem;
 }
 
-/* Spacing helpers */
-.gap-2 {
-  gap: 0.5rem;
-}
-
-.gap-4 {
-  gap: 1rem;
-}
-
-.gap-6 {
-  gap: 1.5rem;
-}
-
-.gap-8 {
-  gap: 2rem;
-}
-
-.space-y-2>*+* {
-  margin-top: 0.5rem;
-}
-
-.space-y-4>*+* {
-  margin-top: 1rem;
-}
-
-.space-y-6>*+* {
-  margin-top: 1.5rem;
-}
-
-.space-y-8>*+* {
-  margin-top: 2rem;
-}
-
 /* Surfaces */
 .card {
-  background-color: var(--card);
-  color: var(--card-foreground);
-  border: 1px solid var(--border);
+  background-color: var(--color-surface-card);
+  color: var(--color-text-on-card);
+  border: 1px solid var(--color-border-default);
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-soft);
 }
 
 .surface-muted {
-  background-color: var(--secondary);
+  background-color: var(--color-surface-secondary);
 }
 
 .surface-white {
-  background-color: var(--card);
+  background-color: var(--color-surface-card);
 }
 
 /* Buttons */
@@ -227,15 +218,14 @@ h6 {
 }
 
 .btn:focus-visible,
-.icon-btn:focus-visible,
-.search-input:focus-visible {
-  outline: 2px solid var(--ring);
+.icon-btn:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
   outline-offset: 2px;
 }
 
 .btn-primary {
-  background-color: var(--primary);
-  color: var(--primary-foreground);
+  background-color: var(--color-action-primary);
+  color: var(--color-text-on-primary);
 }
 
 .btn-primary:hover {
@@ -244,17 +234,17 @@ h6 {
 
 .btn-outline {
   background-color: transparent;
-  color: var(--foreground);
-  border-color: var(--border);
+  color: var(--color-text-primary);
+  border-color: var(--color-border-default);
 }
 
 .btn-outline:hover {
-  background-color: var(--secondary);
+  background-color: var(--color-surface-secondary);
 }
 
 .btn-ghost {
   background-color: transparent;
-  color: var(--foreground);
+  color: var(--color-text-primary);
 }
 
 .btn-ghost:hover {
@@ -279,7 +269,7 @@ h6 {
   border-radius: var(--radius-full);
   border: 1px solid transparent;
   background: transparent;
-  color: var(--foreground);
+  color: var(--color-text-primary);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -301,11 +291,11 @@ h6 {
 }
 
 .nav-link:hover {
-  color: var(--accent);
+  color: var(--color-action-accent);
 }
 
 .nav-link.active {
-  color: var(--foreground);
+  color: var(--color-text-primary);
 }
 
 .nav-link.active::after {
@@ -315,7 +305,7 @@ h6 {
   bottom: -0.35rem;
   width: 100%;
   height: 2px;
-  background-color: var(--accent);
+  background-color: var(--color-action-accent);
   border-radius: var(--radius-full);
 }
 
@@ -333,7 +323,7 @@ h6 {
 }
 
 .badge-new {
-  background-color: var(--accent);
+  background-color: var(--color-action-accent);
   color: #ffffff;
 }
 
@@ -342,8 +332,8 @@ h6 {
 }
 
 .badge-popular {
-  background-color: var(--primary);
-  color: var(--primary-foreground);
+  background-color: var(--color-action-primary);
+  color: var(--color-text-on-primary);
 }
 
 .badge-popular:hover {
@@ -351,7 +341,7 @@ h6 {
 }
 
 .badge-sale {
-  background-color: var(--destructive);
+  background-color: var(--color-status-danger);
   color: #ffffff;
 }
 
@@ -359,178 +349,53 @@ h6 {
   background-color: var(--badge-sale-hover);
 }
 
-.badge-discount {
-  background-color: var(--sale-red-bg);
-  color: var(--stock-text);
-}
-
-.badge-count {
-  min-width: 1rem;
-  height: 1rem;
-  padding: 0;
-  border-radius: var(--radius-full);
-  background-color: var(--primary);
-  color: var(--primary-foreground);
-  font-size: 10px;
-  font-weight: 700;
-}
-
-.wishlist-heart {
-  color: var(--foreground);
-  transition: transform 0.2s ease, color 0.2s ease, fill 0.2s ease;
-}
-
-.wishlist-heart:hover {
-  transform: scale(1.08);
-}
-
-.wishlist-heart.is-favorited {
-  color: var(--accent);
-  fill: var(--accent);
-}
-
-/* Search bar */
-.search-bar {
-  width: 100%;
-  max-width: 42rem;
-  margin-inline: auto;
-  position: relative;
-}
-
-.search-input {
-  width: 100%;
-  height: 3rem;
-  padding: 0.75rem 1rem 0.75rem 2.75rem;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  background-color: transparent;
-  color: var(--foreground);
-}
-
-.search-input::placeholder {
-  color: var(--muted-foreground);
-}
-
-.search-icon {
-  position: absolute;
-  top: 50%;
-  left: 0.9rem;
-  transform: translateY(-50%);
-  color: var(--muted-foreground);
-  pointer-events: none;
-}
-
-/* Price display */
-.price-group {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-}
-
-.sale-price-large {
-  font-size: 1.875rem;
-  font-weight: 700;
-  color: var(--stock-text);
-}
-
-.original-price-large {
-  font-size: 1.5rem;
-  color: var(--muted-foreground);
-  text-decoration: line-through;
-}
-
-/* Out of stock */
-.out-of-stock {
-  border: 1px solid var(--stock-border);
-  background-color: var(--stock-bg);
-  color: var(--stock-text);
-  border-radius: var(--radius-lg);
-  padding: 0.75rem 1rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-}
-
-/* Spacing shopping cart headers */
-.mb-40 {
-  margin-bottom: 0.5rem;
-}
-
-.mb-50 {
-  margin-bottom: 1rem;
-}
-
 /* Utility helpers */
-.rounded-sm {
-  border-radius: var(--radius-sm);
-}
-
-.rounded-md {
-  border-radius: var(--radius-md);
-}
-
-.rounded-lg {
-  border-radius: var(--radius-lg);
-}
-
-.rounded-xl {
-  border-radius: var(--radius-xl);
-}
-
-.rounded-2xl {
-  border-radius: var(--radius-2xl);
-}
-
-.rounded-full {
-  border-radius: var(--radius-full);
-}
-
 .border-default {
-  border: 1px solid var(--border);
+  border: 1px solid var(--color-border-default);
 }
 
 .text-foreground {
-  color: var(--foreground);
+  color: var(--color-text-primary);
 }
 
 .text-muted-foreground {
-  color: var(--muted-foreground);
+  color: var(--color-text-secondary);
 }
 
 .bg-background {
-  background-color: var(--background);
+  background-color: var(--color-surface-page);
 }
 
 .bg-card {
-  background-color: var(--card);
+  background-color: var(--color-surface-card);
 }
 
 .bg-secondary {
-  background-color: var(--secondary);
+  background-color: var(--color-surface-secondary);
 }
 
 .bg-accent {
-  background-color: var(--accent);
+  background-color: var(--color-action-accent);
 }
 
 .text-primary {
-  color: var(--primary);
+  color: var(--color-action-primary);
 }
 
 .text-success {
-  color: var(--success-green);
+  color: var(--color-status-success);
 }
 
 .text-destructive {
-  color: var(--destructive);
+  color: var(--color-status-danger);
 }
 
 .border-border {
-  border-color: var(--border);
+  border-color: var(--color-border-default);
 }
 
 .border-card {
-  border-color: var(--card);
+  border-color: var(--color-surface-card);
 }
 
 .sr-only {

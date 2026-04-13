@@ -1,16 +1,16 @@
 <main class="mx-auto w-9/12 px-4 py-10 md:px-6 md:py-12" aria-labelledby="wishlist-title">
     <section class="mb-8 space-y-2 md:mb-10">
-        <p class="text-xs font-bold uppercase tracking-[0.14em] text-[var(--muted-foreground)]">Saved For Later</p>
+        <p class="wishlist-eyebrow text-xs font-bold uppercase tracking-[0.14em]">Saved For Later</p>
         <h1 id="wishlist-title" class="text-3xl font-bold tracking-tight md:text-4xl">My favorites</h1>
-        <p class="max-w-2xl text-sm text-[var(--muted-foreground)] md:text-base">
+        <p class="wishlist-subtitle max-w-2xl text-sm md:text-base">
             {{ subtitle() }}
         </p>
     </section>
 
     @if (wishlistItems().length === 0) {
-        <section class="rounded-xl border border-[var(--border)] bg-[var(--card)] p-8 text-center">
+        <section class="wishlist-empty rounded-xl border p-8 text-center">
             <h2 class="text-xl font-semibold">Your wishlist is empty</h2>
-            <p class="mt-2 text-sm text-[var(--muted-foreground)]">
+            <p class="wishlist-empty-copy mt-2 text-sm">
                 Tap the heart icon on any product card to save it here.
             </p>
         </section>

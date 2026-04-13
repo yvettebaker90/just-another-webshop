@@ -11,6 +11,7 @@ import { ProfileService } from '../../services/profile.service';
 @Component({
   selector: 'app-account',
   templateUrl: './account.page.html',
+  styleUrl: './account.page.css',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, NgIcon],
   providers: [provideIcons({ ionPersonCircleOutline, ionLogOutOutline, ionPersonOutline })]

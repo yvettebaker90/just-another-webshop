@@ -54,7 +54,7 @@
 
         <!-- RIGHT: Product info -->
         <div class="flex flex-col">
-          <p class="text-sm tracking-wide text-[var(--primary)] capitalize">
+          <p class="text-sm tracking-wide text-[var(--color-action-primary)] capitalize">
             {{ product()!.category }}
           </p>
 
@@ -105,7 +105,7 @@
             <button
               type="button"
               (click)="toggleFavorite()"
-              class="inline-flex h-11 w-11 items-center justify-center border border-gray-300 bg-white text-[var(--foreground)] transition hover:scale-105"
+              class="inline-flex h-11 w-11 items-center justify-center border border-gray-300 bg-white text-[var(--color-text-primary)] transition hover:scale-105"
               [attr.aria-label]="isFavorite() ? 'Remove from favorites' : 'Add to favorites'"
               [attr.aria-pressed]="isFavorite()"
             >

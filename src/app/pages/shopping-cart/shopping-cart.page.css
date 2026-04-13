@@ -1,0 +1,38 @@
+.shopping-cart-page {
+  background-color: var(--color-surface-page);
+}
+
+.shopping-cart-title,
+.shopping-cart-summary-title,
+.shopping-cart-item-title {
+  font-family: var(--font-heading);
+}
+
+.shopping-cart-item-image-bg {
+  background-color: var(--color-surface-muted);
+}
+
+.shopping-cart-trash-icon {
+  font-size: 20px;
+}
+
+.shopping-cart-shipping-free {
+  color: var(--color-status-success);
+  font-weight: 600;
+}
+
+.shopping-cart-threshold {
+  background-color: rgba(163, 177, 138, 0.1);
+}
+
+.shopping-cart-checkout-btn {
+  background-color: var(--color-action-primary);
+}
+
+.shopping-cart-trust-copy {
+  color: var(--color-text-secondary);
+}
+
+.shopping-cart-checkmark {
+  font-size: 16px;
+}

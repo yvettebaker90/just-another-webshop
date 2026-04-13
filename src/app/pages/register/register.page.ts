@@ -9,6 +9,7 @@ import { SupabaseService } from '../../services/supabase.services';
 @Component({
     selector: 'app-register',
     templateUrl: './register.page.html',
+    styleUrl: './register.page.css',
     standalone: true,
     imports: [ReactiveFormsModule, CommonModule],
 })

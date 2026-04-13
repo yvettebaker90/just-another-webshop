@@ -21,6 +21,7 @@ interface CartItem {
   imports: [CommonModule, FormsModule, RouterModule, NgIcon],
   providers: [provideIcons({ ionTrashOutline })],
   templateUrl: './shopping-cart.page.html',
+  styleUrl: './shopping-cart.page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShoppingCart {
