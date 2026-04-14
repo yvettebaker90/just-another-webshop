@@ -1,9 +1,13 @@
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import emailjs from '@emailjs/browser';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { ionMailOutline } from '@ng-icons/ionicons';
 
 @Component({
   selector: 'app-contact-form',
   templateUrl: './contact.page.html',
+  imports: [NgIcon],
+  providers: [provideIcons({ ionMailOutline })],
 })
 export class ContactFormPage {
   private readonly cdr = inject(ChangeDetectorRef);
