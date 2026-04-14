@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { ionCartOutline, ionHeart, ionHeartOutline } from '@ng-icons/ionicons';
 import { Product, ProductService } from '../../services/product.service';
+import { ShoppingCartService, CartItem } from '../../services/shopping-cart.service';
 
 @Component({
   selector: 'app-product-detail',
@@ -22,8 +23,23 @@ export class ProductDetail {
   readonly activeTab = signal<'description' | 'details'>('description');
 
   private readonly productService = inject(ProductService);
+  private readonly cartService = inject(ShoppingCartService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  async addToCart() {
+    const p = this.product();
+    if (!p) return;
+    const item: CartItem = {
+      id: p.id,
+      title: p.title,
+      brand: p.brand,
+      price: p.price,
+      image: p.image,
+      category: p.category,
+      quantity: this.quantity(),
+    };
+    await this.cartService.add(item);
+  }
 
   constructor() {
     this.route.params.subscribe(params => {

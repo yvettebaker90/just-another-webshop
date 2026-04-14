@@ -235,4 +235,17 @@ export class ShoppingCartService {
         this.cartItemsSignal.set([]);
         localStorage.removeItem(this.storageKey);
     }
+
+    // Perform checkout: call Supabase RPC to decrease stock and clear cart
+    async checkout(): Promise<void> {
+        const userId = await this.getCurrentUserId();
+        if (!userId) return;
+        const { error } = await this.supabaseService.client.rpc('checkout_cart', { p_user_id: userId });
+        if (error) {
+            console.error('Checkout failed:', error.message);
+            return;
+        }
+        this.cartItemsSignal.set([]);
+        this.saveToLocalStorage();
+    }
 }

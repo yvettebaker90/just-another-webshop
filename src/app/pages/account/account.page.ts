@@ -133,9 +133,11 @@ export class AccountPage implements OnInit {
   private showSuccessMessage(message: string): void {
     this.successMessage = message;
     this.showSuccess = true;
+    this.cdr.markForCheck();
     setTimeout(() => {
       this.showSuccess = false;
-    }, 3000);
+      this.cdr.markForCheck();
+    }, 2000);
   }
 
   // Sign out the user and redirect to login

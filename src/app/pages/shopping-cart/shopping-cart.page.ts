@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, computed, inject, signal } from '@angular/core';
+import { Component, ChangeDetectionStrategy, computed, inject, signal, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
@@ -18,8 +18,14 @@ import type { CartItem } from '../../services/shopping-cart.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShoppingCart {
+  // Track login state (must be public for template access)
+  public isLoggedIn = false;
   // Inject the ShoppingCartService to access cart logic
   private readonly cartService = inject(ShoppingCartService);
+
+  // Success message state for toast/notification
+  showSuccess = false;
+  successMessage = '';
 
   // Observable signal for cart items
   cartItems = this.cartService.cartItems;
@@ -37,7 +43,13 @@ export class ShoppingCart {
   total = computed(() => this.subtotal() + this.shipping() + this.tax());
 
   // Inject Angular Router for navigation
-  constructor(private router: Router) { }
+  constructor(private router: Router, private cdr: ChangeDetectorRef) {
+    // Check login state on component creation
+    this.cartService['supabaseService'].client.auth.getUser().then(({ data: { user } }) => {
+      this.isLoggedIn = !!user;
+      this.cdr.markForCheck();
+    });
+  }
 
   // Decrease the quantity of a cart item (minimum 1)
   async onDecrementQuantity(item: CartItem) {
@@ -56,13 +68,26 @@ export class ShoppingCart {
     await this.cartService.remove(productId);
   }
 
-  // Handle the checkout button click.
-  // This method should trigger the checkout process, such as reducing stock in the database
-  // and navigating to a confirmation or checkout page.
-  onCheckout(): void {
-    // TODO: Implement checkout logic here (e.g., call a service method to update stock)
-    // For now, just log the total amount to the console.
-    console.log('Proceeding to checkout with total:', this.total());
+  // Handle the checkout button click: perform checkout and show a toast, stay on cart page
+  async onCheckout() {
+    if (!this.isLoggedIn) {
+      this.showSuccessMessage('Please log in to continue');
+      return;
+    }
+    await this.cartService.checkout();
+    this.showSuccessMessage('Purchase successful!');
+    // Stay on the cart page; cart will be empty after checkout
+  }
+
+  // Show a temporary success message (toast)
+  private showSuccessMessage(message: string): void {
+    this.successMessage = message;
+    this.showSuccess = true;
+    this.cdr.markForCheck();
+    setTimeout(() => {
+      this.showSuccess = false;
+      this.cdr.markForCheck();
+    }, 2000);
   }
 
   // Navigate to the products page to continue shopping
