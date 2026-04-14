@@ -4,16 +4,16 @@
   </div>
 }
 
-<div class="w-full px-6 py-16 mx-0 lg:w-9/12 lg:mx-auto lg:px-4">
+<div class="w-full px-6 py-16 mx-0 lg:w-9/12 lg:mx-auto lg:px-4 space-y-12">
   <div class="max-w-2xl mx-auto">
     <!-- Header -->
-    <div class="mb-12 text-left">
-      <h1 class="text-4xl font-bold text-foreground mb-3">Get in Touch</h1>
-      <p class="text-muted-foreground text-lg">We'd love to hear from you. Send us a message and we'll respond as soon as possible.</p>
+    <div class="mb-12 text-left text-(--foreground)">
+      <h1 class="text-4xl font-bold mb-3">Get in Touch</h1>
+      <h2 class="text-lg">We'd love to hear from you. Send us a message and we'll respond as soon as possible.</h2>
     </div>
 
     <!-- Contact Form -->
-    <form (submit)="sendEmail($event)" class="bg-card rounded-lg shadow-md p-8 border border-border">
+    <form (submit)="sendEmail($event)" class="bg-(--muted) shadow-md p-8 border border-border">
       
       <!-- Name Input -->
       <div class="mb-6">
@@ -24,7 +24,7 @@
           name="user_name"
           placeholder="Enter your full name"
           required
-          class="w-full px-4 py-3 border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent bg-background text-foreground placeholder-muted-foreground transition-all"
+          class="w-full px-4 py-3 border border-gray-300 border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent bg-background text-foreground placeholder-muted-foreground transition-all"
         />
       </div>
 
@@ -37,7 +37,7 @@
           name="user_email"
           placeholder="Enter your email address"
           required
-          class="w-full px-4 py-3 border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent bg-background text-foreground placeholder-muted-foreground transition-all"
+          class="w-full px-4 py-3 border border-gray-300 border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent bg-background text-foreground placeholder-muted-foreground transition-all"
         />
       </div>
 
@@ -50,7 +50,7 @@
           placeholder="Tell us what's on your mind..."
           rows="6"
           required
-          class="w-full px-4 py-3 border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent bg-background text-foreground placeholder-muted-foreground transition-all resize-none"
+          class="w-full px-4 py-3 border border-gray-300 border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent bg-background text-foreground placeholder-muted-foreground transition-all resize-none"
         ></textarea>
       </div>
 
@@ -58,8 +58,8 @@
       <button
         type="submit"
         [disabled]="isSending"
-        class="w-full cursor-pointer px-6 py-3 bg-black text-white font-medium rounded-lg hover:bg-black/90 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
-      >
+        class="flex items-center justify-center w-full cursor-pointer px-6 py-3 bg-black text-white font-medium rounded-lg hover:bg-black/90 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
+      > <ng-icon name="ionMailOutline" size="24" class="inline-block mr-2"></ng-icon>
         {{ isSending ? 'Sending...' : 'Send Message' }}
       </button>
 
