@@ -24,7 +24,8 @@
                     [title]="item.title"
                     [price]="item.price"
                     [image]="item.image"
-                    [tags]="[]"
+                    [tags]="item.tags ?? []"
+                    [discountPercentage]="item.discount_percentage"
                     [showDeleteAction]="true"
                 ></app-product-card>
             }

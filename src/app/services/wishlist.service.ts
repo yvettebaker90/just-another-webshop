@@ -8,6 +8,8 @@ export type WishlistItem = {
   price: number;
   image: string;
   category: string;
+  tags?: string[];
+  discount_percentage?: number;
 };
 
 @Injectable({ providedIn: 'root' })
@@ -189,6 +191,8 @@ export class WishlistService {
       price: Number.isFinite(price) ? price : 0,
       image,
       category,
+      tags: this.parseTags(row['tags'] ?? row['Tags']),
+      discount_percentage: this.parseDiscountPercentage(row['discount_percentage']),
     };
   }
 
@@ -251,6 +255,8 @@ export class WishlistService {
       price: Number.isFinite(price) ? price : 0,
       image,
       category,
+      tags: this.parseTags(row['tags'] ?? row['Tags']),
+      discount_percentage: this.parseDiscountPercentage(row['discount_percentage']),
     };
   }
 
@@ -268,5 +274,30 @@ export class WishlistService {
   private clearLocalState(): void {
     this.wishlistItemsSignal.set([]);
     localStorage.removeItem(this.storageKey);
+  }
+
+  private parseTags(tagsValue: unknown): string[] | undefined {
+    if (Array.isArray(tagsValue)) {
+      return tagsValue.map((tag) => String(tag).trim().toLowerCase()).filter(Boolean);
+    }
+
+    if (typeof tagsValue === 'string' && tagsValue.trim()) {
+      return tagsValue
+        .split(',')
+        .map((tag) => tag.trim().toLowerCase())
+        .filter(Boolean);
+    }
+
+    return undefined;
+  }
+
+  private parseDiscountPercentage(value: unknown): number | undefined {
+    const parsed = typeof value === 'number' ? value : Number(value);
+
+    if (!Number.isFinite(parsed) || parsed <= 0) {
+      return undefined;
+    }
+
+    return Math.min(parsed, 100);
   }
 }

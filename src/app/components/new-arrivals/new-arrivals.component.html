@@ -7,7 +7,8 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             <app-product-card *ngFor="let product of newArrivals()" [id]="product.id" [brand]="product.brand"
                 [category]="product.category" [title]="product.title" [price]="product.price"
-                [image]="product.image || product.image_1 || ''" [tags]="product.tags || []">
+                [image]="product.image || product.image_1 || ''" [tags]="product.tags || []"
+                [discountPercentage]="product.discount_percentage">
             </app-product-card>
         </div>
         <div class="mt-12 text-center">
