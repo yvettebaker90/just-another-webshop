@@ -1,5 +1,5 @@
 <div class="min-h-screen bg-[#f3f3f3] py-10">
-  <div class="mx-auto w-9/12">
+  <div class="content-shell">
 
     @if (loading()) {
       <p class="rounded border border-gray-200 bg-white px-4 py-6 text-center text-sm text-gray-600">
@@ -54,11 +54,11 @@
 
         <!-- RIGHT: Product info -->
         <div class="flex flex-col">
-          <p class="text-sm tracking-wide text-[var(--primary)] capitalize">
+          <p class="text-sm tracking-wide text-primary capitalize">
             {{ product()!.category }}
           </p>
 
-          <h1 class="mt-2 text-3xl font-bold [font-family:var(--font-heading)] tracking-[-0.02em]">
+          <h1 class="font-heading mt-2 text-3xl font-bold tracking-[-0.02em]">
             {{ product()!.title }}
           </h1>
 
@@ -105,7 +105,7 @@
             <button
               type="button"
               (click)="toggleFavorite()"
-              class="inline-flex h-11 w-11 items-center justify-center border border-gray-300 bg-white text-[var(--foreground)] transition hover:scale-105"
+              class="inline-flex h-11 w-11 items-center justify-center border border-gray-300 bg-white text-foreground transition hover:scale-105"
               [attr.aria-label]="isFavorite() ? 'Remove from favorites' : 'Add to favorites'"
               [attr.aria-pressed]="isFavorite()"
             >

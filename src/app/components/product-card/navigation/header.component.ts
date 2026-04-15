@@ -14,6 +14,7 @@ import { ShoppingCartService } from '../../../services/shopping-cart.service';
   imports: [NgIcon, RouterModule, SearchBarComponent, CommonModule],
   providers: [provideIcons({ ionHeartOutline, ionCartOutline, ionPersonOutline, ionHomeOutline, ionBagOutline, ionMailOutline })],
   templateUrl: './header.component.html',
+  styleUrl: './header.component.css',
 })
 export class HeaderComponent {
   private readonly wishlistService = inject(WishlistService);

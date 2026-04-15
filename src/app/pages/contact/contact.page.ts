@@ -6,6 +6,7 @@ import { ionMailOutline } from '@ng-icons/ionicons';
 @Component({
   selector: 'app-contact-form',
   templateUrl: './contact.page.html',
+  styleUrl: './contact.page.css',
   imports: [NgIcon],
   providers: [provideIcons({ ionMailOutline })],
 })

@@ -5,10 +5,10 @@
 
 <ng-container *ngIf="cartItems().length === 0; else cartContent">
     <section
-        class="rounded-xl border border-(--border) bg-(--card) p-8 text-center flex flex-col items-center justify-center">
+        class="flex flex-col items-center justify-center p-8 text-center">
         <ng-icon name="ionCartOutline" size="48" color="black" class="mb-4"></ng-icon>
         <h1 class="text-xl font-semibold mb-2">Your cart is empty</h1>
-        <p class="mt-2 mb-6 text-xs font-light" style="color: #6d6257;">
+        <p class="mt-2 mb-6 text-xs font-light text-muted-foreground">
             Looks like you haven't added anything to your cart yet.
         </p>
         <button
@@ -19,11 +19,10 @@
     </section>
 </ng-container>
 <ng-template #cartContent>
-    <main class="min-h-screen py-8" style="background-color: var(--background);" role="main"
+    <main class="min-h-screen bg-background py-8" role="main"
         aria-labelledby="cart-heading">
-        <div class="w-9/12 mx-auto px-4 bg-background">
-            <h1 id="cart-heading" class="text-3xl font-bold mb-40 mt-20 text-foreground text-left"
-                style="font-family: var(--font-heading);">
+        <div class="content-shell bg-background">
+            <h1 id="cart-heading" class="font-heading mb-40 mt-10 text-left text-3xl font-bold text-foreground sm:mt-20">
                 Shopping Cart
             </h1>
             <!-- Cart Content -->
@@ -32,18 +31,17 @@
                 <section class="lg:col-span-2 space-y-4" aria-labelledby="cart-items-heading">
                     <h2 id="cart-items-heading" class="sr-only">Cart Items</h2>
                     <!-- Cart Item (Loop) -->
-                    <div *ngFor="let item of cartItems()" class="rounded-lg p-4 bg-card border border-border">
-                        <div class="flex gap-4">
+                    <div *ngFor="let item of cartItems()" class="rounded-lg border border-border bg-card p-4">
+                        <div class="flex flex-wrap gap-4 sm:flex-nowrap">
                             <!-- Product Image -->
-                            <div class="h-24 w-24 shrink-0 overflow-hidden rounded-lg"
-                                style="background-color: var(--muted);">
+                            <div class="h-24 w-24 shrink-0 overflow-hidden rounded-lg bg-muted">
                                 <img [src]="item.image" [alt]="item.title" class="h-full w-full object-cover" />
                             </div>
 
                             <!-- Product Info -->
-                            <div class="flex flex-1 flex-col justify-between">
+                            <div class="flex min-w-0 flex-1 flex-col justify-between">
                                 <div>
-                                    <h2 class="font-semibold text-foreground" style="font-family: var(--font-heading);">
+                                    <h2 class="font-heading font-semibold text-foreground">
                                         {{ item.title }}
                                     </h2>
                                     <!-- Only one category line needed, use utility class -->
@@ -51,24 +49,24 @@
                                 </div>
 
                                 <!-- Quantity Controls & Price -->
-                                <div class="flex items-center justify-between">
+                                <div class="flex flex-col gap-3 pt-3 sm:flex-row sm:items-center sm:justify-between">
                                     <div class="flex items-center gap-2">
                                         <span class="sr-only">Quantity for {{ item.title }}</span>
                                         <button (click)="onDecrementQuantity(item)"
-                                            class="h-8 w-8 rounded border border-border flex items-center justify-center hover:opacity-70 transition-opacity">
+                                            class="h-8 w-8 rounded border border-border flex items-center justify-center hover:opacity-70 transition-opacity cursor-pointer">
                                             <span class="text-foreground">−</span>
                                         </button>
                                         <span class="w-8 text-center text-sm font-medium text-foreground">{{
                                             item.quantity
                                             }}</span>
                                         <button (click)="onIncrementQuantity(item)"
-                                            class="h-8 w-8 rounded border border-border flex items-center justify-center hover:opacity-70 transition-opacity">
+                                            class="h-8 w-8 rounded border border-border flex items-center justify-center hover:opacity-70 transition-opacity cursor-pointer">
                                             <span class="text-foreground">+</span>
                                         </button>
                                     </div>
 
                                     <!-- Price -->
-                                    <div class="text-right">
+                                    <div class="text-left sm:text-right">
                                         <p class="font-semibold text-foreground">
                                             ${{ (item.price * item.quantity).toFixed(2) }}
                                         </p>
@@ -80,23 +78,22 @@
                             </div>
                             <!-- Remove Button -->
                             <button (click)="onRemoveItem(item.id)"
-                                class="h-8 w-8 flex items-center justify-center hover:opacity-70 transition-opacity text-destructive"
+                                class="ml-auto h-8 w-8 flex items-center justify-center text-destructive transition-opacity hover:opacity-70 cursor-pointer sm:ml-0"
                                 aria-label="Remove {{item.title}} from cart">
-                                <ng-icon name="ionTrashOutline" style="font-size: 20px;"></ng-icon>
+                                <ng-icon name="ionTrashOutline" class="text-[20px]"></ng-icon>
                             </button>
                         </div>
                     </div>
                     <!-- Continue Shopping Button -->
                     <button (click)="onContinueShopping()"
-                        class="w-full sm:w-auto px-6 py-3 rounded-lg border-2 border-border font-medium hover:opacity-80 transition-opacity text-foreground">
+                        class="cursor-pointer w-full sm:w-auto px-6 py-3 rounded-lg border-2 border-border font-medium hover:opacity-80 transition-opacity text-foreground">
                         Continue Shopping
                     </button>
                 </section>
                 <!-- Order Summary Sidebar -->
                 <aside class="lg:col-span-1" aria-labelledby="order-summary-heading">
                     <div class="rounded-lg p-6 sticky top-0 mt-4 bg-card border border-border">
-                        <h3 id="order-summary-heading" class="text-xl font-semibold mb-50 text-foreground"
-                            style="font-family: var(--font-heading);">
+                        <h3 id="order-summary-heading" class="font-heading text-xl font-semibold mb-50 text-foreground">
                             Order Summary
                         </h3>
                         <!-- Summary Lines -->
@@ -104,7 +101,7 @@
                             <!-- Subtotal -->
                             <div class="flex justify-between text-sm">
                                 <span class="text-foreground">Subtotal</span>
-                                <span class="font-medium" style="color: var(--foreground);">${{ subtotal().toFixed(2)
+                                <span class="font-medium text-foreground">${{ subtotal().toFixed(2)
                                     }}</span>
                             </div>
                             <!-- Shipping -->
@@ -112,7 +109,7 @@
                                 <span class="text-foreground">Shipping</span>
                                 <span class="font-medium">
                                     <ng-container *ngIf="shipping() === 0; else notFree">
-                                        <span style="color: var(--success-green); font-weight: 600;">Free</span>
+                                        <span class="text-success font-semibold">Free</span>
                                     </ng-container>
                                     <ng-template #notFree>
                                         <span class="text-foreground">${{ shipping().toFixed(2) }}</span>
@@ -129,13 +126,12 @@
                             <!-- Total -->
                             <div class="flex justify-between">
                                 <span class="font-semibold text-foreground">Total</span>
-                                <span class="text-xl font-bold" style="color: var(--foreground);" aria-live="polite">${{
+                                <span class="text-xl font-bold text-foreground" aria-live="polite">${{
                                     total().toFixed(2) }}</span>
                             </div>
                         </div>
                         <!-- Free Shipping Threshold Info -->
-                        <div *ngIf="subtotal() < 50" class="mb-6 rounded-lg p-3 text-sm text-center"
-                            style="background-color: rgba(163, 177, 138, 0.1);">
+                        <div *ngIf="subtotal() < 50" class="mb-6 rounded-lg bg-[rgba(163,177,138,0.1)] p-3 text-center text-sm">
                             <p>
                                 Add <span class="font-semibold">${{ (50 - subtotal()).toFixed(2) }}</span> more for free
                                 shipping!
@@ -143,15 +139,14 @@
                         </div>
                         <!-- Checkout Button -->
                         <button (click)="onCheckout()" [disabled]="!isLoggedIn"
-                            class="w-full mb-6 px-6 py-3 rounded-lg font-semibold text-white flex items-center justify-center gap-2 hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
-                            style="background-color: var(--primary);">
+                            class="cursor-pointer bg-primary text-primary-foreground w-full mb-6 flex items-center justify-center gap-2 rounded-lg px-6 py-3 font-semibold hover:opacity-90 transition-opacity disabled:cursor-not-allowed disabled:opacity-50">
                             Proceed to Checkout
                             <span>→</span>
                         </button>
                         <!-- Trust Info -->
-                        <div class="space-y-2 text-xs text-center" style="color: var(--muted-foreground);">
+                        <div class="space-y-2 text-xs text-center text-muted-foreground">
                             <p class="flex items-center justify-center gap-2 text-foreground">
-                                <span style="font-size: 16px;">✓</span>
+                                <span class="text-[16px]">✓</span>
                                 Secure checkout
                             </p>
                             <p class="text-foreground">Free returns within 30 days</p>

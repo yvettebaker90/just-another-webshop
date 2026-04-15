@@ -13,6 +13,7 @@ type FooterLink = {
     imports: [NgIcon],
     providers: [provideIcons({ ionMailOutline, ionLogoInstagram, ionLogoFacebook, ionLogoTwitter })],
     templateUrl: './footer.component.html',
+    styleUrl: './footer.component.css',
 })
 export class FooterComponent {
     currentYear = new Date().getFullYear();
