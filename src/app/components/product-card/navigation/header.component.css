@@ -1,0 +1,17 @@
+.site-header__inner {
+  width: 100%;
+}
+
+.site-header__logo {
+  line-height: 1;
+}
+
+.site-header__mobile-drawer {
+  max-height: 90vh;
+}
+
+.site-header__divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 0;
+}

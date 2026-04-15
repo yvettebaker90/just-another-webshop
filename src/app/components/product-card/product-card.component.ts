@@ -21,10 +21,10 @@ type ProductCategoryGroup = {
     class: 'block h-full',
   },
   template: `
-    <div (click)="navigateToDetail()" class="relative flex h-full flex-col overflow-hidden bg-(--card) shadow-(--shadow-soft) transition-[transform,box-shadow] duration-200 ease-in-out hover:-translate-y-0.5 hover:border hover:border-black/10 hover:shadow-(--shadow-hover) cursor-pointer">
+    <div (click)="navigateToDetail()" class="card relative flex h-full flex-col overflow-hidden transition-[transform,box-shadow] duration-200 ease-in-out hover:-translate-y-0.5 hover:border-black/10 hover:shadow-(--shadow-hover) cursor-pointer">
       <button
         type="button"
-        class="absolute right-3 top-3 z-10 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-(--foreground) shadow-sm transition hover:scale-105"
+        class="text-foreground absolute right-3 top-3 z-10 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/90 shadow-sm transition hover:scale-105"
         [attr.aria-label]="isFavorite() ? 'Remove from favorites' : 'Add to favorites'"
         [attr.aria-pressed]="isFavorite()"
         (click)="$event.stopPropagation(); toggleFavorite()"
@@ -32,7 +32,7 @@ type ProductCategoryGroup = {
         <ng-icon [name]="isFavorite() ? 'ionHeart' : 'ionHeartOutline'" size="20"></ng-icon>
       </button>
 
-      <div class="relative aspect-square overflow-hidden bg-(--secondary)">
+      <div class="bg-secondary relative aspect-square overflow-hidden">
         <img [src]="image()" [alt]="'Picture of ' + title()" [title]="title()" class="h-full w-full object-cover" />
         @if (tags().length) {
           <div class="absolute left-2 top-2 z-10 flex flex-col gap-1">
@@ -44,16 +44,28 @@ type ProductCategoryGroup = {
       </div>
 
       <div class="mb-4 flex flex-1 flex-col gap-2 p-4">
-        <p class="text-sm tracking-wide text-(--primary) capitalize">{{ brand() }} / {{ category() }}</p>
+        <p class="text-primary text-sm tracking-wide capitalize">{{ brand() }} / {{ category() }}</p>
         <h3
-          class="min-h-[3.4rem] text-lg font-bold [font-family:var(--font-heading)] leading-[1.3] tracking-[-0.02em] overflow-hidden [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2]"
+          class="font-heading min-h-[3.4rem] overflow-hidden text-lg font-bold leading-[1.3] tracking-[-0.02em] [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2]"
           [title]="title()"
         >{{ title() }}</h3>
         <p class="text-lg font-semibold">{{ '$' + price() }}</p>
-        <button type="button" (click)="$event.stopPropagation(); addToCart()" class="btn btn-primary mt-auto inline-flex items-center gap-2">
-          <ng-icon name="ionCartOutline" size="18" aria-hidden="true"></ng-icon>
-          Add to cart
-        </button>
+        <div class="mt-auto flex flex-col gap-2">
+          <button type="button" (click)="$event.stopPropagation(); addToCart()" class="btn btn-primary inline-flex items-center gap-2">
+            <ng-icon name="ionCartOutline" size="18" aria-hidden="true"></ng-icon>
+            Add to cart
+          </button>
+          @if (showDeleteAction()) {
+            <button
+              type="button"
+              (click)="$event.stopPropagation(); removeFromWishlist()"
+              class="btn btn-outline text-destructive"
+              aria-label="Delete {{ title() }} from wishlist"
+            >
+              Delete
+            </button>
+          }
+        </div>
       </div>     
     </div>
   `,
@@ -70,6 +82,7 @@ export class ProductCardComponent {
   image = input('');
   brand = input('');
   tags = input<string[]>([]);
+  showDeleteAction = input(false);
 
   readonly isFavorite = computed(() => {
     const productId = this.id();
@@ -86,6 +99,15 @@ export class ProductCardComponent {
       category: this.category(),
       quantity: 1
     });
+  }
+
+  removeFromWishlist(): void {
+    const productId = this.id();
+    if (productId <= 0) {
+      return;
+    }
+
+    void this.wishlistService.remove(productId);
   }
 
   navigateToDetail(): void {
