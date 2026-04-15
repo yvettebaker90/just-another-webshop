@@ -1,16 +1,17 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { ionCartOutline, ionHeart, ionHeartOutline } from '@ng-icons/ionicons';
+import { ionCartOutline, ionHeart, ionHeartOutline, ionChevronBack, ionRemove, ionAdd } from '@ng-icons/ionicons';
 import { Product, ProductService } from '../../services/product.service';
 import { ShoppingCartService, CartItem } from '../../services/shopping-cart.service';
+import { WishlistService } from '../../services/wishlist.service';
 
 @Component({
   selector: 'app-product-detail',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgIcon],
-  providers: [provideIcons({ ionCartOutline, ionHeart, ionHeartOutline })],
+  providers: [provideIcons({ ionCartOutline, ionHeart, ionHeartOutline, ionChevronBack, ionRemove, ionAdd })],
   templateUrl: './products-details.page.html',
 })
 export class ProductDetail {
@@ -19,11 +20,15 @@ export class ProductDetail {
   readonly error = signal<string | null>(null);
   readonly quantity = signal(1);
   readonly activeImage = signal('');
-  readonly isFavorite = signal(false);
   readonly activeTab = signal<'description' | 'details'>('description');
+  readonly isFavorite = computed(() => {
+    const currentProduct = this.product();
+    return currentProduct ? this.wishlistService.isInWishlist(currentProduct.id) : false;
+  });
 
   private readonly productService = inject(ProductService);
   private readonly cartService = inject(ShoppingCartService);
+  private readonly wishlistService = inject(WishlistService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   async addToCart() {
@@ -74,7 +79,14 @@ export class ProductDetail {
   increment(): void { this.quantity.update(q => q + 1); }
   decrement(): void { this.quantity.update(q => Math.max(1, q - 1)); }
   setActiveImage(img: string): void { this.activeImage.set(img); }
-  toggleFavorite(): void { this.isFavorite.update(v => !v); }
+  toggleFavorite(): void {
+    const currentProduct = this.product();
+    if (!currentProduct) {
+      return;
+    }
+
+    this.wishlistService.toggle(currentProduct);
+  }
   setActiveTab(tab: 'description' | 'details'): void { this.activeTab.set(tab); }
   goBack(): void { void this.router.navigate(['/products']); }
 }

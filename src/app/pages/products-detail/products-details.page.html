@@ -20,7 +20,8 @@
         (click)="goBack()"
         class="mb-6 inline-flex items-center gap-1 text-md text-gray-500 hover:text-black transition-colors"
       >
-        &#8249; Back to products
+        <ng-icon name="ionChevronBack" class="h-4 w-4"></ng-icon>
+        Back to products
       </button>
 
       <div class="grid grid-cols-1 gap-12 lg:grid-cols-2">
@@ -39,6 +40,7 @@
             <div class="flex gap-3">
               @for (img of images; track img) {
                 <button
+                  title="View image"
                   type="button"
                   (click)="setActiveImage(img)"
                   class="h-24 w-24 overflow-hidden border-2 transition-colors"
@@ -82,7 +84,7 @@
                 class="flex h-8 w-8 items-center justify-center text-lg hover:bg-gray-100 transition-colors"
                 aria-label="Decrease quantity"
               >
-                &minus;
+                <ng-icon name="ionRemove" size="18" aria-hidden="true"></ng-icon>
               </button>
               <span class="w-10 text-center text-sm">{{ quantity() }}</span>
               <button
@@ -91,7 +93,7 @@
                 class="flex h-8 w-8 items-center justify-center text-lg hover:bg-gray-100 transition-colors"
                 aria-label="Increase quantity"
               >
-                &#43;
+                <ng-icon name="ionAdd" size="18" aria-hidden="true"></ng-icon>
               </button>
             </div>
           </div>
@@ -105,7 +107,7 @@
             <button
               type="button"
               (click)="toggleFavorite()"
-              class="inline-flex h-11 w-11 items-center justify-center border border-gray-300 bg-white text-foreground transition hover:scale-105"
+              class="inline-flex h-11 w-11 items-center justify-center border border-gray-300 bg-white text-foreground transition hover:scale-105 cursor-pointer"
               [attr.aria-label]="isFavorite() ? 'Remove from favorites' : 'Add to favorites'"
               [attr.aria-pressed]="isFavorite()"
             >
