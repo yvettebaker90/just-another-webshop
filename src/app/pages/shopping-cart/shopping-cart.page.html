@@ -4,25 +4,23 @@
 </div>
 
 <ng-container *ngIf="cartItems().length === 0; else cartContent">
-    <section
-        class="flex flex-col items-center justify-center p-8 text-center">
+    <section class="flex flex-col items-center justify-center p-8 text-center">
         <ng-icon name="ionCartOutline" size="48" color="black" class="mb-4"></ng-icon>
         <h1 class="text-xl font-semibold mb-2">Your cart is empty</h1>
-        <p class="mt-2 mb-6 text-xs font-light text-muted-foreground">
+        <h2 class="h2-cart-empty">
             Looks like you haven't added anything to your cart yet.
-        </p>
-        <button
-            class="btn btn-primary px-6 py-3 rounded-lg font-medium flex items-center justify-center"
+        </h2>
+        <button class="btn btn-primary px-6 py-3 rounded-lg font-medium flex items-center justify-center"
             (click)="onStartShopping()">
             Start shopping
         </button>
     </section>
 </ng-container>
 <ng-template #cartContent>
-    <main class="min-h-screen bg-background py-8" role="main"
-        aria-labelledby="cart-heading">
+    <main class="min-h-screen bg-background py-8" role="main" aria-labelledby="cart-heading">
         <div class="content-shell bg-background">
-            <h1 id="cart-heading" class="font-heading mb-40 mt-10 text-left text-3xl font-bold text-foreground sm:mt-20">
+            <h1 id="cart-heading"
+                class="font-heading mb-40 mt-10 text-left text-3xl font-bold text-foreground sm:mt-20">
                 Shopping Cart
             </h1>
             <!-- Cart Content -->
@@ -86,7 +84,7 @@
                     </div>
                     <!-- Continue Shopping Button -->
                     <button (click)="onContinueShopping()"
-                        class="cursor-pointer w-full sm:w-auto px-6 py-3 rounded-lg border-2 border-border font-medium hover:opacity-80 transition-opacity text-foreground">
+                        class="cursor-pointer btn btn-outline btn-lg font-light tracking-wide w-full sm:w-auto mt-4">
                         Continue Shopping
                     </button>
                 </section>
@@ -131,7 +129,8 @@
                             </div>
                         </div>
                         <!-- Free Shipping Threshold Info -->
-                        <div *ngIf="subtotal() < 50" class="mb-6 rounded-lg bg-[rgba(163,177,138,0.1)] p-3 text-center text-sm">
+                        <div *ngIf="subtotal() < 50"
+                            class="mb-6 rounded-lg bg-[rgba(163,177,138,0.1)] p-3 text-center text-sm">
                             <p>
                                 Add <span class="font-semibold">${{ (50 - subtotal()).toFixed(2) }}</span> more for free
                                 shipping!
