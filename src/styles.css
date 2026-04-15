@@ -148,12 +148,13 @@ textarea {
   font: inherit;
 }
 
-  a {
-    text-decoration: none;
-  }
+a {
+  text-decoration: none;
+}
 
 /* Typography */
 h1,
+h2,
 h3,
 h4,
 h5,
@@ -163,12 +164,22 @@ h6 {
   color: var(--foreground);
 }
 
-h2 {
+/* h2 {
   margin: 0;
   font-family: var(--font-body);
   color: var(--foreground);
   font-size: 1.5rem;
   font-weight: 100;
+} */
+
+.h1-login-register {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--primary);
+  margin: 0;
+  text-align: center;
+  padding-top: 0.25rem;
+  margin-bottom: 1rem;
 }
 
 .h2-new-arrivals {
@@ -176,16 +187,22 @@ h2 {
   font-family: var(--font-heading);
   color: var(--foreground);
   font-size: 1.5rem;
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: -0.01em;
 }
 
 .h2-cart-empty {
-  margin-top: 0.5rem;   
+  margin-top: 0.5rem;
   margin-bottom: 1.5rem;
   font-size: 0.75rem;
-  font-weight: 300;
   color: var(--foreground);
+}
+
+.h2-login-register {
+  font-size: 0.9rem;
+  color: var(--foreground);
+  font-weight: 800;
+  margin: 0;
 }
 
 .text-display {
