@@ -49,7 +49,17 @@ type ProductCategoryGroup = {
           class="font-heading min-h-[3.4rem] overflow-hidden text-lg font-bold leading-[1.3] tracking-[-0.02em] [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2]"
           [title]="title()"
         >{{ title() }}</h3>
-        <p class="text-lg font-semibold">{{ '$' + price() }}</p>
+        @if (isOnSale()) {
+          <div class="space-y-1">
+            <p class="text-sm text-black/45 line-through">{{ formatPrice(price()) }}</p>
+            <div class="flex flex-wrap items-center gap-2">
+              <p class="text-lg font-semibold text-red-600">{{ formatPrice(discountedPrice()) }}</p>
+              <span class="text-sm font-semibold text-red-600">-{{ salePercentage() }}%</span>
+            </div>
+          </div>
+        } @else {
+          <p class="text-lg font-semibold">{{ formatPrice(price()) }}</p>
+        }
         <div class="mt-auto flex flex-col gap-2">
           <button type="button" (click)="$event.stopPropagation(); addToCart()" class="btn btn-primary inline-flex items-center gap-2">
             <ng-icon name="ionCartOutline" size="18" aria-hidden="true"></ng-icon>
@@ -82,11 +92,33 @@ export class ProductCardComponent {
   image = input('');
   brand = input('');
   tags = input<string[]>([]);
+  discountPercentage = input<number | undefined>(undefined);
   showDeleteAction = input(false);
 
   readonly isFavorite = computed(() => {
     const productId = this.id();
     return productId > 0 && this.wishlistService.isInWishlist(productId);
+  });
+  readonly salePercentage = computed(() => {
+    const rawValue = this.discountPercentage();
+    if (rawValue === undefined || rawValue === null) {
+      return 0;
+    }
+
+    const normalized = Math.round(rawValue);
+    return normalized > 0 ? Math.min(normalized, 100) : 0;
+  });
+  readonly hasSaleTag = computed(() => this.tags().some((tag) => tag.toLowerCase() === 'sale'));
+  readonly isOnSale = computed(() => this.hasSaleTag() && this.salePercentage() > 0);
+  readonly discountedPrice = computed(() => {
+    const originalPrice = this.price();
+    const percentage = this.salePercentage();
+
+    if (percentage <= 0) {
+      return originalPrice;
+    }
+
+    return originalPrice * (1 - percentage / 100);
   });
 
   addToCart() {
@@ -127,6 +159,8 @@ export class ProductCardComponent {
       price: this.price(),
       image: this.image(),
       category: this.category(),
+      tags: this.tags(),
+      discount_percentage: this.discountPercentage(),
     });
   }
 
@@ -147,6 +181,10 @@ export class ProductCardComponent {
 
   formatTag(tag: string): string {
     return tag.charAt(0).toUpperCase() + tag.slice(1).toLowerCase();
+  }
+
+  formatPrice(value: number): string {
+    return `$${value.toFixed(2)}`;
   }
 }
 
