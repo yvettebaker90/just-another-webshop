@@ -11,6 +11,7 @@ type ProductWithTags = Product & {
 
 @Component({
   selector: 'app-products',
+  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ProductCardComponent, SearchFilterComponent],
   templateUrl: './products.page.html'
