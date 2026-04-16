@@ -1,5 +1,4 @@
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
-import emailjs from '@emailjs/browser';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { ionMailOutline } from '@ng-icons/ionicons';
 
@@ -35,7 +34,9 @@ export class ContactFormPage {
     this.messageType = '';
 
     try {
-      await emailjs.sendForm(
+      const emailjs = await import('@emailjs/browser');
+
+      await emailjs.default.sendForm(
         'service_2tctss2',
         'template_9gru4sf',
         form,
