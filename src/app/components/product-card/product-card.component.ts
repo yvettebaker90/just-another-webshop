@@ -14,6 +14,7 @@ type ProductCategoryGroup = {
 
 @Component({
   selector: 'app-product-card',
+  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgIcon, CommonModule],
   providers: [provideIcons({ ionCartOutline, ionHeart, ionHeartOutline })],
@@ -190,6 +191,7 @@ export class ProductCardComponent {
 
 @Component({
   selector: 'app-product-cards',
+  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ProductCardComponent],
   templateUrl: './product-card.component.html',

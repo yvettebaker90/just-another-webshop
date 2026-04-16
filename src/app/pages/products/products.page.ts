@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { ionClose } from '@ng-icons/ionicons';
 import { Subscription } from 'rxjs';
 import { ProductCardComponent } from '../../components/product-card/product-card.component';
 import { SearchFilterComponent } from '../../components/search-filter/search-filter.component';
@@ -11,8 +13,10 @@ type ProductWithTags = Product & {
 
 @Component({
   selector: 'app-products',
+  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ProductCardComponent, SearchFilterComponent],
+  imports: [ProductCardComponent, SearchFilterComponent, NgIcon],
+  providers: [provideIcons({ ionClose })],
   templateUrl: './products.page.html'
 })
 // Products page component: displays all products with filtering, search, and pagination
@@ -33,6 +37,7 @@ export class Products implements OnDestroy {
   readonly error = signal<string | null>(null);
   // Current search query from URL
   readonly searchQuery = signal('');
+  readonly isFilterModalOpen = signal(false);
 
   // Unique categories from products
   readonly categories = computed(() => {
@@ -78,6 +83,12 @@ export class Products implements OnDestroy {
   readonly selectedTags = signal<string[]>([]);
   // Number of products after filtering
   readonly totalProducts = computed(() => this.filteredProducts().length);
+  readonly activeFilterCount = computed(() =>
+    this.selectedCategories().length +
+    this.selectedBrands().length +
+    this.selectedTags().length +
+    (this.maxPrice() < this.highestPrice() ? 1 : 0)
+  );
 
   // Pagination state
   readonly PAGE_SIZE = 12;
@@ -103,6 +114,14 @@ export class Products implements OnDestroy {
 
   // Go to a specific page
   goToPage(page: number): void { this.currentPage.set(page); }
+
+  openFilterModal(): void {
+    this.isFilterModalOpen.set(true);
+  }
+
+  closeFilterModal(): void {
+    this.isFilterModalOpen.set(false);
+  }
 
   // Subscribe to query param changes and load products on init
   constructor() {

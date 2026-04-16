@@ -23,6 +23,7 @@
 
   --color-accent: #6d7b52;
   --color-accent-foreground: #2b2b2b;
+  --color-accent-focus-ring: rgba(109, 123, 82, 0.18);
 
   --color-taupe: #b8ada4;
   --color-border: #d4cfc7;
@@ -31,6 +32,8 @@
 
   --color-destructive: #8b2f23;
   --color-destructive-foreground: #ffffff;
+  --color-destructive-border-soft: #e5d1cf;
+  --color-destructive-bg-soft: #f6eeed;
   --color-success-green: #166534;
 
   --color-sale-red: #f87171;
@@ -73,9 +76,11 @@
 
   --muted: var(--color-muted);
   --muted-foreground: var(--color-muted-foreground);
+  --muted-soft: #eeeae5;
 
   --accent: var(--color-accent);
   --accent-foreground: var(--color-accent-foreground);
+  --accent-focus-ring: var(--color-accent-focus-ring);
 
   --taupe: var(--color-taupe);
   --border: var(--color-border);
@@ -84,6 +89,8 @@
 
   --destructive: var(--color-destructive);
   --destructive-foreground: var(--color-destructive-foreground);
+  --destructive-border-soft: var(--color-destructive-border-soft);
+  --destructive-bg-soft: var(--color-destructive-bg-soft);
   --success-green: var(--color-success-green);
 
   --sale-red: var(--color-sale-red);
@@ -366,7 +373,7 @@ h6 {
 }
 
 .panel-muted {
-  background-color: color-mix(in srgb, var(--muted) 75%, white 25%);
+  background-color: var(--muted-soft);
 }
 
 .status-message {
@@ -380,8 +387,8 @@ h6 {
 }
 
 .status-message--error {
-  border-color: color-mix(in srgb, var(--destructive) 22%, white 78%);
-  background-color: color-mix(in srgb, var(--destructive) 8%, white 92%);
+  border-color: var(--destructive-border-soft);
+  background-color: var(--destructive-bg-soft);
   color: var(--destructive);
 }
 
@@ -411,7 +418,7 @@ h6 {
 .form-control:focus-visible {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent);
+  box-shadow: 0 0 0 3px var(--accent-focus-ring);
 }
 
 .form-control--white {
