@@ -1,8 +1,8 @@
-<div class="min-h-screen bg-[#f3f3f3] py-10 w-full">
+<div class="min-h-screen w-full bg-[#f3f3f3] py-8 sm:py-10">
 	<section class="content-shell space-y-6" id="top">
 		<header class="space-y-2">
-			<h1 class="text-4xl font-bold tracking-tight">Shop All Products</h1>
-			<p class="text-xl text-black/60">{{ totalProducts() }} products found</p>
+			<h1 class="text-3xl font-bold tracking-tight sm:text-4xl">Shop All Products</h1>
+			<p class="text-base text-black/60 sm:text-xl">{{ totalProducts() }} products found</p>
 		</header>
 
 		<div class="space-y-6">
@@ -24,11 +24,10 @@
 
 			<div class="space-y-4">
 				<div class="flex justify-end">
-
 					<button
 						type="button"
 						(click)="openFilterModal()"
-						class="btn btn-outline btn-lg rounded-md font-light tracking-wide"
+						class="btn btn-outline min-h-[2.75rem] rounded-md px-4 py-2.5 text-sm font-light tracking-wide sm:min-h-12 sm:px-5"
 						aria-haspopup="dialog"
 						aria-controls="collection-filter-modal"
 						[attr.aria-expanded]="isFilterModalOpen()"
@@ -63,7 +62,7 @@
 				}
 
 				@if (!loading() && !error()) {
-					<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+					<div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
 						@for (product of paginatedProducts(); track product.id) {
 							<app-product-card
 								[id]="product.id"
@@ -90,7 +89,7 @@
 
 							@for (page of pageNumbers(); track $index) {
 								@if (page === null) {
-									<span class="inline-flex h-9 w-9 items-center justify-center text-sm text-gray-400">…</span>
+									<span class="inline-flex h-9 w-9 items-center justify-center text-sm text-gray-400">&#8230;</span>
 								} @else {
 									<button
 										type="button"
@@ -123,7 +122,7 @@
 
 	@if (isFilterModalOpen()) {
 		<div
-			class="fixed inset-0 z-50 flex items-start justify-end bg-black/45 px-4 py-6 md:px-8"
+			class="fixed inset-0 z-50 flex items-start justify-center bg-black/45 px-4 py-4 sm:justify-end sm:px-6 sm:py-6"
 			(click)="closeFilterModal()"
 		>
 			<div
@@ -131,26 +130,26 @@
 				role="dialog"
 				aria-modal="true"
 				aria-labelledby="collection-filter-title"
-				class="flex max-h-[calc(100vh-3rem)] w-full max-w-md flex-col overflow-hidden rounded-[2rem] bg-[#f8f2eb] shadow-2xl"
+				class="flex max-h-[calc(100vh-2rem)] w-full max-w-[36rem] flex-col overflow-hidden rounded-md bg-[#f8f2eb] shadow-2xl sm:max-h-[calc(100vh-3rem)]"
 				(click)="$event.stopPropagation()"
 			>
-				<div class="flex items-start justify-between border-b border-black/10 px-6 py-5">
+				<div class="flex items-start justify-between gap-4 border-b border-black/10 px-4 py-4 sm:px-6 sm:py-5">
 					<div class="space-y-1">
-						<h2 id="collection-filter-title" class="text-2xl font-semibold text-black">Filter products</h2>
-						<p class="text-sm text-black/65">Choose what you want to browse right now.</p>
+						<h2 id="collection-filter-title" class="text-xl font-semibold text-black sm:text-2xl">Filter products</h2>
+						<p class="text-xs text-black/65 sm:text-sm">Choose what you want to browse right now.</p>
 					</div>
 
 					<button
 						type="button"
 						(click)="closeFilterModal()"
-						class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-black/15 bg-white text-xl text-black transition hover:border-black hover:bg-black hover:text-white"
+						class="h-10 w-10 shrink-0 rounded-full bg-white p-0 text-black cursor-pointer flex items-center justify-center"
 						aria-label="Close filter modal"
 					>
-						×
+						<ng-icon name="ionClose" size="20" color="black" aria-hidden="true"></ng-icon>
 					</button>
 				</div>
 
-				<div class="overflow-y-auto px-6 py-5">
+				<div class="overflow-y-auto px-4 py-4 sm:px-6 sm:py-5">
 					<app-search-filter
 						[categories]="categories()"
 						[brands]="brands()"
@@ -167,11 +166,11 @@
 					></app-search-filter>
 				</div>
 
-				<div class="flex items-center justify-between gap-3 border-t border-black/10 bg-white/75 px-6 py-4">
+				<div class="flex flex-col-reverse gap-3 border-t border-black/10 bg-white/75 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
 					<button
 						type="button"
 						(click)="clearFilters()"
-						class="inline-flex items-center justify-center rounded-full border border-black/15 px-4 py-2 text-sm font-medium text-black transition hover:border-black hover:bg-black hover:text-white"
+						class="btn btn-outline min-h-[2.75rem] w-full rounded-md px-4 py-2.5 text-sm font-light tracking-wide cursor-pointer sm:w-auto sm:min-h-12 sm:px-5"
 					>
 						Clear all
 					</button>
@@ -179,7 +178,7 @@
 					<button
 						type="button"
 						(click)="closeFilterModal()"
-						class="inline-flex items-center justify-center rounded-full bg-black px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-black/85"
+						class="inline-flex w-full items-center justify-center rounded-md bg-black px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-black/85 sm:w-auto cursor-pointer"
 					>
 						Show {{ totalProducts() }} products
 					</button>

@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { ionClose } from '@ng-icons/ionicons';
 import { Subscription } from 'rxjs';
 import { ProductCardComponent } from '../../components/product-card/product-card.component';
 import { SearchFilterComponent } from '../../components/search-filter/search-filter.component';
@@ -13,7 +15,8 @@ type ProductWithTags = Product & {
   selector: 'app-products',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ProductCardComponent, SearchFilterComponent],
+  imports: [ProductCardComponent, SearchFilterComponent, NgIcon],
+  providers: [provideIcons({ ionClose })],
   templateUrl: './products.page.html'
 })
 // Products page component: displays all products with filtering, search, and pagination
