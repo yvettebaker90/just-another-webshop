@@ -5,8 +5,9 @@
 			<p class="text-xl text-black/60">{{ totalProducts() }} products found</p>
 		</header>
 
-		<div class="grid grid-cols-1 gap-6 lg:grid-cols-[230px_1fr]">
+		<div class="space-y-6">
 			<app-search-filter
+				class="hidden"
 				[categories]="categories()"
 				[brands]="brands()"
 				[availableTags]="availableTags()"
@@ -22,6 +23,27 @@
 			></app-search-filter>
 
 			<div class="space-y-4">
+				<div class="flex justify-end">
+
+					<button
+						type="button"
+						(click)="openFilterModal()"
+						class="btn btn-outline btn-lg rounded-md font-light tracking-wide"
+						aria-haspopup="dialog"
+						aria-controls="collection-filter-modal"
+						[attr.aria-expanded]="isFilterModalOpen()"
+					>
+						<span>Filter</span>
+						@if (activeFilterCount() > 0) {
+							<span class="inline-flex min-h-6 min-w-6 items-center justify-center rounded-full bg-white px-2 text-xs font-bold text-black">
+								{{ activeFilterCount() }}
+							</span>
+						}
+					</button>
+				</div>
+
+				<hr class="border-t border-[#a3b18a]/50" />
+
 				@if (loading()) {
 					<p class="rounded border border-gray-200 bg-white px-4 py-6 text-center text-sm text-gray-600">
 						Loading products...
@@ -98,4 +120,72 @@
 			</div>
 		</div>
 	</section>
+
+	@if (isFilterModalOpen()) {
+		<div
+			class="fixed inset-0 z-50 flex items-start justify-end bg-black/45 px-4 py-6 md:px-8"
+			(click)="closeFilterModal()"
+		>
+			<div
+				id="collection-filter-modal"
+				role="dialog"
+				aria-modal="true"
+				aria-labelledby="collection-filter-title"
+				class="flex max-h-[calc(100vh-3rem)] w-full max-w-md flex-col overflow-hidden rounded-[2rem] bg-[#f8f2eb] shadow-2xl"
+				(click)="$event.stopPropagation()"
+			>
+				<div class="flex items-start justify-between border-b border-black/10 px-6 py-5">
+					<div class="space-y-1">
+						<p class="text-xs uppercase tracking-[0.24em] text-black/45">Collection</p>
+						<h2 id="collection-filter-title" class="text-2xl font-semibold text-black">Filter products</h2>
+						<p class="text-sm text-black/65">Choose what you want to browse right now.</p>
+					</div>
+
+					<button
+						type="button"
+						(click)="closeFilterModal()"
+						class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-black/15 bg-white text-xl text-black transition hover:border-black hover:bg-black hover:text-white"
+						aria-label="Close filter modal"
+					>
+						×
+					</button>
+				</div>
+
+				<div class="overflow-y-auto px-6 py-5">
+					<app-search-filter
+						[categories]="categories()"
+						[brands]="brands()"
+						[availableTags]="availableTags()"
+						[selectedCategories]="selectedCategories()"
+						[selectedBrands]="selectedBrands()"
+						[selectedTags]="selectedTags()"
+						[maxPrice]="maxPrice()"
+						[highestPrice]="highestPrice()"
+						(categoryToggled)="toggleCategory($event)"
+						(brandToggled)="toggleBrand($event)"
+						(maxPriceChanged)="updateMaxPrice($event)"
+						(tagToggled)="toggleTag($event)"
+					></app-search-filter>
+				</div>
+
+				<div class="flex items-center justify-between gap-3 border-t border-black/10 bg-white/75 px-6 py-4">
+					<button
+						type="button"
+						(click)="clearFilters()"
+						class="inline-flex items-center justify-center rounded-full border border-black/15 px-4 py-2 text-sm font-medium text-black transition hover:border-black hover:bg-black hover:text-white"
+					>
+						Clear all
+					</button>
+
+					<button
+						type="button"
+						(click)="closeFilterModal()"
+						class="inline-flex items-center justify-center rounded-full bg-black px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-black/85"
+					>
+						Show {{ totalProducts() }} products
+					</button>
+				</div>
+			</div>
+		</div>
+	}
 </div>

@@ -33,6 +33,7 @@ export class Products implements OnDestroy {
   readonly error = signal<string | null>(null);
   // Current search query from URL
   readonly searchQuery = signal('');
+  readonly isFilterModalOpen = signal(false);
 
   // Unique categories from products
   readonly categories = computed(() => {
@@ -78,6 +79,12 @@ export class Products implements OnDestroy {
   readonly selectedTags = signal<string[]>([]);
   // Number of products after filtering
   readonly totalProducts = computed(() => this.filteredProducts().length);
+  readonly activeFilterCount = computed(() =>
+    this.selectedCategories().length +
+    this.selectedBrands().length +
+    this.selectedTags().length +
+    (this.maxPrice() < this.highestPrice() ? 1 : 0)
+  );
 
   // Pagination state
   readonly PAGE_SIZE = 12;
@@ -103,6 +110,14 @@ export class Products implements OnDestroy {
 
   // Go to a specific page
   goToPage(page: number): void { this.currentPage.set(page); }
+
+  openFilterModal(): void {
+    this.isFilterModalOpen.set(true);
+  }
+
+  closeFilterModal(): void {
+    this.isFilterModalOpen.set(false);
+  }
 
   // Subscribe to query param changes and load products on init
   constructor() {
