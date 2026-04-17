@@ -41,7 +41,7 @@
                         <div class="flex flex-wrap gap-4 sm:flex-nowrap">
                             <!-- Product Image -->
                             <div class="h-24 w-24 shrink-0 overflow-hidden rounded-lg bg-muted">
-                                <img [src]="item.image" [alt]="item.title" class="h-full w-full object-cover" />
+                                <img [src]="item.image" [alt]="item.title" loading="lazy" decoding="async" class="h-full w-full object-cover" />
                             </div>
 
                             <!-- Product Info -->

@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { Meta, Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { ionCartOutline, ionHeart, ionHeartOutline, ionChevronBack, ionRemove, ionAdd } from '@ng-icons/ionicons';
@@ -31,6 +32,8 @@ export class ProductDetail {
   private readonly wishlistService = inject(WishlistService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly title = inject(Title);
+  private readonly meta = inject(Meta);
   async addToCart() {
     const p = this.product();
     if (!p) return;
@@ -59,9 +62,19 @@ export class ProductDetail {
       const product = await this.productService.getProductById(id);
       if (!product) {
         this.error.set('Product not found.');
+        this.title.setTitle('Product Not Found | Just Another Webshop');
+        this.meta.updateTag({
+          name: 'description',
+          content: 'The product you are looking for could not be found at Just Another Webshop.',
+        });
       } else {
         this.product.set(product);
         this.activeImage.set(product.image);
+        this.title.setTitle(`${product.title} | Just Another Webshop`);
+        this.meta.updateTag({
+          name: 'description',
+          content: product.description?.trim() || `Buy ${product.title} at Just Another Webshop.`,
+        });
       }
     } catch {
       this.error.set('Could not load product.');
