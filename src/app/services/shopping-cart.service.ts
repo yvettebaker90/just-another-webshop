@@ -20,6 +20,7 @@ export class ShoppingCartService {
     private readonly storageKey = 'jaw_cart_items';
     // Table name in Supabase
     private readonly tableName = 'shopping_cart_items';
+    private currentUserId: string | null | undefined = undefined;
 
     // Signal to hold the current cart items
     private readonly cartItemsSignal = signal<CartItem[]>([]);
@@ -33,17 +34,31 @@ export class ShoppingCartService {
 
     constructor() {
         // Initialize cart on service creation
-        void this.initializeCart();
+        this.scheduleInitialization();
         // Listen for authentication state changes
         this.supabaseService.client.auth.onAuthStateChange((_event, session) => {
-            if (!session?.user) {
+            this.currentUserId = session?.user?.id ?? null;
+
+            if (!this.currentUserId) {
                 // If user logs out, clear local state
                 this.clearLocalState();
                 return;
             }
             // On login, load from localStorage and sync with Supabase
             this.loadFromLocalStorage();
-            void this.syncWithSupabase(session.user.id);
+            this.scheduleSyncWithSupabase(this.currentUserId);
+        });
+    }
+
+    private scheduleInitialization(): void {
+        this.runWhenIdle(() => {
+            void this.initializeCart();
+        });
+    }
+
+    private scheduleSyncWithSupabase(userId: string): void {
+        this.runWhenIdle(() => {
+            void this.syncWithSupabase(userId);
         });
     }
 
@@ -126,14 +141,20 @@ export class ShoppingCartService {
 
     // Get the current logged-in user's ID from Supabase auth
     private async getCurrentUserId(): Promise<string | null> {
+        if (this.currentUserId !== undefined) {
+            return this.currentUserId;
+        }
+
         const {
-            data: { user },
+            data: { session },
             error,
-        } = await this.supabaseService.client.auth.getUser();
-        if (error || !user) {
+        } = await this.supabaseService.client.auth.getSession();
+        if (error || !session?.user) {
+            this.currentUserId = null;
             return null;
         }
-        return user.id;
+        this.currentUserId = session.user.id;
+        return this.currentUserId;
     }
 
     // Read all cart items for a user from Supabase
@@ -171,8 +192,6 @@ export class ShoppingCartService {
             .upsert(payload, { onConflict: 'user_id,product_id' });
         if (error) {
             console.error('Supabase error:', error.message, error.details);
-        } else {
-            console.log('Supabase upsert success:', data);
         }
     }
 
@@ -247,5 +266,14 @@ export class ShoppingCartService {
         }
         this.cartItemsSignal.set([]);
         this.saveToLocalStorage();
+    }
+
+    private runWhenIdle(task: () => void): void {
+        if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+            window.requestIdleCallback(() => task(), { timeout: 1500 });
+            return;
+        }
+
+        setTimeout(task, 250);
     }
 }

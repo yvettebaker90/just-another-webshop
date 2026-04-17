@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Meta, Title } from '@angular/platform-browser';
 import { ProfileService } from '../../services/profile.service';
 import { Router } from '@angular/router';
 import { SupabaseService } from '../../services/supabase.services';
@@ -12,7 +13,9 @@ import { SupabaseService } from '../../services/supabase.services';
     standalone: true,
     imports: [ReactiveFormsModule, CommonModule],
 })
-export class RegisterPage {
+export class RegisterPage implements OnInit {
+    private readonly title = inject(Title);
+    private readonly meta = inject(Meta);
     registerForm: FormGroup;
     submitted = false;
     error: string | null = null;
@@ -31,6 +34,14 @@ export class RegisterPage {
             password: ['', [Validators.required, Validators.minLength(6)]],
             confirmPassword: ['', [Validators.required]]
         }, { validators: this.passwordsMatchValidator });
+    }
+
+    ngOnInit(): void {
+        this.title.setTitle('Create Account | Just Another Webshop');
+        this.meta.updateTag({
+            name: 'description',
+            content: 'Create your Just Another Webshop account to save favorites, manage your cart, and shop faster.',
+        });
     }
 
     get firstName() { return this.registerForm.get('firstName'); }

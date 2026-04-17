@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy, signal } from '@angular/core';
+import { Meta, Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { ionClose } from '@ng-icons/ionicons';
@@ -24,6 +25,8 @@ export class Products implements OnDestroy {
   // Inject ProductService for data and ActivatedRoute for query params
   private readonly productService = inject(ProductService);
   private readonly route = inject(ActivatedRoute);
+  private readonly title = inject(Title);
+  private readonly meta = inject(Meta);
 
   // Subscription for query param changes
   private queryParamsSub: Subscription;
@@ -125,10 +128,16 @@ export class Products implements OnDestroy {
 
   // Subscribe to query param changes and load products on init
   constructor() {
+    this.title.setTitle('Shop All Products | Just Another Webshop');
+    this.meta.updateTag({
+      name: 'description',
+      content: 'Browse all products at Just Another Webshop, including fragrances, beauty items, and curated favorites.',
+    });
+
     this.queryParamsSub = this.route.queryParams.subscribe((params) => {
       const search = params['search'] ?? '';
       this.searchQuery.set(search);
-      void this.loadProducts(search.trim() || undefined);
+      void this.loadProducts(search.trim());
     });
   }
 
@@ -155,21 +164,20 @@ export class Products implements OnDestroy {
   });
 
   /* Loads all products (optionally filtered by search query) and updates all filter and pagination state */
-  async loadProducts(search?: string): Promise<void> {
+  async loadProducts(search = ''): Promise<void> {
     this.loading.set(true);
     this.error.set(null);
 
     try {
-      // ProductService already returns tags as array
       const allRaw = await this.productService.getProducts();
-      this.allProducts.set(allRaw as ProductWithTags[]);
+      const normalizedProducts = allRaw as ProductWithTags[];
+      const trimmedSearch = search.trim().toLowerCase();
+      const visibleProducts = trimmedSearch.length > 0
+        ? normalizedProducts.filter((product) => this.matchesSearch(product, trimmedSearch))
+        : normalizedProducts;
 
-      if (search && search.length > 0) {
-        const searchRaw = await this.productService.searchProducts(search);
-        this.products.set(searchRaw as ProductWithTags[]);
-      } else {
-        this.products.set(allRaw as ProductWithTags[]);
-      }
+      this.allProducts.set(normalizedProducts);
+      this.products.set(visibleProducts);
 
       // Remove any selected filters that are no longer valid
       this.selectedCategories.update((sel) => sel.filter((c) => this.categories().includes(c)));
@@ -238,5 +246,10 @@ export class Products implements OnDestroy {
   // Utility: convert a string to Title Case
   private toTitleCase(value: string): string {
     return value.charAt(0).toUpperCase() + value.slice(1);
+  }
+
+  private matchesSearch(product: ProductWithTags, search: string): boolean {
+    return [product.title, product.category, product.brand ?? '']
+      .some((value) => value.toLowerCase().includes(search));
   }
 }

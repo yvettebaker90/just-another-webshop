@@ -18,16 +18,45 @@ export interface Product {
 // ProductService is responsible for fetching, searching, and normalizing product data from Supabase.
 @Injectable({ providedIn: 'root' })
 export class ProductService {
+  private productsCache: Product[] | null = null;
+  private productsRequest: Promise<Product[]> | null = null;
+
   constructor(private supabase: SupabaseService) { }
 
   /* Updates the stock (in_stock) for a product by a given diff (positive or negative). */
   async updateStock(productId: number, diff: number): Promise<void> {
     await this.supabase.client
       .rpc('increment_product_stock', { product_id: productId, diff });
+    this.clearProductsCache();
   }
 
   /* Fetches all products from the 'Jaw Products' table in Supabase */
   async getProducts(): Promise<Product[]> {
+    if (this.productsCache) {
+      return this.productsCache;
+    }
+
+    if (this.productsRequest) {
+      return this.productsRequest;
+    }
+
+    this.productsRequest = this.fetchProducts();
+
+    try {
+      const products = await this.productsRequest;
+      this.productsCache = products;
+      return products;
+    } finally {
+      this.productsRequest = null;
+    }
+  }
+
+  clearProductsCache(): void {
+    this.productsCache = null;
+    this.productsRequest = null;
+  }
+
+  private async fetchProducts(): Promise<Product[]> {
     const { data, error } = await this.supabase.client
       .from('Jaw Products')
       .select('*');

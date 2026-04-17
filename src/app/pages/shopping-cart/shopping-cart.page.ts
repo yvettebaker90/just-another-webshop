@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, computed, inject, signal, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Meta, Title } from '@angular/platform-browser';
 import { RouterModule, Router } from '@angular/router';
 import { ShoppingCartService } from '../../services/shopping-cart.service';
 import { NgIcon, provideIcons } from '@ng-icons/core';
@@ -22,6 +23,8 @@ export class ShoppingCart {
   public isLoggedIn = false;
   // Inject the ShoppingCartService to access cart logic
   private readonly cartService = inject(ShoppingCartService);
+  private readonly title = inject(Title);
+  private readonly meta = inject(Meta);
 
   // Success message state for toast/notification
   showSuccess = false;
@@ -44,6 +47,12 @@ export class ShoppingCart {
 
   // Inject Angular Router for navigation
   constructor(private router: Router, private cdr: ChangeDetectorRef) {
+    this.title.setTitle('Shopping Cart | Just Another Webshop');
+    this.meta.updateTag({
+      name: 'description',
+      content: 'Review the items in your shopping cart and continue to checkout at Just Another Webshop.',
+    });
+
     // Check login state on component creation
     this.cartService['supabaseService'].client.auth.getUser().then(({ data: { user } }) => {
       this.isLoggedIn = !!user;

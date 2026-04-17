@@ -24,7 +24,7 @@
             <div class="flex justify-center mb-6">
               <div
                 class="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center shadow-lg mx-auto overflow-hidden">
-                <img *ngIf="profileAvatarUrl; else defaultAvatar" [src]="profileAvatarUrl" alt="Avatar"
+                <img *ngIf="profileAvatarUrl; else defaultAvatar" [src]="profileAvatarUrl" alt="Avatar" loading="lazy" decoding="async"
                   class="w-20 h-20 object-cover rounded-full" />
                 <ng-template #defaultAvatar>
                   <ng-icon name="ionPersonOutline" size="48" color="#111"></ng-icon>

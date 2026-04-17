@@ -34,7 +34,14 @@ type ProductCategoryGroup = {
       </button>
 
       <div class="bg-secondary relative aspect-square overflow-hidden">
-        <img [src]="image()" [alt]="'Picture of ' + title()" [title]="title()" class="h-full w-full object-cover" />
+        <img
+          [src]="image()"
+          [alt]="'Picture of ' + title()"
+          [title]="title()"
+          loading="lazy"
+          decoding="async"
+          class="h-full w-full object-cover"
+        />
         @if (tags().length) {
           <div class="absolute left-2 top-2 z-10 flex flex-col gap-1">
             @for (tag of tags(); track tag) {

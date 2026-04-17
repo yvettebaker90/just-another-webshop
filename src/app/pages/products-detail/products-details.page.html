@@ -32,6 +32,7 @@
             <img
               [src]="activeImage()"
               [alt]="product()!.title"
+              decoding="async"
               class="h-full w-full object-cover"
             />
           </div>
@@ -47,7 +48,7 @@
                   [class.border-black]="activeImage() === img"
                   [class.border-transparent]="activeImage() !== img"
                 >
-                  <img [src]="img" [alt]="product()!.title" class="h-full w-full object-cover" />
+                  <img [src]="img" [alt]="product()!.title" loading="lazy" decoding="async" class="h-full w-full object-cover" />
                 </button>
               }
             </div>

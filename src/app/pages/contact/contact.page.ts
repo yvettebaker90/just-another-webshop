@@ -1,4 +1,5 @@
-import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import { Meta, Title } from '@angular/platform-browser';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { ionMailOutline } from '@ng-icons/ionicons';
 
@@ -9,14 +10,24 @@ import { ionMailOutline } from '@ng-icons/ionicons';
   imports: [NgIcon],
   providers: [provideIcons({ ionMailOutline })],
 })
-export class ContactFormPage {
+export class ContactFormPage implements OnInit {
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly title = inject(Title);
+  private readonly meta = inject(Meta);
 
   isSending = false;
   message = '';
   messageType: 'success' | 'error' | '' = '';
   showSuccessToast = false;
   private successToastTimeoutId: ReturnType<typeof setTimeout> | null = null;
+
+  ngOnInit(): void {
+    this.title.setTitle('Contact Us | Just Another Webshop');
+    this.meta.updateTag({
+      name: 'description',
+      content: 'Get in touch with Just Another Webshop for questions about products, orders, and customer support.',
+    });
+  }
 
   async sendEmail(event: Event): Promise<void> {
     event.preventDefault();
