@@ -4,13 +4,17 @@
   </div>
 }
 
-<div class="contact-page content-shell py-14 space-y-10">
+<div class="contact-page content-shell py-8 space-y-10">
   <div class="max-w-xl mx-auto">
-    <!-- Header -->
-    <div class="contact-page__intro mb-10 text-left">
-      <h1 class="text-4xl font-bold mb-3">Get in Touch</h1>
-      <h2 class="text-lg">We'd love to hear from you. Send us a message and we'll respond as soon as possible.</h2>
-    </div>
+    <section class="mb-12 space-y-2">
+      <h1 class="sr-only">Contact Us</h1>
+      <h2 class="font-heading mt-10 text-left text-3xl font-bold text-foreground sm:mt-20">
+        Get in Touch
+      </h2>
+      <p class="max-w-2xl text-sm text-foreground md:text-base">
+        We'd love to hear from you. Send us a message and we'll respond as soon as possible.
+      </p>
+    </section>
 
     <!-- Contact Form -->
     <form (submit)="sendEmail($event)" class="form-surface contact-page__form space-y-5 rounded-xl p-6 md:p-5">

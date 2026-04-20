@@ -2,6 +2,7 @@
     @if (wishlistItems().length === 0) {
         <section class="content-shell flex flex-col items-center justify-center p-8 text-center">
             <ng-icon name="ionHeartOutline" size="48" color="black" class="mb-4"></ng-icon>
+            <h1 id="wishlist-title" class="sr-only">Your Favorites</h1>
             <h2 class="mb-2 text-xl font-semibold">Your wishlist is empty</h2>
             <p class="h2-cart-empty max-w-xl">
                 Looks like you haven't saved any favorites yet.
@@ -17,9 +18,10 @@
         <div class="content-shell bg-background">
             <section class="mb-12 space-y-2">
                 <p class="text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">Saved For Later</p>
-                <h1 id="wishlist-title" class="font-heading mt-10 text-left text-3xl font-bold text-foreground sm:mt-20">
+                <h1 class="sr-only">My favorites</h1>
+                <h2 id="wishlist-title" class="font-heading mt-10 text-left text-3xl font-bold text-foreground sm:mt-20">
                     My favorites
-                </h1>
+                </h2>
                 <p class="max-w-2xl text-sm text-muted-foreground md:text-base">
                     {{ subtitle() }}
                 </p>
