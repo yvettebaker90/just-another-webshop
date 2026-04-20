@@ -11,15 +11,52 @@ export interface Product {
   description?: string;
   brand: string;
   tags?: string[];
+  in_stock?: number;
+  discount_percentage?: number;
 }
 
 // ProductService is responsible for fetching, searching, and normalizing product data from Supabase.
 @Injectable({ providedIn: 'root' })
 export class ProductService {
+  private productsCache: Product[] | null = null;
+  private productsRequest: Promise<Product[]> | null = null;
+
   constructor(private supabase: SupabaseService) { }
+
+  /* Updates the stock (in_stock) for a product by a given diff (positive or negative). */
+  async updateStock(productId: number, diff: number): Promise<void> {
+    await this.supabase.client
+      .rpc('increment_product_stock', { product_id: productId, diff });
+    this.clearProductsCache();
+  }
 
   /* Fetches all products from the 'Jaw Products' table in Supabase */
   async getProducts(): Promise<Product[]> {
+    if (this.productsCache) {
+      return this.productsCache;
+    }
+
+    if (this.productsRequest) {
+      return this.productsRequest;
+    }
+
+    this.productsRequest = this.fetchProducts();
+
+    try {
+      const products = await this.productsRequest;
+      this.productsCache = products;
+      return products;
+    } finally {
+      this.productsRequest = null;
+    }
+  }
+
+  clearProductsCache(): void {
+    this.productsCache = null;
+    this.productsRequest = null;
+  }
+
+  private async fetchProducts(): Promise<Product[]> {
     const { data, error } = await this.supabase.client
       .from('Jaw Products')
       .select('*');
@@ -73,6 +110,8 @@ export class ProductService {
   /* Converts a raw row from Supabase to a strongly typed Product object.
       Ensures all fields are present and tags are normalized */
   private mapRowToProduct(row: Partial<Product>, index: number): Product {
+    const discountRaw = (row as Product & { discount_percentage?: unknown })?.discount_percentage;
+
     return {
       id: Number(row.id ?? index),
       category: String(row.category ?? ''),
@@ -83,6 +122,8 @@ export class ProductService {
       description: row.description ? String(row.description) : undefined,
       brand: String(row.brand ?? 'Unknown Brand'),
       tags: this.parseTags(row.tags ?? (row as any).Tags),
+      in_stock: typeof row.in_stock === 'number' ? row.in_stock : Number(row.in_stock ?? 0),
+      discount_percentage: this.parseDiscountPercentage(discountRaw),
     };
   }
 
@@ -107,5 +148,15 @@ export class ProductService {
 
     // If tags is null, undefined, or anything else, return an empty array
     return [];
+  }
+
+  private parseDiscountPercentage(value: unknown): number | undefined {
+    const parsed = typeof value === 'number' ? value : Number(value);
+
+    if (!Number.isFinite(parsed) || parsed <= 0) {
+      return undefined;
+    }
+
+    return Math.min(parsed, 100);
   }
 }

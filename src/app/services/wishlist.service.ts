@@ -8,6 +8,8 @@ export type WishlistItem = {
   price: number;
   image: string;
   category: string;
+  tags?: string[];
+  discount_percentage?: number;
 };
 
 @Injectable({ providedIn: 'root' })
@@ -15,6 +17,7 @@ export class WishlistService {
   private readonly supabaseService = inject(SupabaseService);
   private readonly storageKey = 'jaw_wishlist_items';
   private readonly tableName = 'wishlist_items';
+  private currentUserId: string | null | undefined = undefined;
 
   private readonly wishlistItemsSignal = signal<WishlistItem[]>([]);
 
@@ -22,16 +25,30 @@ export class WishlistService {
   readonly totalItems = computed(() => this.wishlistItemsSignal().length);
 
   constructor() {
-    void this.initializeWishlist();
+    this.scheduleInitialization();
 
     this.supabaseService.client.auth.onAuthStateChange((_event, session) => {
-      if (!session?.user) {
+      this.currentUserId = session?.user?.id ?? null;
+
+      if (!this.currentUserId) {
         this.clearLocalState();
         return;
       }
 
       this.loadFromLocalStorage();
-      void this.syncWithSupabase(session.user.id);
+      this.scheduleSyncWithSupabase(this.currentUserId);
+    });
+  }
+
+  private scheduleInitialization(): void {
+    this.runWhenIdle(() => {
+      void this.initializeWishlist();
+    });
+  }
+
+  private scheduleSyncWithSupabase(userId: string): void {
+    this.runWhenIdle(() => {
+      void this.syncWithSupabase(userId);
     });
   }
 
@@ -114,16 +131,22 @@ export class WishlistService {
   }
 
   private async getCurrentUserId(): Promise<string | null> {
-    const {
-      data: { user },
-      error,
-    } = await this.supabaseService.client.auth.getUser();
+    if (this.currentUserId !== undefined) {
+      return this.currentUserId;
+    }
 
-    if (error || !user) {
+    const {
+      data: { session },
+      error,
+    } = await this.supabaseService.client.auth.getSession();
+
+    if (error || !session?.user) {
+      this.currentUserId = null;
       return null;
     }
 
-    return user.id;
+    this.currentUserId = session.user.id;
+    return this.currentUserId;
   }
 
   private async readSupabaseWishlist(userId: string): Promise<WishlistItem[]> {
@@ -189,6 +212,8 @@ export class WishlistService {
       price: Number.isFinite(price) ? price : 0,
       image,
       category,
+      tags: this.parseTags(row['tags'] ?? row['Tags']),
+      discount_percentage: this.parseDiscountPercentage(row['discount_percentage']),
     };
   }
 
@@ -251,6 +276,8 @@ export class WishlistService {
       price: Number.isFinite(price) ? price : 0,
       image,
       category,
+      tags: this.parseTags(row['tags'] ?? row['Tags']),
+      discount_percentage: this.parseDiscountPercentage(row['discount_percentage']),
     };
   }
 
@@ -268,5 +295,39 @@ export class WishlistService {
   private clearLocalState(): void {
     this.wishlistItemsSignal.set([]);
     localStorage.removeItem(this.storageKey);
+  }
+
+  private parseTags(tagsValue: unknown): string[] | undefined {
+    if (Array.isArray(tagsValue)) {
+      return tagsValue.map((tag) => String(tag).trim().toLowerCase()).filter(Boolean);
+    }
+
+    if (typeof tagsValue === 'string' && tagsValue.trim()) {
+      return tagsValue
+        .split(',')
+        .map((tag) => tag.trim().toLowerCase())
+        .filter(Boolean);
+    }
+
+    return undefined;
+  }
+
+  private parseDiscountPercentage(value: unknown): number | undefined {
+    const parsed = typeof value === 'number' ? value : Number(value);
+
+    if (!Number.isFinite(parsed) || parsed <= 0) {
+      return undefined;
+    }
+
+    return Math.min(parsed, 100);
+  }
+
+  private runWhenIdle(task: () => void): void {
+    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+      window.requestIdleCallback(() => task(), { timeout: 1500 });
+      return;
+    }
+
+    setTimeout(task, 250);
   }
 }

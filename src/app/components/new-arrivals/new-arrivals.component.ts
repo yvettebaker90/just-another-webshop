@@ -21,8 +21,6 @@ export class NewArrivalsComponent implements OnInit {
     async ngOnInit() {
         // Fetch all products from Supabase
         const products = await this.productService.getProducts();
-        // Log all products and their tags for debugging
-        console.log('All products:', products.map(p => ({ title: p.title, tags: p.tags })));
         // Filter products that have the 'new' tag (tags are already parsed to lowercase arrays)
         this.newArrivals.set(
             products

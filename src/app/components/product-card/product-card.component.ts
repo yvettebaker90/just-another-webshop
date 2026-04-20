@@ -5,6 +5,7 @@ import { NgIcon, provideIcons } from '@ng-icons/core';
 import { ionCartOutline, ionHeart, ionHeartOutline } from '@ng-icons/ionicons';
 import { Product, ProductService } from '../../services/product.service';
 import { WishlistService } from '../../services/wishlist.service';
+import { ShoppingCartService } from '../../services/shopping-cart.service';
 
 type ProductCategoryGroup = {
   category: string;
@@ -13,6 +14,7 @@ type ProductCategoryGroup = {
 
 @Component({
   selector: 'app-product-card',
+  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgIcon, CommonModule],
   providers: [provideIcons({ ionCartOutline, ionHeart, ionHeartOutline })],
@@ -20,10 +22,10 @@ type ProductCategoryGroup = {
     class: 'block h-full',
   },
   template: `
-    <div (click)="navigateToDetail()" class="relative flex h-full flex-col overflow-hidden bg-(--card) shadow-(--shadow-soft) transition-[transform,box-shadow] duration-200 ease-in-out hover:-translate-y-0.5 hover:border hover:border-black/10 hover:shadow-(--shadow-hover) cursor-pointer">
+    <div (click)="navigateToDetail()" class="card relative flex h-full flex-col overflow-hidden transition-[transform,box-shadow] duration-200 ease-in-out hover:-translate-y-0.5 hover:border-black/10 hover:shadow-(--shadow-hover) cursor-pointer">
       <button
         type="button"
-        class="absolute right-3 top-3 z-10 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-(--foreground) shadow-sm transition hover:scale-105"
+        class="text-foreground absolute right-3 top-3 z-10 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/90 shadow-sm transition hover:scale-105"
         [attr.aria-label]="isFavorite() ? 'Remove from favorites' : 'Add to favorites'"
         [attr.aria-pressed]="isFavorite()"
         (click)="$event.stopPropagation(); toggleFavorite()"
@@ -31,8 +33,15 @@ type ProductCategoryGroup = {
         <ng-icon [name]="isFavorite() ? 'ionHeart' : 'ionHeartOutline'" size="20"></ng-icon>
       </button>
 
-      <div class="relative aspect-square overflow-hidden bg-(--secondary)">
-        <img [src]="image()" [alt]="'Picture of ' + title()" [title]="title()" class="h-full w-full object-cover" />
+      <div class="bg-secondary relative aspect-square overflow-hidden">
+        <img
+          [src]="image()"
+          [alt]="'Picture of ' + title()"
+          [title]="title()"
+          loading="lazy"
+          decoding="async"
+          class="h-full w-full object-cover"
+        />
         @if (tags().length) {
           <div class="absolute left-2 top-2 z-10 flex flex-col gap-1">
             @for (tag of tags(); track tag) {
@@ -43,16 +52,38 @@ type ProductCategoryGroup = {
       </div>
 
       <div class="mb-4 flex flex-1 flex-col gap-2 p-4">
-        <p class="text-sm tracking-wide text-(--primary) capitalize">{{ brand() }} / {{ category() }}</p>
+        <p class="text-primary text-sm tracking-wide capitalize">{{ brand() }} / {{ category() }}</p>
         <h3
-          class="min-h-[3.4rem] text-lg font-bold [font-family:var(--font-heading)] leading-[1.3] tracking-[-0.02em] overflow-hidden [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2]"
+          class="font-heading min-h-[3.4rem] overflow-hidden text-lg font-bold leading-[1.3] tracking-[-0.02em] [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2]"
           [title]="title()"
         >{{ title() }}</h3>
-        <p class="text-lg font-semibold">{{ '$' + price() }}</p>
-        <button type="button" (click)="$event.stopPropagation()" class="btn btn-primary mt-auto inline-flex items-center gap-2">
-          <ng-icon name="ionCartOutline" size="18" aria-hidden="true"></ng-icon>
-          Add to cart
-        </button>
+        @if (isOnSale()) {
+          <div class="space-y-1">
+            <p class="text-sm text-black/45 line-through">{{ formatPrice(price()) }}</p>
+            <div class="flex flex-wrap items-center gap-2">
+              <p class="text-lg font-semibold text-red-600">{{ formatPrice(discountedPrice()) }}</p>
+              <span class="text-sm font-semibold text-red-600">-{{ salePercentage() }}%</span>
+            </div>
+          </div>
+        } @else {
+          <p class="text-lg font-semibold">{{ formatPrice(price()) }}</p>
+        }
+        <div class="mt-auto flex flex-col gap-2">
+          <button type="button" (click)="$event.stopPropagation(); addToCart()" class="btn btn-primary inline-flex items-center gap-2">
+            <ng-icon name="ionCartOutline" size="18" aria-hidden="true"></ng-icon>
+            Add to cart
+          </button>
+          @if (showDeleteAction()) {
+            <button
+              type="button"
+              (click)="$event.stopPropagation(); removeFromWishlist()"
+              class="btn btn-outline text-destructive"
+              aria-label="Delete {{ title() }} from wishlist"
+            >
+              Delete
+            </button>
+          }
+        </div>
       </div>     
     </div>
   `,
@@ -60,6 +91,7 @@ type ProductCategoryGroup = {
 export class ProductCardComponent {
   private readonly router = inject(Router);
   private readonly wishlistService = inject(WishlistService);
+  private readonly cartService = inject(ShoppingCartService);
 
   id = input(0);
   category = input('');
@@ -68,11 +100,55 @@ export class ProductCardComponent {
   image = input('');
   brand = input('');
   tags = input<string[]>([]);
+  discountPercentage = input<number | undefined>(undefined);
+  showDeleteAction = input(false);
 
   readonly isFavorite = computed(() => {
     const productId = this.id();
     return productId > 0 && this.wishlistService.isInWishlist(productId);
   });
+  readonly salePercentage = computed(() => {
+    const rawValue = this.discountPercentage();
+    if (rawValue === undefined || rawValue === null) {
+      return 0;
+    }
+
+    const normalized = Math.round(rawValue);
+    return normalized > 0 ? Math.min(normalized, 100) : 0;
+  });
+  readonly hasSaleTag = computed(() => this.tags().some((tag) => tag.toLowerCase() === 'sale'));
+  readonly isOnSale = computed(() => this.hasSaleTag() && this.salePercentage() > 0);
+  readonly discountedPrice = computed(() => {
+    const originalPrice = this.price();
+    const percentage = this.salePercentage();
+
+    if (percentage <= 0) {
+      return originalPrice;
+    }
+
+    return originalPrice * (1 - percentage / 100);
+  });
+
+  addToCart() {
+    this.cartService.add({
+      id: this.id(),
+      title: this.title(),
+      brand: this.brand(),
+      price: this.price(),
+      image: this.image(),
+      category: this.category(),
+      quantity: 1
+    });
+  }
+
+  removeFromWishlist(): void {
+    const productId = this.id();
+    if (productId <= 0) {
+      return;
+    }
+
+    void this.wishlistService.remove(productId);
+  }
 
   navigateToDetail(): void {
     void this.router.navigate(['/products', this.id()]);
@@ -91,6 +167,8 @@ export class ProductCardComponent {
       price: this.price(),
       image: this.image(),
       category: this.category(),
+      tags: this.tags(),
+      discount_percentage: this.discountPercentage(),
     });
   }
 
@@ -112,10 +190,15 @@ export class ProductCardComponent {
   formatTag(tag: string): string {
     return tag.charAt(0).toUpperCase() + tag.slice(1).toLowerCase();
   }
+
+  formatPrice(value: number): string {
+    return `$${value.toFixed(2)}`;
+  }
 }
 
 @Component({
   selector: 'app-product-cards',
+  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ProductCardComponent],
   templateUrl: './product-card.component.html',

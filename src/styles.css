@@ -1,68 +1,105 @@
 @import 'tailwindcss';
 
+@theme {
+  --color-background: #f8f7f5;
+  --color-foreground: #2b2b2b;
+
+  --color-card: #ffffff;
+  --color-card-foreground: #2b2b2b;
+
+  --color-popover: #ffffff;
+  --color-popover-foreground: #2b2b2b;
+
+  --color-primary: #2b2b2b;
+  --color-primary-foreground: #f8f7f5;
+
+  --color-secondary: #e8e3dc;
+  --color-secondary-foreground: #2b2b2b;
+
+  --color-muted: #e8e3dc;
+  --color-muted-foreground: #837a71;
+
+  --color-accent: #6d7b52;
+  --color-accent-foreground: #2b2b2b;
+  --color-accent-focus-ring: rgba(109, 123, 82, 0.18);
+
+  --color-taupe: #b8ada4;
+  --color-border: #d4cfc7;
+  --color-input: #d4cfc7;
+  --color-ring: #a3b18a;
+
+  --color-destructive: #8b2f23;
+  --color-destructive-foreground: #ffffff;
+  --color-destructive-border-soft: #e5d1cf;
+  --color-destructive-bg-soft: #f6eeed;
+  --color-success-green: #166534;
+
+  --color-sale-red: #f87171;
+  --color-sale-red-bg: #fee2e2;
+  --color-stock-border: #fecaca;
+  --color-stock-bg: #fef2f2;
+  --color-stock-text: #dc2626;
+
+  --color-badge-new-hover: #8f9d78;
+  --color-badge-popular-hover: #3a3a3a;
+  --color-badge-sale-hover: #b55a4e;
+
+  --radius-sm: 0.125rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --radius-full: 9999px;
+
+  --font-heading: "Sora", sans-serif;
+  --font-body: "Plus Jakarta Sans", sans-serif;
+}
+
 :root {
-  /* Colors */
-  --color-surface-page: #f8f7f5;
-  --color-text-primary: #2b2b2b;
+  /* Theme aliases for existing component CSS */
+  --background: var(--color-background);
+  --foreground: var(--color-foreground);
 
-  --color-surface-card: #ffffff;
-  --color-text-on-card: #2b2b2b;
+  --card: var(--color-card);
+  --card-foreground: var(--color-card-foreground);
 
-  --color-surface-popover: #ffffff;
-  --color-text-on-popover: #2b2b2b;
+  --popover: var(--color-popover);
+  --popover-foreground: var(--color-popover-foreground);
 
-  --color-action-primary: #2b2b2b;
-  --color-text-on-primary: #f8f7f5;
+  --primary: var(--color-primary);
+  --primary-foreground: var(--color-primary-foreground);
 
-  --color-surface-secondary: #e8e3dc;
-  --color-text-on-secondary: #2b2b2b;
+  --secondary: var(--color-secondary);
+  --secondary-foreground: var(--color-secondary-foreground);
 
-  --color-surface-muted: #e8e3dc;
-  --color-text-secondary: #837a71;
+  --muted: var(--color-muted);
+  --muted-foreground: var(--color-muted-foreground);
+  --muted-soft: #eeeae5;
 
-  --color-action-accent: #6d7b52;
-  --color-text-on-accent: #2b2b2b;
+  --accent: var(--color-accent);
+  --accent-foreground: var(--color-accent-foreground);
+  --accent-focus-ring: var(--color-accent-focus-ring);
 
-  --taupe: #b8ada4;
-  --color-border-default: #d4cfc7;
-  --color-border-input: #d4cfc7;
-  --color-focus-ring: #a3b18a;
+  --taupe: var(--color-taupe);
+  --border: var(--color-border);
+  --input: var(--color-input);
+  --ring: var(--color-ring);
 
-  --color-status-danger: #8b2f23;
-  --color-text-on-danger: #ffffff;
-  --color-status-success: #166534;
+  --destructive: var(--color-destructive);
+  --destructive-foreground: var(--color-destructive-foreground);
+  --destructive-border-soft: var(--color-destructive-border-soft);
+  --destructive-bg-soft: var(--color-destructive-bg-soft);
+  --success-green: var(--color-success-green);
 
-  /* Legacy aliases (safe during migration) */
-  --background: var(--color-surface-page);
-  --foreground: var(--color-text-primary);
-  --card: var(--color-surface-card);
-  --card-foreground: var(--color-text-on-card);
-  --popover: var(--color-surface-popover);
-  --popover-foreground: var(--color-text-on-popover);
-  --primary: var(--color-action-primary);
-  --primary-foreground: var(--color-text-on-primary);
-  --secondary: var(--color-surface-secondary);
-  --secondary-foreground: var(--color-text-on-secondary);
-  --muted: var(--color-surface-muted);
-  --muted-foreground: var(--color-text-secondary);
-  --accent: var(--color-action-accent);
-  --accent-foreground: var(--color-text-on-accent);
-  --border: var(--color-border-default);
-  --input: var(--color-border-input);
-  --ring: var(--color-focus-ring);
-  --destructive: var(--color-status-danger);
-  --destructive-foreground: var(--color-text-on-danger);
-  --success-green: var(--color-status-success);
+  --sale-red: var(--color-sale-red);
+  --sale-red-bg: var(--color-sale-red-bg);
+  --stock-border: var(--color-stock-border);
+  --stock-bg: var(--color-stock-bg);
+  --stock-text: var(--color-stock-text);
 
-  --sale-red: #f87171;
-  --sale-red-bg: #fee2e2;
-  --stock-border: #fecaca;
-  --stock-bg: #fef2f2;
-  --stock-text: #dc2626;
-
-  --badge-new-hover: #8f9d78;
-  --badge-popular-hover: #3a3a3a;
-  --badge-sale-hover: #b55a4e;
+  --badge-new-hover: var(--color-badge-new-hover);
+  --badge-popular-hover: var(--color-badge-popular-hover);
+  --badge-sale-hover: var(--color-badge-sale-hover);
 
   /* Radius */
   --radius-sm: 0.125rem;
@@ -154,11 +191,50 @@ h5,
 h6 {
   margin: 0;
   font-family: var(--font-heading);
-  letter-spacing: -0.02em;
-  color: var(--color-text-primary);
+  color: var(--foreground);
 }
 
+/* h2 {
+  margin: 0;
+  font-family: var(--font-body);
+  color: var(--foreground);
+  font-size: 1.5rem;
+  font-weight: 100;
+} */
 
+.h1-login-register {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--primary);
+  margin: 0;
+  text-align: center;
+  padding-top: 0.25rem;
+  margin-bottom: 1rem;
+}
+
+.h2-new-arrivals {
+  margin: 0;
+  font-family: var(--font-heading);
+  color: var(--foreground);
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.h2-cart-empty {
+  margin-top: 0.5rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.75rem;
+  font-weight: 100;
+  color: var(--foreground);
+}
+
+.h2-login-register {
+  font-size: 0.9rem;
+  color: var(--foreground);
+  font-weight: 800;
+  margin: 0;
+}
 
 .text-sale-price {
   color: var(--stock-text);
@@ -174,6 +250,14 @@ h6 {
   color: var(--color-text-secondary);
 }
 
+.font-heading {
+  font-family: var(--font-heading);
+}
+
+.font-body {
+  font-family: var(--font-body);
+}
+
 /* Layout helpers */
 .container {
   width: 100%;
@@ -184,6 +268,85 @@ h6 {
 
 .section {
   padding-block: 3rem;
+}
+
+.page-shell {
+  width: 100%;
+  max-width: 72rem;
+  margin-inline: auto;
+  padding-inline: 1rem;
+}
+
+.page-shell--wide {
+  max-width: 80rem;
+}
+
+.content-shell {
+  width: 100%;
+  max-width: 80rem;
+  margin-inline: auto;
+  padding-inline: 1rem;
+}
+
+@media (min-width: 640px) {
+  .content-shell {
+    padding-inline: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .content-shell {
+    width: 75%;
+    padding-inline: 1rem;
+  }
+}
+
+.page-title {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.page-subtitle {
+  margin: 0;
+  color: var(--muted-foreground);
+  font-size: 1rem;
+}
+
+/* Spacing helpers */
+.gap-2 {
+  gap: 0.5rem;
+}
+
+.gap-4 {
+  gap: 1rem;
+}
+
+.gap-6 {
+  gap: 1.5rem;
+}
+
+.gap-8 {
+  gap: 2rem;
+}
+
+.space-y-2>*+* {
+  margin-top: 0.5rem;
+}
+
+.space-y-4>*+* {
+  margin-top: 1rem;
+}
+
+.space-y-6>*+* {
+  margin-top: 1.5rem;
+}
+
+.space-y-8>*+* {
+  margin-top: 2rem;
 }
 
 /* Surfaces */
@@ -201,6 +364,223 @@ h6 {
 
 .surface-white {
   background-color: var(--color-surface-card);
+}
+
+.panel {
+  background-color: var(--card);
+  color: var(--card-foreground);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-soft);
+}
+
+.panel-muted {
+  background-color: var(--muted-soft);
+}
+
+.status-message {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  background-color: var(--card);
+  padding: 1rem;
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+}
+
+.status-message--error {
+  border-color: var(--destructive-border-soft);
+  background-color: var(--destructive-bg-soft);
+  color: var(--destructive);
+}
+
+.form-surface {
+  background-color: var(--card);
+  border: 1px solid #d1d5db;
+  border-radius: var(--radius-md);
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08);
+}
+
+.form-status {
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  padding: 0.75rem 1rem;
+}
+
+.form-status--error {
+  border-color: #fecaca;
+  background-color: #fef2f2;
+  color: #b91c1c;
+}
+
+.form-status--success {
+  border-color: #bbf7d0;
+  background-color: #f0fdf4;
+  color: #15803d;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.form-control {
+  width: 100%;
+  min-height: 2.875rem;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  background-color: var(--background);
+  padding: 0.75rem 1rem;
+  color: var(--foreground);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.form-control::placeholder {
+  color: var(--muted-foreground);
+}
+
+.form-control:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-focus-ring);
+}
+
+.form-control--white {
+  background-color: var(--card);
+}
+
+.form-control--compact {
+  min-height: 2.5rem;
+  padding-block: 0.625rem;
+  padding-inline: 0.875rem;
+}
+
+.form-control--textarea {
+  resize: vertical;
+}
+
+.form-field-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #334155;
+}
+
+.form-field-control {
+  width: 100%;
+  border: 1px solid #d1d5db;
+  border-radius: var(--radius-md);
+  background-color: rgb(248 250 252 / 0.65);
+  padding: 0.75rem 1rem;
+  color: #0f172a;
+  font-size: 0.875rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.form-field-control::placeholder {
+  color: #94a3b8;
+}
+
+.form-field-control:hover {
+  border-color: #9ca3af;
+}
+
+.form-field-control:focus-visible {
+  outline: none;
+  border-color: #111111;
+  box-shadow: 0 0 0 2px #111111;
+  outline-offset: 2px;
+  background-color: var(--card);
+}
+
+.form-field-control[readonly] {
+  background-color: #f8fafc;
+  color: #475569;
+}
+
+.form-field-control--textarea {
+  min-height: 8rem;
+  resize: vertical;
+}
+
+.form-field-control--sm {
+  padding: 0.625rem 0.875rem;
+  font-size: 0.875rem;
+}
+
+.form-field-control--sm.form-field-control--textarea {
+  min-height: 7rem;
+}
+
+.form-button--sm {
+  min-height: 2.5rem;
+  padding: 0.625rem 1rem;
+  font-size: 0.875rem;
+}
+
+.footer-link {
+  color: var(--primary);
+  transition: color 0.2s ease;
+}
+
+.footer-link:hover {
+  color: var(--muted-foreground);
+}
+
+.icon-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.icon-link:hover {
+  color: var(--accent);
+  transform: translateY(-1px);
+}
+
+.pagination-button {
+  display: inline-flex;
+  height: 2.25rem;
+  width: 2.25rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background-color: var(--card);
+  color: var(--foreground);
+  font-size: 0.875rem;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.pagination-button:hover {
+  background-color: var(--secondary);
+}
+
+.pagination-button:disabled {
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+.pagination-button.is-active {
+  border-color: var(--primary);
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.pagination-ellipsis {
+  display: inline-flex;
+  height: 2.25rem;
+  width: 2.25rem;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted-foreground);
+  font-size: 0.875rem;
 }
 
 /* Buttons */
@@ -349,6 +729,111 @@ h6 {
   background-color: var(--badge-sale-hover);
 }
 
+.badge-discount {
+  background-color: var(--sale-red-bg);
+  color: var(--stock-text);
+}
+
+.badge-count {
+  min-width: 1rem;
+  height: 1rem;
+  padding: 0;
+  border-radius: var(--radius-full);
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.wishlist-heart {
+  color: var(--foreground);
+  transition: transform 0.2s ease, color 0.2s ease, fill 0.2s ease;
+}
+
+.wishlist-heart:hover {
+  transform: scale(1.08);
+}
+
+.wishlist-heart.is-favorited {
+  color: var(--accent);
+  fill: var(--accent);
+}
+
+/* Search bar */
+.search-bar {
+  width: 100%;
+  max-width: 42rem;
+  margin-inline: auto;
+  position: relative;
+}
+
+.search-input {
+  width: 100%;
+  height: 3rem;
+  padding: 0.75rem 1rem 0.75rem 2.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background-color: transparent;
+  color: var(--foreground);
+}
+
+.search-input::placeholder {
+  color: var(--muted-foreground);
+}
+
+.search-input--with-clear {
+  padding-right: 3rem;
+}
+
+.search-icon {
+  position: absolute;
+  top: 50%;
+  left: 0.9rem;
+  transform: translateY(-50%);
+  color: var(--muted-foreground);
+  pointer-events: none;
+}
+
+/* Price display */
+.price-group {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.sale-price-large {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--stock-text);
+}
+
+.original-price-large {
+  font-size: 1.5rem;
+  color: var(--muted-foreground);
+  text-decoration: line-through;
+}
+
+/* Out of stock */
+.out-of-stock {
+  border: 1px solid var(--stock-border);
+  background-color: var(--stock-bg);
+  color: var(--stock-text);
+  border-radius: var(--radius-lg);
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* Spacing shopping cart headers */
+.mb-40 {
+  margin-bottom: 0.5rem;
+}
+
+.mb-50 {
+  margin-bottom: 1rem;
+}
+
 /* Utility helpers */
 .border-default {
   border: 1px solid var(--color-border-default);
@@ -366,6 +851,10 @@ h6 {
   background-color: var(--color-surface-page);
 }
 
+.bg-muted {
+  background-color: var(--muted);
+}
+
 .bg-card {
   background-color: var(--color-surface-card);
 }
@@ -378,8 +867,16 @@ h6 {
   background-color: var(--color-action-accent);
 }
 
+.bg-primary {
+  background-color: var(--primary);
+}
+
 .text-primary {
   color: var(--color-action-primary);
+}
+
+.text-primary-foreground {
+  color: var(--primary-foreground);
 }
 
 .text-success {
@@ -396,6 +893,14 @@ h6 {
 
 .border-card {
   border-color: var(--color-surface-card);
+}
+
+.object-pos-hero {
+  object-position: center 30%;
+}
+
+.icon-16 {
+  font-size: 16px;
 }
 
 .sr-only {

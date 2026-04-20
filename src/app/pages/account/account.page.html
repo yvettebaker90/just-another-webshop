@@ -1,33 +1,30 @@
-<div class="account-page-shell min-h-screen p-8">
+<div class="min-h-screen bg-background py-8">
   <!-- Success Message -->
   <div *ngIf="showSuccess"
-    class="fixed top-8 right-8 bg-green-500 text-white px-6 py-4 rounded-lg shadow-lg flex items-center gap-3 z-50 animate-in fade-in slide-in-from-right-8">
-    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
-    </svg>
-    <span class="font-medium">{{ successMessage }}</span>
+    class="fixed top-8 left-1/2 transform -translate-x-1/2 z-50 bg-green-600 text-white px-6 py-3 rounded shadow-lg transition-opacity duration-300">
+    {{ successMessage }}
   </div>
 
   <!-- Page Header -->
-  <div class="mb-12 animate-in fade-in slide-in-from-top-4 duration-600">
+  <div class="content-shell mb-10 animate-in fade-in slide-in-from-top-4 duration-600">
     <h1 class="text-4xl font-bold text-gray-900 mb-2 tracking-tight">My Account</h1>
     <p class="text-lg text-gray-600">Manage your profile and shipping information</p>
   </div>
 
   <!-- Main Content Grid -->
-  <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-4 gap-8">
+  <div class="content-shell grid grid-cols-1 gap-6 lg:grid-cols-4">
 
     <!-- Sidebar -->
 
     <aside class="lg:col-span-1 animate-in fade-in slide-in-from-left-8 duration-600">
-      <div class="bg-white rounded-2xl shadow-md border border-gray-200 p-8">
+      <div class="bg-white rounded-xl shadow-md border border-gray-300 p-6">
         <ng-container *ngIf="profileLoaded; else loadingProfile">
           <ng-container *ngIf="!profileError; else profileErrorBlock">
             <!-- Avatar -->
             <div class="flex justify-center mb-6">
               <div
                 class="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center shadow-lg mx-auto overflow-hidden">
-                <img *ngIf="profileAvatarUrl; else defaultAvatar" [src]="profileAvatarUrl" alt="Avatar"
+                <img *ngIf="profileAvatarUrl; else defaultAvatar" [src]="profileAvatarUrl" alt="Avatar" loading="lazy" decoding="async"
                   class="w-20 h-20 object-cover rounded-full" />
                 <ng-template #defaultAvatar>
                   <ng-icon name="ionPersonOutline" size="48" color="#111"></ng-icon>
@@ -68,19 +65,19 @@
 
       <!-- Profile Information Card -->
       <div
-        class="bg-white rounded-2xl shadow-md border border-gray-200 p-8 animate-in fade-in slide-in-from-bottom-4 duration-600">
-        <div class="mb-8">
+        class="bg-white rounded-xl shadow-md border border-gray-300 p-6 animate-in fade-in slide-in-from-bottom-4 duration-600">
+        <div class="mb-6">
           <h2 class="text-2xl font-bold text-gray-900">Profile Information</h2>
         </div>
 
-        <form [formGroup]="profileForm" (ngSubmit)="saveProfileChanges()" class="space-y-6">
+        <form [formGroup]="profileForm" (ngSubmit)="saveProfileChanges()" class="space-y-5">
           <!-- Name Grid -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
             <!-- First Name -->
             <div>
               <label for="firstName" class="block text-sm font-semibold text-gray-900 mb-2">First Name</label>
               <input id="firstName" type="text" formControlName="firstName" placeholder="First name"
-                class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none transition-colors bg-white text-gray-900" />
+                class="form-field-control form-field-control--sm border-2 border-gray-300 bg-white text-gray-900 focus:border-blue-500" />
               <div *ngIf="profileForm.get('firstName')?.invalid && profileForm.get('firstName')?.touched"
                 class="text-red-600 text-sm mt-1">
                 First name must be at least 2 characters
@@ -91,7 +88,7 @@
             <div>
               <label for="lastName" class="block text-sm font-semibold text-gray-900 mb-2">Last Name</label>
               <input id="lastName" type="text" formControlName="lastName" placeholder="Last name"
-                class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none transition-colors bg-white text-gray-900" />
+                class="form-field-control form-field-control--sm border-2 border-gray-300 bg-white text-gray-900 focus:border-blue-500" />
               <div *ngIf="profileForm.get('lastName')?.invalid && profileForm.get('lastName')?.touched"
                 class="text-red-600 text-sm mt-1">
                 Last name must be at least 2 characters
@@ -103,7 +100,7 @@
           <div>
             <label for="email" class="block text-sm font-semibold text-gray-900 mb-2">Email</label>
             <input id="email" type="email" formControlName="email" placeholder="your@email.com"
-              class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none transition-colors bg-white text-gray-900"
+              class="form-field-control form-field-control--sm border-2 border-gray-300 bg-white text-gray-900 focus:border-blue-500"
               readonly />
             <div class="text-gray-500 text-xs mt-1">
               Email address cannot be changed here.
@@ -114,7 +111,7 @@
           <div>
             <label for="phone" class="block text-sm font-semibold text-gray-900 mb-2">Phone</label>
             <input id="phone" type="tel" formControlName="phone" placeholder="+46 70 123 45 67"
-              class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none transition-colors bg-white text-gray-900" />
+              class="form-field-control form-field-control--sm border-2 border-gray-300 bg-white text-gray-900 focus:border-blue-500" />
             <div *ngIf="profileForm.get('phone')?.invalid && profileForm.get('phone')?.touched"
               class="text-red-600 text-sm mt-1">
               Please enter a valid phone number
@@ -125,7 +122,7 @@
           <div>
             <label for="avatar" class="block text-sm font-semibold text-gray-900 mb-2">Avatar URL</label>
             <input id="avatar" type="url" formControlName="avatar" placeholder="https://..."
-              class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none transition-colors bg-white text-gray-900" />
+              class="form-field-control form-field-control--sm border-2 border-gray-300 bg-white text-gray-900 focus:border-blue-500" />
             <div *ngIf="profileForm.get('avatar')?.invalid && profileForm.get('avatar')?.touched"
               class="text-red-600 text-sm mt-1">
               Please enter a valid URL
@@ -134,7 +131,7 @@
 
           <!-- Submit Button -->
           <button type="submit"
-            class="px-6 py-3 bg-gray-900 text-white font-semibold rounded-lg hover:bg-gray-800 transition-colors">
+            class="form-button--sm bg-gray-900 text-white font-semibold rounded-lg hover:bg-gray-800 transition-colors">
             Save Changes
           </button>
         </form>
@@ -142,17 +139,17 @@
 
       <!-- Shipping Address Card -->
       <div
-        class="bg-white rounded-2xl shadow-md border border-gray-200 p-8 animate-in fade-in slide-in-from-bottom-4 duration-600">
-        <div class="mb-8">
+        class="bg-white rounded-xl shadow-md border border-gray-300 p-6 animate-in fade-in slide-in-from-bottom-4 duration-600">
+        <div class="mb-6">
           <h2 class="text-2xl font-bold text-gray-900">Shipping Address</h2>
         </div>
 
-        <form [formGroup]="addressForm" (ngSubmit)="saveAddress()" class="space-y-6">
+        <form [formGroup]="addressForm" (ngSubmit)="saveAddress()" class="space-y-5">
           <!-- Street Address -->
           <div>
             <label for="street" class="block text-sm font-semibold text-gray-900 mb-2">Street Address</label>
             <input id="street" type="text" formControlName="street" placeholder="Storgatan 1"
-              class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none transition-colors bg-white text-gray-900" />
+              class="form-field-control form-field-control--sm border-2 border-gray-300 bg-white text-gray-900 focus:border-blue-500" />
             <div *ngIf="addressForm.get('street')?.invalid && addressForm.get('street')?.touched"
               class="text-red-600 text-sm mt-1">
               Please enter a valid street address
@@ -160,12 +157,12 @@
           </div>
 
           <!-- City & Postal grid -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
             <!-- City -->
             <div>
               <label for="city" class="block text-sm font-semibold text-gray-900 mb-2">City</label>
               <input id="city" type="text" formControlName="city" placeholder="Stockholm"
-                class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none transition-colors bg-white text-gray-900" />
+                class="form-field-control form-field-control--sm border-2 border-gray-300 bg-white text-gray-900 focus:border-blue-500" />
               <div *ngIf="addressForm.get('city')?.invalid && addressForm.get('city')?.touched"
                 class="text-red-600 text-sm mt-1">
                 City must be at least 2 characters
@@ -176,7 +173,7 @@
             <div>
               <label for="zipCode" class="block text-sm font-semibold text-gray-900 mb-2">Postal Code</label>
               <input id="zipCode" type="text" formControlName="zipCode" placeholder="123 45"
-                class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none transition-colors bg-white text-gray-900" />
+                class="form-field-control form-field-control--sm border-2 border-gray-300 bg-white text-gray-900 focus:border-blue-500" />
               <div *ngIf="addressForm.get('zipCode')?.invalid && addressForm.get('zipCode')?.touched"
                 class="text-red-600 text-sm mt-1">
                 Enter a valid postal code
@@ -186,7 +183,7 @@
 
           <!-- Submit Button -->
           <button type="submit"
-            class="px-6 py-3 bg-gray-900 text-white font-semibold rounded-lg hover:bg-gray-800 transition-colors">
+            class="form-button--sm bg-gray-900 text-white font-semibold rounded-lg hover:bg-gray-800 transition-colors">
             Save Address
           </button>
         </form>

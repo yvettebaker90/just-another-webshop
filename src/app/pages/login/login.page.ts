@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Meta, Title } from '@angular/platform-browser';
 import { SupabaseService } from '../../services/supabase.services';
 
 @Component({
@@ -12,6 +13,8 @@ import { SupabaseService } from '../../services/supabase.services';
     imports: [CommonModule, ReactiveFormsModule],
 })
 export class LoginPage implements OnInit {
+    private readonly title = inject(Title);
+    private readonly meta = inject(Meta);
     loginForm: FormGroup;
     loading = false;
     submitted = false;
@@ -28,7 +31,13 @@ export class LoginPage implements OnInit {
         });
     }
 
-    ngOnInit(): void { }
+    ngOnInit(): void {
+        this.title.setTitle('Sign In | Just Another Webshop');
+        this.meta.updateTag({
+            name: 'description',
+            content: 'Sign in to your Just Another Webshop account to manage your profile, wishlist, and shopping cart.',
+        });
+    }
 
     get email() {
         return this.loginForm.get('email');
