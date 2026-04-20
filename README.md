@@ -21,8 +21,7 @@ A Figma prototype was used as the base for the UI.
 
 The project uses a modern, earthy color palette with neutral backgrounds and accent colors for highlights and actions.
 
-<img width="200" alt="colorpalette" src="https://github.com/user-attachments/assets/7473adb7-b61c-4f84-abbf-407e7e599814" />
-
+<img width="447" height="377" alt="colorpalette" src="https://github.com/user-attachments/assets/dbd0762e-f690-49a9-b1c9-32c077c722d1" />
 
 ## ✨ Features
 
