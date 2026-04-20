@@ -1,9 +1,14 @@
 <div class="min-h-screen w-full bg-[#f3f3f3] py-8 sm:py-10">
 	<section class="content-shell space-y-6" id="top">
-		<header class="space-y-2">
-			<h1 class="text-3xl font-bold tracking-tight sm:text-4xl">Shop All Products</h1>
-			<p class="text-base text-black/60 sm:text-xl">{{ totalProducts() }} products found</p>
-		</header>
+		<section class="mb-12 space-y-2">
+			<h1 class="sr-only">Collection</h1>
+			<h2 class="font-heading mt-10 text-left text-3xl font-bold text-foreground sm:mt-20">
+				Shop All Products
+			</h2>
+			<p class="max-w-2xl text-sm text-foreground md:text-base">
+				{{ totalProducts() }} products found
+			</p>
+		</section>
 
 		<div class="space-y-6">
 			<app-search-filter
@@ -27,14 +32,14 @@
 					<button
 						type="button"
 						(click)="openFilterModal()"
-						class="btn btn-outline min-h-[2.75rem] rounded-md px-4 py-2.5 text-sm font-light tracking-wide sm:min-h-12 sm:px-5"
+						class="group btn btn-outline min-h-[2.75rem] rounded-md px-4 py-2.5 text-sm font-light tracking-wide sm:min-h-12 sm:px-5"
 						aria-haspopup="dialog"
 						aria-controls="collection-filter-modal"
 						[attr.aria-expanded]="isFilterModalOpen()"
 					>
 						<span>Filter</span>
 						@if (activeFilterCount() > 0) {
-							<span class="inline-flex min-h-6 min-w-6 items-center justify-center rounded-full bg-white px-2 text-xs font-bold text-black">
+							<span class="inline-flex min-h-6 min-w-6 items-center justify-center rounded-full bg-secondary px-2 text-xs font-bold text-primary transition-colors group-hover:bg-white">
 								{{ activeFilterCount() }}
 							</span>
 						}

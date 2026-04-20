@@ -16,6 +16,7 @@ import type { CartItem } from '../../services/shopping-cart.service';
   imports: [CommonModule, FormsModule, RouterModule, NgIcon],
   providers: [provideIcons({ ionTrashOutline, ionCartOutline })],
   templateUrl: './shopping-cart.page.html',
+  styleUrl: './shopping-cart.page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShoppingCart {

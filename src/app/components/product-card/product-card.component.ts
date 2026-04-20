@@ -61,8 +61,8 @@ type ProductCategoryGroup = {
           <div class="space-y-1">
             <p class="text-sm text-black/45 line-through">{{ formatPrice(price()) }}</p>
             <div class="flex flex-wrap items-center gap-2">
-              <p class="text-lg font-semibold text-red-600">{{ formatPrice(discountedPrice()) }}</p>
-              <span class="text-sm font-semibold text-red-600">-{{ salePercentage() }}%</span>
+              <p class="text-destructive text-lg font-semibold">{{ formatPrice(discountedPrice()) }}</p>
+              <span class="text-destructive text-sm font-semibold">-{{ salePercentage() }}%</span>
             </div>
           </div>
         } @else {
@@ -77,7 +77,7 @@ type ProductCategoryGroup = {
             <button
               type="button"
               (click)="$event.stopPropagation(); removeFromWishlist()"
-              class="btn btn-outline text-destructive"
+              class="btn btn-destructive"
               aria-label="Delete {{ title() }} from wishlist"
             >
               Delete

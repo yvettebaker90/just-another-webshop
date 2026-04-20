@@ -61,9 +61,11 @@
             {{ product()!.category }}
           </p>
 
-          <h1 class="font-heading mt-2 text-3xl font-bold tracking-[-0.02em]">
+          <h1 class="sr-only">{{ product()!.title }}</h1>
+
+          <h2 class="font-heading mt-2 text-3xl font-bold tracking-[-0.02em]">
             {{ product()!.title }}
-          </h1>
+          </h2>
 
           <div class="mt-4 flex items-center gap-3">
             <span class="text-2xl font-semibold">${{ product()!.price }}</span>

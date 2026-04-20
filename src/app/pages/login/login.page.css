@@ -1,0 +1,7 @@
+.login-page-shell {
+  background-color: var(--color-surface-page);
+}
+
+.login-submit-btn {
+  background-color: var(--color-action-primary);
+}
