@@ -144,7 +144,7 @@ export class AccountPage implements OnInit {
   // Sign out the user and redirect to login
   async signOut(): Promise<void> {
     await this.supabaseService.client.auth.signOut();
-    window.location.href = '/login';
+    void this.router.navigate(['/login']);
   }
 
   // Returns true if the profile form is dirty (changed) and valid

@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Meta, Title } from '@angular/platform-browser';
 import { SupabaseService } from '../../services/supabase.services';
 
@@ -10,7 +10,7 @@ import { SupabaseService } from '../../services/supabase.services';
     templateUrl: './login.page.html',
     styleUrl: './login.page.css',
     standalone: true,
-    imports: [CommonModule, ReactiveFormsModule],
+    imports: [CommonModule, ReactiveFormsModule, RouterLink],
 })
 export class LoginPage implements OnInit {
     private readonly title = inject(Title);
@@ -76,6 +76,6 @@ export class LoginPage implements OnInit {
     }
 
     navigateToSignup(): void {
-        this.router.navigate(['/signup']);
+        this.router.navigate(['/register']);
     }
 }

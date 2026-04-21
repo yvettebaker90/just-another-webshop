@@ -4,7 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Meta, Title } from '@angular/platform-browser';
 import { ProfileService } from '../../services/profile.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { SupabaseService } from '../../services/supabase.services';
 
 @Component({
@@ -12,7 +12,7 @@ import { SupabaseService } from '../../services/supabase.services';
     templateUrl: './register.page.html',
     styleUrl: './register.page.css',
     standalone: true,
-    imports: [ReactiveFormsModule, CommonModule],
+    imports: [ReactiveFormsModule, CommonModule, RouterLink],
 })
 export class RegisterPage implements OnInit {
     private readonly title = inject(Title);
