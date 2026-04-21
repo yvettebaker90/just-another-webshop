@@ -40,8 +40,8 @@ export class ShoppingCartService {
             this.currentUserId = session?.user?.id ?? null;
 
             if (!this.currentUserId) {
-                // If user logs out, clear local state
-                this.clearLocalState();
+                // Guests keep their cart in localStorage.
+                this.loadFromLocalStorage();
                 return;
             }
             // On login, load from localStorage and sync with Supabase
@@ -66,7 +66,7 @@ export class ShoppingCartService {
     private async initializeCart(): Promise<void> {
         const userId = await this.getCurrentUserId();
         if (!userId) {
-            this.clearLocalState();
+            this.loadFromLocalStorage();
             return;
         }
         this.loadFromLocalStorage();
@@ -129,7 +129,7 @@ export class ShoppingCartService {
     private async syncWithSupabase(userId?: string): Promise<void> {
         const resolvedUserId = userId ?? await this.getCurrentUserId();
         if (!resolvedUserId) {
-            this.clearLocalState();
+            this.loadFromLocalStorage();
             return;
         }
         const remoteItems = await this.readSupabaseCart(resolvedUserId);

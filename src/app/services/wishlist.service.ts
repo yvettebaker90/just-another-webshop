@@ -31,7 +31,7 @@ export class WishlistService {
       this.currentUserId = session?.user?.id ?? null;
 
       if (!this.currentUserId) {
-        this.clearLocalState();
+        this.loadFromLocalStorage();
         return;
       }
 
@@ -56,7 +56,7 @@ export class WishlistService {
     const userId = await this.getCurrentUserId();
 
     if (!userId) {
-      this.clearLocalState();
+      this.loadFromLocalStorage();
       return;
     }
 
@@ -117,7 +117,7 @@ export class WishlistService {
   private async syncWithSupabase(userId?: string): Promise<void> {
     const resolvedUserId = userId ?? await this.getCurrentUserId();
     if (!resolvedUserId) {
-      this.clearLocalState();
+      this.loadFromLocalStorage();
       return;
     }
 
