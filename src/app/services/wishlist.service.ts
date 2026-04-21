@@ -27,10 +27,15 @@ export class WishlistService {
   constructor() {
     this.scheduleInitialization();
 
-    this.supabaseService.client.auth.onAuthStateChange((_event, session) => {
+    this.supabaseService.client.auth.onAuthStateChange((event, session) => {
       this.currentUserId = session?.user?.id ?? null;
 
       if (!this.currentUserId) {
+        if (event === 'SIGNED_OUT') {
+          this.clearLocalState();
+          return;
+        }
+
         this.loadFromLocalStorage();
         return;
       }

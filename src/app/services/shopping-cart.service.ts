@@ -36,11 +36,17 @@ export class ShoppingCartService {
         // Initialize cart on service creation
         this.scheduleInitialization();
         // Listen for authentication state changes
-        this.supabaseService.client.auth.onAuthStateChange((_event, session) => {
+        this.supabaseService.client.auth.onAuthStateChange((event, session) => {
             this.currentUserId = session?.user?.id ?? null;
 
             if (!this.currentUserId) {
-                // Guests keep their cart in localStorage.
+                if (event === 'SIGNED_OUT') {
+                    // Clear the device after logout, but keep the synced Supabase cart.
+                    this.clearLocalState();
+                    return;
+                }
+
+                // Guests keep their cart in localStorage until they explicitly log out.
                 this.loadFromLocalStorage();
                 return;
             }
