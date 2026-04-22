@@ -1,0 +1,48 @@
+<section class="relative w-full overflow-hidden">
+  <div class="relative w-full aspect-4/3 sm:aspect-16/7 md:aspect-16/6 lg:aspect-16/5">
+    <!-- Photo by Anastasiya Lobanovskaya: https://www.pexels.com/photo/perfume-bottle-beside-a-book-4110339/ -->
+    <img
+      src="assets/hero.webp"
+      alt="Fragrance Essentials"
+      fetchpriority="high"
+      decoding="async"
+      class="object-pos-hero absolute inset-0 h-full w-full object-cover"
+    />
+
+    <div class="absolute inset-0 bg-linear-to-r from-black/60 via-black/30 to-transparent"></div>
+
+    <div class="absolute inset-0 flex items-start pt-6 sm:pt-10 md:pt-14 lg:pt-18">
+      <div class="w-full px-6 lg:w-10/12 lg:mx-auto lg:px-8 xl:px-12">
+        <div class="max-w-md md:max-w-lg">
+
+          <!-- Heading -->
+          <h1 class="text-left text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-light tracking-tight text-white leading-tight">
+            Fragrance <span class="italic">Essentials</span>
+          </h1>
+
+          <!-- Subtitle -->
+          <p class="mt-2 md:mt-3 lg:mt-4 mb-4 md:mb-6 lg:mb-8 text-sm md:text-base lg:text-lg xl:text-xl leading-relaxed text-white/85 max-[370px]:text-xs">
+            Discover our exclusive collection of fragrances.<br class="hidden md:inline" />
+            Find your signature scent and elevate every moment.
+          </p>
+
+          <!-- Button -->
+          <div class="mt-6 sm:mt-5 md:mt-0 text-left text-white hover:text-[#2B2B2B]">
+            <a
+              routerLink="/products"
+              class="inline-block border border-white bg-white/10 text-white hover:bg-white hover:text-[#2B2B2B] px-3 py-1.5 sm:px-4 sm:py-2 md:px-5 md:py-2.5 rounded-lg text-sm sm:text-base md:text-lg lg:text-xl font-medium tracking-wide transition-colors no-underline"
+            >Shop Now</a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Carousel indicators -->
+    <div class="absolute bottom-3 sm:bottom-4 md:bottom-6 right-3 sm:right-4 md:right-6 flex gap-2">
+      <button class="h-2 w-2 rounded-full bg-white" aria-label="Slide 1"></button>
+      <button class="h-2 w-2 rounded-full bg-white/40" aria-label="Slide 2"></button>
+      <button class="h-2 w-2 rounded-full bg-white/40" aria-label="Slide 3"></button>
+    </div>
+  </div>
+</section>

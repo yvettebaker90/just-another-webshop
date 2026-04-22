@@ -1,0 +1,111 @@
+<div class="flex justify-center p-2">
+    <div class="relative w-full max-w-sm mt-10 mb-10">
+        <div class="bg-white rounded-xl shadow-xl shadow-slate-200/50 backdrop-blur-xl border border-gray-300 p-3 md:p-4">
+            <!-- Header -->
+            <div class="text-center pt-1 mb-4">
+                <h1 class="h1-login-register">Register</h1>
+            </div>
+            <!-- Error message -->
+            <div *ngIf="registerForm.errors?.['passwordsMismatch'] && submitted"
+                class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg animate-shake">
+                <p class="text-red-700 text-sm font-medium">Passwords do not match</p>
+            </div>
+            <div *ngIf="error" class="mb-4 p-3 bg-red-100 border border-red-300 text-red-700 rounded">
+                {{ error }}
+            </div>
+            <div *ngIf="success" class="mb-4 p-3 bg-green-100 border border-green-300 text-green-700 rounded">
+                {{ success }}
+            </div>
+
+            <!-- Form -->
+            <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-4">
+                <!-- First Name field -->
+                <div class="group">
+                    <label for="firstName" class="block text-sm font-semibold text-slate-700 mb-2">First Name</label>
+                    <input type="text" id="firstName" name="firstName" autocomplete="given-name"
+                        formControlName="firstName" placeholder="First Name"
+                        class="form-field-control form-field-control--sm bg-slate-50/50 text-slate-900 placeholder-slate-400 hover:border-gray-400"
+                        [class.border-red-300]="submitted && firstName?.invalid"
+                        [class.focus:ring-red-500]="submitted && firstName?.invalid" />
+                    <p *ngIf="submitted && firstName?.invalid && firstName?.errors?.['required']"
+                        class="mt-2 text-xs text-red-600 font-medium">
+                        First name is required
+                    </p>
+                </div>
+                <!-- Last Name field -->
+                <div class="group">
+                    <label for="lastName" class="block text-sm font-semibold text-slate-700 mb-2">Last Name</label>
+                    <input type="text" id="lastName" name="lastName" autocomplete="family-name"
+                        formControlName="lastName" placeholder="Last Name"
+                        class="form-field-control form-field-control--sm bg-slate-50/50 text-slate-900 placeholder-slate-400 hover:border-gray-400"
+                        [class.border-red-300]="submitted && lastName?.invalid"
+                        [class.focus:ring-red-500]="submitted && lastName?.invalid" />
+                    <p *ngIf="submitted && lastName?.invalid && lastName?.errors?.['required']"
+                        class="mt-2 text-xs text-red-600 font-medium">
+                        Last name is required
+                    </p>
+                </div>
+                <!-- Email field -->
+                <div class="group">
+                    <label for="email" class="block text-sm font-semibold text-slate-700 mb-2">Email</label>
+                    <input type="email" id="email" name="email" autocomplete="email" formControlName="email"
+                        placeholder="you@example.com"
+                        class="form-field-control form-field-control--sm bg-slate-50/50 text-slate-900 placeholder-slate-400 hover:border-gray-400"
+                        [class.border-red-300]="submitted && email?.invalid"
+                        [class.focus:ring-red-500]="submitted && email?.invalid" />
+                    <p *ngIf="submitted && email?.invalid && email?.errors?.['required']"
+                        class="mt-2 text-xs text-red-600 font-medium">
+                        Email is required
+                    </p>
+                    <p *ngIf="submitted && email?.invalid && email?.errors?.['email']"
+                        class="mt-2 text-xs text-red-600 font-medium">
+                        Please enter a valid email
+                    </p>
+                </div>
+                <!-- Password field -->
+                <div class="group">
+                    <label for="password" class="block text-sm font-semibold text-slate-700 mb-2">Password</label>
+                    <input type="password" id="password" name="password" autocomplete="new-password"
+                        formControlName="password" placeholder="••••••••"
+                        class="form-field-control form-field-control--sm bg-slate-50/50 text-slate-900 placeholder-slate-400 hover:border-gray-400"
+                        [class.border-red-300]="submitted && password?.invalid"
+                        [class.focus:ring-red-500]="submitted && password?.invalid" />
+                    <p *ngIf="submitted && password?.invalid && password?.errors?.['required']"
+                        class="mt-2 text-xs text-red-600 font-medium">
+                        Password is required
+                    </p>
+                    <p *ngIf="submitted && password?.invalid && password?.errors?.['minlength']"
+                        class="mt-2 text-xs text-red-600 font-medium">
+                        Password must be at least 6 characters
+                    </p>
+                </div>
+                <!-- Confirm Password field -->
+                <div class="group">
+                    <label for="confirmPassword" class="block text-sm font-semibold text-slate-700 mb-2">Confirm
+                        Password</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" autocomplete="new-password"
+                        formControlName="confirmPassword" placeholder="••••••••"
+                        class="form-field-control form-field-control--sm bg-slate-50/50 text-slate-900 placeholder-slate-400 hover:border-gray-400"
+                        [class.border-red-300]="submitted && (confirmPassword?.invalid || registerForm.errors?.['passwordsMismatch'])"
+                        [class.focus:ring-red-500]="submitted && (confirmPassword?.invalid || registerForm.errors?.['passwordsMismatch'])" />
+                    <p *ngIf="submitted && confirmPassword?.invalid && confirmPassword?.errors?.['required']"
+                        class="mt-2 text-xs text-red-600 font-medium">
+                        Confirm password is required
+                    </p>
+                </div>
+                <button type="submit"
+                    class="form-button--sm bg-primary text-primary-foreground flex w-full items-center justify-center gap-2 rounded-lg font-semibold transition-opacity hover:opacity-90">
+                    Register
+                </button>
+                <div class="mt-6 text-center">
+                    <div class="mt-6 flex items-center justify-center gap-2 text-center">
+                        <span class="text-sm text-foreground">Do you have an account?</span>
+                        <h2 class="h2-login-register" style="margin-bottom: 0;">
+                            <a routerLink="/login" class="h2-login-register">Sign in</a>
+                        </h2>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

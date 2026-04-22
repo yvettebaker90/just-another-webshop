@@ -1,0 +1,194 @@
+<div class="min-h-screen w-full bg-[#f3f3f3] py-8 sm:py-10">
+	<section class="content-shell space-y-6" id="top">
+		<section class="mb-12 space-y-2">
+			<h1 class="sr-only">Collection</h1>
+			<h2 class="font-heading mt-10 text-left text-3xl font-bold text-foreground sm:mt-20">
+				Shop All Products
+			</h2>
+			<p class="max-w-2xl text-sm text-foreground md:text-base">
+				{{ totalProducts() }} products found
+			</p>
+		</section>
+
+		<div class="space-y-6">
+			<app-search-filter
+				class="hidden"
+				[categories]="categories()"
+				[brands]="brands()"
+				[availableTags]="availableTags()"
+				[selectedCategories]="selectedCategories()"
+				[selectedBrands]="selectedBrands()"
+				[selectedTags]="selectedTags()"
+				[maxPrice]="maxPrice()"
+				[highestPrice]="highestPrice()"
+				(categoryToggled)="toggleCategory($event)"
+				(brandToggled)="toggleBrand($event)"
+				(maxPriceChanged)="updateMaxPrice($event)"
+				(tagToggled)="toggleTag($event)"
+			></app-search-filter>
+
+			<div class="space-y-4">
+				<div class="flex justify-end">
+					<button
+						type="button"
+						(click)="openFilterModal()"
+						class="group btn btn-outline min-h-[2.75rem] rounded-md px-4 py-2.5 text-sm font-light tracking-wide sm:min-h-12 sm:px-5"
+						aria-haspopup="dialog"
+						aria-controls="collection-filter-modal"
+						[attr.aria-expanded]="isFilterModalOpen()"
+					>
+						<span>Filter</span>
+						@if (activeFilterCount() > 0) {
+							<span class="inline-flex min-h-6 min-w-6 items-center justify-center rounded-full bg-secondary px-2 text-xs font-bold text-primary transition-colors group-hover:bg-white">
+								{{ activeFilterCount() }}
+							</span>
+						}
+					</button>
+				</div>
+
+				<hr class="border-t border-[#a3b18a]/50" />
+
+				@if (loading()) {
+					<p class="rounded border border-gray-200 bg-white px-4 py-6 text-center text-sm text-gray-600">
+						Loading products...
+					</p>
+				}
+
+				@if (error()) {
+					<p class="rounded border border-red-200 bg-red-50 px-4 py-6 text-center text-sm text-red-700">
+						Could not load products: {{ error() }}
+					</p>
+				}
+
+				@if (!loading() && !error() && totalProducts() === 0) {
+					<p class="rounded border border-gray-200 bg-white px-4 py-6 text-center text-sm text-gray-600">
+						No products match your filters.
+					</p>
+				}
+
+				@if (!loading() && !error()) {
+					<div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+						@for (product of paginatedProducts(); track product.id) {
+							<app-product-card
+								[id]="product.id"
+								[brand]="product.brand"
+								[category]="product.category"
+								[title]="product.title"
+								[price]="product.price"
+								[image]="product.image || product.image_1 || ''"
+								[tags]="product.tags"
+								[discountPercentage]="product.discount_percentage"
+							></app-product-card>
+						}
+					</div>
+
+					@if (totalPages() > 1) {
+						<div class="flex items-center justify-center gap-1 pt-6">
+							<button
+								type="button"
+								(click)="goToPage(currentPage() - 1)"
+								[disabled]="currentPage() === 1"
+								class="inline-flex h-9 w-9 items-center justify-center border border-gray-300 bg-white text-sm transition hover:bg-gray-100 disabled:pointer-events-none disabled:opacity-40"
+								aria-label="Previous page"
+							>&#8249;</button>
+
+							@for (page of pageNumbers(); track $index) {
+								@if (page === null) {
+									<span class="inline-flex h-9 w-9 items-center justify-center text-sm text-gray-400">&#8230;</span>
+								} @else {
+									<button
+										type="button"
+										(click)="goToPage(page)"
+										class="inline-flex h-9 w-9 items-center justify-center border text-sm transition"
+										[class.bg-black]="currentPage() === page"
+										[class.text-white]="currentPage() === page"
+										[class.border-black]="currentPage() === page"
+										[class.bg-white]="currentPage() !== page"
+										[class.border-gray-300]="currentPage() !== page"
+										[class.hover:bg-gray-100]="currentPage() !== page"
+										[attr.aria-current]="currentPage() === page ? 'page' : null"
+									>{{ page }}</button>
+								}
+							}
+
+							<button
+								type="button"
+								(click)="goToPage(currentPage() + 1)"
+								[disabled]="currentPage() === totalPages()"
+								class="inline-flex h-9 w-9 items-center justify-center border border-gray-300 bg-white text-sm transition hover:bg-gray-100 disabled:pointer-events-none disabled:opacity-40"
+								aria-label="Next page"
+							>&#8250;</button>
+						</div>
+					}
+				}
+			</div>
+		</div>
+	</section>
+
+	@if (isFilterModalOpen()) {
+		<div
+			class="fixed inset-0 z-50 flex items-start justify-center bg-black/45 px-4 py-4 sm:justify-end sm:px-6 sm:py-6"
+			(click)="closeFilterModal()"
+		>
+			<div
+				id="collection-filter-modal"
+				role="dialog"
+				aria-modal="true"
+				aria-labelledby="collection-filter-title"
+				class="flex max-h-[calc(100vh-2rem)] w-full max-w-[36rem] flex-col overflow-hidden rounded-md bg-[#f8f2eb] shadow-2xl sm:max-h-[calc(100vh-3rem)]"
+				(click)="$event.stopPropagation()"
+			>
+				<div class="flex items-start justify-between gap-4 border-b border-black/10 px-4 py-4 sm:px-6 sm:py-5">
+					<div class="space-y-1">
+						<h2 id="collection-filter-title" class="text-xl font-semibold text-black sm:text-2xl">Filter products</h2>
+						<p class="text-xs text-black/65 sm:text-sm">Choose what you want to browse right now.</p>
+					</div>
+
+					<button
+						type="button"
+						(click)="closeFilterModal()"
+						class="h-10 w-10 shrink-0 rounded-full bg-white p-0 text-black cursor-pointer flex items-center justify-center"
+						aria-label="Close filter modal"
+					>
+						<ng-icon name="ionClose" size="20" color="black" aria-hidden="true"></ng-icon>
+					</button>
+				</div>
+
+				<div class="overflow-y-auto px-4 py-4 sm:px-6 sm:py-5">
+					<app-search-filter
+						[categories]="categories()"
+						[brands]="brands()"
+						[availableTags]="availableTags()"
+						[selectedCategories]="selectedCategories()"
+						[selectedBrands]="selectedBrands()"
+						[selectedTags]="selectedTags()"
+						[maxPrice]="maxPrice()"
+						[highestPrice]="highestPrice()"
+						(categoryToggled)="toggleCategory($event)"
+						(brandToggled)="toggleBrand($event)"
+						(maxPriceChanged)="updateMaxPrice($event)"
+						(tagToggled)="toggleTag($event)"
+					></app-search-filter>
+				</div>
+
+				<div class="flex flex-col-reverse gap-3 border-t border-black/10 bg-white/75 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+					<button
+						type="button"
+						(click)="clearFilters()"
+						class="btn btn-outline min-h-[2.75rem] w-full rounded-md px-4 py-2.5 text-sm font-light tracking-wide cursor-pointer sm:w-auto sm:min-h-12 sm:px-5"
+					>
+						Clear all
+					</button>
+
+					<button
+						type="button"
+						(click)="closeFilterModal()"
+						class="inline-flex w-full items-center justify-center rounded-md bg-black px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-black/85 sm:w-auto cursor-pointer"
+					>
+						Show {{ totalProducts() }} products
+					</button>
+				</div>
+			</div>
+		</div>
+	}
+</div>

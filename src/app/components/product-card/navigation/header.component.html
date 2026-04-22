@@ -1,0 +1,117 @@
+<header class="site-header sticky top-0 z-50 w-full border-b border-border bg-background text-foreground">
+  <div class="site-header__inner mx-auto w-full px-4 sm:px-6 lg:px-8 xl:px-10 2xl:w-9/12 2xl:px-4">
+    <div class="flex h-16 items-center justify-between lg:h-18 xl:h-20">
+      <!-- Logo/Brand -->
+      <div class="flex w-full items-center justify-between gap-4 lg:gap-6 xl:gap-10">
+        <div class="shrink-0">
+          <a routerLink="/home" class="site-header__brand-link focus:outline-none">
+            <span
+              class="site-header__logo header-logo block w-full whitespace-nowrap text-left text-lg uppercase tracking-tight text-foreground sm:text-md md:text-center lg:text-[1.2rem] xl:text-[1.35rem] 2xl:text-2xl"
+            >
+              JUST ANOTHER WEBSHOP
+            </span>
+          </a>
+        </div>
+
+        <!-- Mobile icons and hamburger grouped to the right -->
+        <div class="ml-auto flex items-center space-x-4 md:hidden">
+          <div class="flex items-center space-x-5">
+            <div class="relative">
+              <a routerLink="/shopping-cart" aria-label="Shopping cart">
+                <ng-icon name="ionCartOutline" size="24" color="black"></ng-icon>
+              </a>
+              <span *ngIf="cartCount > 0"
+                class="absolute -top-2 -right-2 bg-black text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center border-2 border-white">
+                {{ cartCount }}
+              </span>
+            </div>
+            <a routerLink="/account" aria-label="Account">
+              <ng-icon name="ionPersonOutline" size="24" color="black"></ng-icon>
+            </a>
+          </div>
+
+          <!-- Hamburger button (mobile only) -->
+          <button class="flex items-center" (click)="mobileMenuOpen = !mobileMenuOpen" aria-label="Open menu">
+            <svg class="w-7 h-7 text-[#2b2b2b]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Desktop Navigation Menu -->
+        <nav class="hidden min-w-0 items-center gap-4 lg:gap-5 xl:gap-7 2xl:gap-10 md:flex">
+          <a routerLink="/home" routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            class="nav-link relative flex items-center pb-1 text-xs font-medium text-foreground transition-all duration-200 lg:text-[0.78rem] xl:text-[0.82rem] 2xl:text-sm">
+            Home
+          </a>
+          <a routerLink="/products" routerLinkActive="active"
+            class="nav-link relative flex items-center pb-1 text-xs font-medium text-foreground transition-all duration-200 lg:text-[0.78rem] xl:text-[0.82rem] 2xl:text-sm">
+            Collections
+          </a>
+          <a routerLink="/contact" routerLinkActive="active"
+            class="nav-link relative flex items-center pb-1 text-xs font-medium text-foreground transition-all duration-200 lg:text-[0.78rem] xl:text-[0.82rem] 2xl:text-sm">
+            Contact
+          </a>
+        </nav>
+
+        <!-- Icons (hidden on mobile) -->
+        <div class="hidden items-center gap-3 lg:gap-4 xl:gap-5 2xl:gap-6 md:flex">
+          <div class="relative">
+            <a routerLink="/wishlist" aria-label="Wishlist">
+              <ng-icon name="ionHeartOutline" size="24" color="black"></ng-icon>
+            </a>
+            <span *ngIf="wishlistCount() > 0"
+              class="absolute -top-2 -right-2 bg-black text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center border-2 border-white">
+              {{ wishlistCount() }}
+            </span>
+          </div>
+          <div class="relative">
+            <a routerLink="/shopping-cart" aria-label="Shopping cart">
+              <ng-icon name="ionCartOutline" size="24" color="black"></ng-icon>
+            </a>
+            <span *ngIf="cartCount > 0"
+              class="absolute -top-2 -right-2 bg-black text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center border-2 border-white">
+              {{ cartCount }}
+            </span>
+          </div>
+          <a routerLink="/account" aria-label="Account">
+            <ng-icon name="ionPersonOutline" size="24" color="black"></ng-icon>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile menu (slide-in from right) -->
+  <div *ngIf="mobileMenuOpen" class="md:hidden fixed inset-0 z-50">
+    <div class="absolute inset-0 bg-black/50" (click)="mobileMenuOpen = false"></div>
+    <div class="site-header__mobile-drawer fixed right-0 top-0 flex h-auto w-3/4 max-w-xs flex-col space-y-6 bg-background p-6 shadow-lg">
+      <button class="self-end mb-4" (click)="mobileMenuOpen = false" aria-label="Close menu">
+        <svg class="w-7 h-7 text-[#2b2b2b]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+      <a routerLink="/home" (click)="mobileMenuOpen = false"
+        class="flex items-center text-foreground text-lg font-medium">
+        <ng-icon name="ionHomeOutline" size="20" class="mr-2"></ng-icon> Home
+      </a>
+      <a routerLink="/products" (click)="mobileMenuOpen = false"
+        class="flex items-center text-foreground text-lg font-medium">
+        <ng-icon name="ionBagOutline" size="20" class="mr-2"></ng-icon> Collections
+      </a>
+      <a routerLink="/contact" (click)="mobileMenuOpen = false"
+        class="flex items-center text-foreground text-lg font-medium">
+        <ng-icon name="ionMailOutline" size="20" class="mr-2"></ng-icon> Contact
+      </a>
+      <a routerLink="/wishlist" (click)="mobileMenuOpen = false"
+        class="flex items-center text-foreground text-lg font-medium">
+        <ng-icon name="ionHeartOutline" size="20" class="mr-2"></ng-icon> Wishlist
+      </a>
+    </div>
+  </div>
+<div class="site-header__inner mx-auto w-full px-4 sm:px-6 lg:px-8 xl:px-10 2xl:w-9/12 2xl:px-4">
+  <hr class="site-header__divider">
+</div>
+<div><app-search-bar></app-search-bar></div>
+</header>

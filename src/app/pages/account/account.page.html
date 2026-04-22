@@ -1,0 +1,195 @@
+<div class="min-h-screen bg-background py-8">
+  <!-- Success Message -->
+  <div *ngIf="showSuccess"
+    class="fixed top-8 left-1/2 transform -translate-x-1/2 z-50 bg-green-600 text-white px-6 py-3 rounded shadow-lg transition-opacity duration-300">
+    {{ successMessage }}
+  </div>
+
+  <!-- Page Header -->
+  <div class="content-shell mb-10 animate-in fade-in slide-in-from-top-4 duration-600">
+    <h1 class="sr-only">My Account</h1>
+    <h2 class="text-4xl font-bold text-gray-900 mb-2 tracking-tight">My Account</h2>
+    <p class="text-lg text-gray-600">Manage your profile and shipping information</p>
+  </div>
+
+  <!-- Main Content Grid -->
+  <div class="content-shell grid grid-cols-1 gap-6 lg:grid-cols-4">
+
+    <!-- Sidebar -->
+
+    <aside class="lg:col-span-1 animate-in fade-in slide-in-from-left-8 duration-600">
+      <div class="bg-white rounded-xl shadow-md border border-gray-300 p-6">
+        <ng-container *ngIf="profileLoaded; else loadingProfile">
+          <ng-container *ngIf="!profileError; else profileErrorBlock">
+            <!-- Avatar -->
+            <div class="flex justify-center mb-6">
+              <div
+                class="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center shadow-lg mx-auto overflow-hidden">
+                <img *ngIf="profileAvatarUrl; else defaultAvatar" [src]="profileAvatarUrl" alt="Avatar" loading="lazy" decoding="async"
+                  class="w-20 h-20 object-cover rounded-full" />
+                <ng-template #defaultAvatar>
+                  <ng-icon name="ionPersonOutline" size="48" color="#111"></ng-icon>
+                </ng-template>
+              </div>
+            </div>
+            <!-- User Info -->
+            <div class="text-center mb-8">
+              <h2 class="text-xl font-bold text-gray-900">{{ profileForm.get('firstName')?.value }} {{
+                profileForm.get('lastName')?.value }}</h2>
+              <p class="text-gray-600 text-sm mt-1">{{ profileForm.get('email')?.value }}</p>
+              <p class="text-gray-500 text-xs mt-3">
+                Member since
+                <span *ngIf="profileCreatedAt; else unknownDate">{{ profileCreatedAt | date:'MMMM yyyy' }}</span>
+                <ng-template #unknownDate>Unknown</ng-template>
+              </p>
+            </div>
+          </ng-container>
+          <ng-template #profileErrorBlock>
+            <div class="text-center text-red-600">Could not load profile information.</div>
+          </ng-template>
+        </ng-container>
+        <ng-template #loadingProfile>
+          <div class="text-center text-gray-500">Loading profile...</div>
+        </ng-template>
+
+        <!-- Actions -->
+        <button (click)="signOut()"
+          class="w-full flex items-center justify-center gap-2 px-4 py-3 text-red-600 hover:bg-red-50 rounded-lg transition-colors font-medium border border-red-200 hover:border-red-300">
+          <ng-icon name="ionLogOutOutline" size="20" color="red"></ng-icon>
+          Sign Out
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="lg:col-span-3 space-y-8">
+
+      <!-- Profile Information Card -->
+      <div
+        class="bg-white rounded-xl shadow-md border border-gray-300 p-6 animate-in fade-in slide-in-from-bottom-4 duration-600">
+        <div class="mb-6">
+          <h2 class="text-2xl font-bold text-gray-900">Profile Information</h2>
+        </div>
+
+        <form [formGroup]="profileForm" (ngSubmit)="saveProfileChanges()" class="space-y-5">
+          <!-- Name Grid -->
+          <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+            <!-- First Name -->
+            <div>
+              <label for="firstName" class="block text-sm font-semibold text-gray-900 mb-2">First Name</label>
+              <input id="firstName" type="text" formControlName="firstName" placeholder="First name"
+                class="form-field-control form-field-control--sm border-2 border-gray-300 bg-white text-gray-900 focus:border-blue-500" />
+              <div *ngIf="profileForm.get('firstName')?.invalid && profileForm.get('firstName')?.touched"
+                class="text-red-600 text-sm mt-1">
+                First name must be at least 2 characters
+              </div>
+            </div>
+
+            <!-- Last Name -->
+            <div>
+              <label for="lastName" class="block text-sm font-semibold text-gray-900 mb-2">Last Name</label>
+              <input id="lastName" type="text" formControlName="lastName" placeholder="Last name"
+                class="form-field-control form-field-control--sm border-2 border-gray-300 bg-white text-gray-900 focus:border-blue-500" />
+              <div *ngIf="profileForm.get('lastName')?.invalid && profileForm.get('lastName')?.touched"
+                class="text-red-600 text-sm mt-1">
+                Last name must be at least 2 characters
+              </div>
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div>
+            <label for="email" class="block text-sm font-semibold text-gray-900 mb-2">Email</label>
+            <input id="email" type="email" formControlName="email" placeholder="your@email.com"
+              class="form-field-control form-field-control--sm border-2 border-gray-300 bg-white text-gray-900 focus:border-blue-500"
+              readonly />
+            <div class="text-gray-500 text-xs mt-1">
+              Email address cannot be changed here.
+            </div>
+          </div>
+
+          <!-- Phone -->
+          <div>
+            <label for="phone" class="block text-sm font-semibold text-gray-900 mb-2">Phone</label>
+            <input id="phone" type="tel" formControlName="phone" placeholder="+46 70 123 45 67"
+              class="form-field-control form-field-control--sm border-2 border-gray-300 bg-white text-gray-900 focus:border-blue-500" />
+            <div *ngIf="profileForm.get('phone')?.invalid && profileForm.get('phone')?.touched"
+              class="text-red-600 text-sm mt-1">
+              Please enter a valid phone number
+            </div>
+          </div>
+
+          <!-- Avatar URL -->
+          <div>
+            <label for="avatar" class="block text-sm font-semibold text-gray-900 mb-2">Avatar URL</label>
+            <input id="avatar" type="url" formControlName="avatar" placeholder="https://..."
+              class="form-field-control form-field-control--sm border-2 border-gray-300 bg-white text-gray-900 focus:border-blue-500" />
+            <div *ngIf="profileForm.get('avatar')?.invalid && profileForm.get('avatar')?.touched"
+              class="text-red-600 text-sm mt-1">
+              Please enter a valid URL
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit"
+            class="form-button--sm bg-gray-900 text-white font-semibold rounded-lg hover:bg-gray-800 transition-colors">
+            Save Changes
+          </button>
+        </form>
+      </div>
+
+      <!-- Shipping Address Card -->
+      <div
+        class="bg-white rounded-xl shadow-md border border-gray-300 p-6 animate-in fade-in slide-in-from-bottom-4 duration-600">
+        <div class="mb-6">
+          <h2 class="text-2xl font-bold text-gray-900">Shipping Address</h2>
+        </div>
+
+        <form [formGroup]="addressForm" (ngSubmit)="saveAddress()" class="space-y-5">
+          <!-- Street Address -->
+          <div>
+            <label for="street" class="block text-sm font-semibold text-gray-900 mb-2">Street Address</label>
+            <input id="street" type="text" formControlName="street" placeholder="Storgatan 1"
+              class="form-field-control form-field-control--sm border-2 border-gray-300 bg-white text-gray-900 focus:border-blue-500" />
+            <div *ngIf="addressForm.get('street')?.invalid && addressForm.get('street')?.touched"
+              class="text-red-600 text-sm mt-1">
+              Please enter a valid street address
+            </div>
+          </div>
+
+          <!-- City & Postal grid -->
+          <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+            <!-- City -->
+            <div>
+              <label for="city" class="block text-sm font-semibold text-gray-900 mb-2">City</label>
+              <input id="city" type="text" formControlName="city" placeholder="Stockholm"
+                class="form-field-control form-field-control--sm border-2 border-gray-300 bg-white text-gray-900 focus:border-blue-500" />
+              <div *ngIf="addressForm.get('city')?.invalid && addressForm.get('city')?.touched"
+                class="text-red-600 text-sm mt-1">
+                City must be at least 2 characters
+              </div>
+            </div>
+
+            <!-- Postal Code -->
+            <div>
+              <label for="zipCode" class="block text-sm font-semibold text-gray-900 mb-2">Postal Code</label>
+              <input id="zipCode" type="text" formControlName="zipCode" placeholder="123 45"
+                class="form-field-control form-field-control--sm border-2 border-gray-300 bg-white text-gray-900 focus:border-blue-500" />
+              <div *ngIf="addressForm.get('zipCode')?.invalid && addressForm.get('zipCode')?.touched"
+                class="text-red-600 text-sm mt-1">
+                Enter a valid postal code
+              </div>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit"
+            class="form-button--sm bg-gray-900 text-white font-semibold rounded-lg hover:bg-gray-800 transition-colors">
+            Save Address
+          </button>
+        </form>
+      </div>
+
+    </main>
+  </div>
+</div>

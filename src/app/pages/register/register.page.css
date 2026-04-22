@@ -1,0 +1,7 @@
+.register-page-shell {
+  background-color: var(--color-surface-page);
+}
+
+.register-submit-btn {
+  background-color: var(--color-action-primary);
+}

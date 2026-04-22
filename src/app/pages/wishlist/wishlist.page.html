@@ -1,0 +1,50 @@
+<main class="bg-background py-8" aria-labelledby="wishlist-title">
+    @if (wishlistItems().length === 0) {
+        <section class="content-shell flex flex-col items-center justify-center p-8 text-center">
+            <ng-icon name="ionHeartOutline" size="48" color="black" class="mb-4"></ng-icon>
+            <h1 id="wishlist-title" class="sr-only">Your Favorites</h1>
+            <h2 class="mb-2 text-xl font-semibold">Your wishlist is empty</h2>
+            <p class="h2-cart-empty max-w-xl">
+                Looks like you haven't saved any favorites yet.
+            </p>
+            <button
+                class="btn btn-primary flex items-center justify-center rounded-lg px-6 py-3 font-medium"
+                (click)="onStartShopping()"
+            >
+                Start shopping
+            </button>
+        </section>
+    } @else {
+        <div class="content-shell bg-background">
+            <section class="mb-12 space-y-2">
+                <p class="text-xs font-bold uppercase tracking-[0.14em] text-primary">Saved For Later</p>
+                <h1 class="sr-only">My favorites</h1>
+                <h2 id="wishlist-title" class="font-heading mt-10 text-left text-3xl font-bold text-primary sm:mt-20">
+                    My favorites
+                </h2>
+                <p class="max-w-2xl text-sm text-primary md:text-base">
+                    {{ subtitle() }}
+                </p>
+            </section>
+
+            <section
+                class="grid grid-cols-1 gap-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+                aria-label="Wishlist products"
+            >
+                @for (item of wishlistItems(); track item.id) {
+                    <app-product-card
+                        [id]="item.id"
+                        [brand]="item.brand"
+                        [category]="item.category"
+                        [title]="item.title"
+                        [price]="item.price"
+                        [image]="item.image"
+                        [tags]="item.tags ?? []"
+                        [discountPercentage]="item.discount_percentage"
+                        [showDeleteAction]="true"
+                    ></app-product-card>
+                }
+            </section>
+        </div>
+    }
+</main>

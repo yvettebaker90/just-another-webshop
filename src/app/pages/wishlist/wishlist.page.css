@@ -1,0 +1,16 @@
+.wishlist-eyebrow {
+  color: var(--color-text-secondary);
+}
+
+.wishlist-subtitle {
+  color: var(--color-text-secondary);
+}
+
+.wishlist-empty {
+  border-color: var(--color-border-default);
+  background-color: var(--color-surface-card);
+}
+
+.wishlist-empty-copy {
+  color: var(--color-text-secondary);
+}

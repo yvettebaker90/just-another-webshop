@@ -1,0 +1,33 @@
+@if (loading()) {
+  <div class="content-shell mt-8 rounded border border-gray-200 bg-white px-4 py-6 text-center text-sm text-gray-600">
+    Loading products...
+  </div>
+}
+
+@if (!loading() && error()) {
+  <div class="content-shell mt-8 rounded border border-red-200 bg-red-50 px-4 py-6 text-center text-sm text-red-700">
+    Could not load products: {{ error() }}
+  </div>
+}
+
+@if (!loading() && !error()) {
+  <div class="content-shell mt-8 grid grid-cols-1 justify-center sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+    @for (product of products(); track product.id) {
+      <app-product-card
+        [id]="product.id"
+        [brand]="product.brand"
+        [category]="product.category || 'Unknown Category'"
+        [title]="product.title"
+        [price]="product.price"
+        [image]="product.image || product.image_1 || ''"
+        [tags]="product.tags ? product.tags : []">
+      </app-product-card>
+    }
+
+    @if (products().length === 0) {
+      <p class="col-span-full rounded border border-gray-200 bg-white px-4 py-6 text-center text-sm text-gray-600">
+        No products found.
+      </p>
+    }
+  </div>
+}

@@ -1,0 +1,7 @@
+.contact-page__intro {
+  color: var(--foreground);
+}
+
+.contact-page__form {
+  background-color: var(--card);
+}

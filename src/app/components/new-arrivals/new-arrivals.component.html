@@ -1,0 +1,23 @@
+<section class="py-12 md:py-16 bg-muted/20">
+    <div class="content-shell">
+        <section class="mb-12 space-y-2">
+            <h2 class="font-heading text-left text-3xl font-bold text-foreground">
+                New Arrivals
+            </h2>
+            <p class="max-w-2xl text-sm text-foreground md:text-base">
+                Discover our latest collection
+            </p>
+        </section>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <app-product-card *ngFor="let product of newArrivals()" [id]="product.id" [brand]="product.brand"
+                [category]="product.category" [title]="product.title" [price]="product.price"
+                [image]="product.image || product.image_1 || ''" [tags]="product.tags || []"
+                [discountPercentage]="product.discount_percentage">
+            </app-product-card>
+        </div>
+        <div class="mt-12 text-center">
+            <button routerLink="/products" fragment="top" class="btn btn-outline btn-lg font-light tracking-wide">View
+                All Products</button>
+        </div>
+    </div>
+</section>
